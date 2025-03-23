@@ -1,6 +1,6 @@
 package mtr.item;
 
-import mtr.CreativeModeTabs;
+import mtr.registry.CreativeModeTabs;
 import mtr.data.RailwayData;
 import mtr.data.TransportMode;
 import mtr.packet.PacketTrainDataGuiServer;

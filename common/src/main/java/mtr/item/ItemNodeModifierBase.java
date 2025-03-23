@@ -1,6 +1,6 @@
 package mtr.item;
 
-import mtr.CreativeModeTabs;
+import mtr.registry.CreativeModeTabs;
 import mtr.block.BlockNode;
 import mtr.data.RailAngle;
 import mtr.data.RailwayData;

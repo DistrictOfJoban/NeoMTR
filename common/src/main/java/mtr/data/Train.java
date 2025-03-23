@@ -1,6 +1,6 @@
 package mtr.data;
 
-import mtr.Items;
+import mtr.registry.Items;
 import mtr.Keys;
 import mtr.block.BlockPSDAPGBase;
 import mtr.block.BlockPSDAPGDoorBase;

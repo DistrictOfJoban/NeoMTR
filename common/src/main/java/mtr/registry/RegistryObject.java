@@ -1,4 +1,4 @@
-package mtr;
+package mtr.registry;
 
 import java.util.function.Supplier;
 

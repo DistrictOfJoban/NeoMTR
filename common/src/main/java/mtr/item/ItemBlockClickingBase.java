@@ -1,6 +1,6 @@
 package mtr.item;
 
-import mtr.CreativeModeTabs;
+import mtr.registry.CreativeModeTabs;
 import mtr.mappings.Text;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.function.Function;

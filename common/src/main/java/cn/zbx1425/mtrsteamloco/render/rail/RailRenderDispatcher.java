@@ -18,14 +18,13 @@ import mtr.data.RailType;
 import mtr.data.TransportMode;
 import mtr.mappings.Utilities;
 import mtr.mappings.UtilitiesClient;
+import mtr.registry.Items;
 import mtr.render.RenderTrains;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
@@ -118,7 +117,7 @@ public class RailRenderDispatcher {
         isPreviewingModel = currentScreen instanceof SelectListScreen && ((SelectListScreen)currentScreen).isSelecting();
         if (!isPreviewingModel) {
             isHoldingRailItem = RenderTrains.isHoldingRailRelated(Minecraft.getInstance().player);
-            isHoldingBrush = Utilities.isHolding(Minecraft.getInstance().player, (item) -> item.equals(mtr.Items.BRUSH.get()));
+            isHoldingBrush = Utilities.isHolding(Minecraft.getInstance().player, (item) -> item.equals(Items.BRUSH.get()));
             isHoldingRailItemOrBrush = isHoldingRailItem || isHoldingBrush;
         } else {
             isHoldingRailItem = false;

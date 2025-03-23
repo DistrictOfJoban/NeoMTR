@@ -1,5 +1,6 @@
-package mtr;
+package mtr.registry;
 
+import mtr.Keys;
 import mtr.data.RailType;
 import mtr.data.TransportMode;
 import mtr.item.*;

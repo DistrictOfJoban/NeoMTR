@@ -1,6 +1,6 @@
 package mtr.entity;
 
-import mtr.EntityTypes;
+import mtr.registry.EntityTypes;
 import mtr.MTR;
 import mtr.block.BlockLiftTrack;
 import mtr.item.ItemLiftRefresher;

@@ -1,13 +1,10 @@
 package cn.zbx1425.mtrsteamloco.render;
 
 import cn.zbx1425.mtrsteamloco.mixin.RailAccessor;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mtr.Blocks;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.Rail;
-import mtr.mappings.Text;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;

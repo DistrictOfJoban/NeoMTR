@@ -1,4 +1,4 @@
-package mtr;
+package mtr.registry;
 
 import mtr.entity.EntityLift;
 import mtr.entity.EntitySeat;

@@ -8,6 +8,7 @@ import mtr.data.*;
 import mtr.item.ItemBlockClickingBase;
 import mtr.packet.IPacket;
 import mtr.packet.PacketTrainDataGuiClient;
+import mtr.registry.*;
 import mtr.render.*;
 import mtr.servlet.Webserver;
 import mtr.sound.LoopingSoundInstance;

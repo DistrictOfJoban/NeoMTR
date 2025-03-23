@@ -1,4 +1,4 @@
-package mtr;
+package mtr.registry;
 
 import mtr.block.*;
 import mtr.data.TransportMode;

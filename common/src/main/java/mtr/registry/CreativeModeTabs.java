@@ -1,5 +1,8 @@
-package mtr;
+package mtr.registry;
 
+import mtr.Keys;
+import mtr.MTR;
+import mtr.Registry;
 import mtr.mappings.Utilities;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;

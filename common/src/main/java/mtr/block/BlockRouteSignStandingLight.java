@@ -1,6 +1,6 @@
 package mtr.block;
 
-import mtr.BlockEntityTypes;
+import mtr.registry.BlockEntityTypes;
 import mtr.mappings.BlockEntityMapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

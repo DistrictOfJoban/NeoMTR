@@ -7,6 +7,7 @@ import mtr.data.Station;
 import mtr.mappings.BlockEntityMapper;
 import mtr.packet.IPacket;
 import mtr.packet.PacketTrainDataGuiServer;
+import mtr.registry.*;
 import mtr.servlet.Webserver;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;

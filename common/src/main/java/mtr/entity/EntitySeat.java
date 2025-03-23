@@ -1,6 +1,6 @@
 package mtr.entity;
 
-import mtr.EntityTypes;
+import mtr.registry.EntityTypes;
 import mtr.data.RailwayData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

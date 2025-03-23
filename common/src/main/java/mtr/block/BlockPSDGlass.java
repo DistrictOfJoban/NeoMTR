@@ -1,6 +1,6 @@
 package mtr.block;
 
-import mtr.Items;
+import mtr.registry.Items;
 import net.minecraft.world.item.Item;
 
 public class BlockPSDGlass extends BlockPSDAPGGlassBase {

@@ -1,6 +1,6 @@
 package mtr.block;
 
-import mtr.Items;
+import mtr.registry.Items;
 import mtr.MTR;
 import mtr.mappings.*;
 import net.minecraft.ChatFormatting;
@@ -9,9 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;

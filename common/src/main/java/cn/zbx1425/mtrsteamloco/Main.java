@@ -4,17 +4,15 @@ import cn.zbx1425.mtrsteamloco.block.BlockEyeCandy;
 import cn.zbx1425.mtrsteamloco.block.BlockOneWayGate;
 import cn.zbx1425.mtrsteamloco.network.*;
 import com.google.gson.JsonParser;
-import mtr.CreativeModeTabs;
+import mtr.registry.CreativeModeTabs;
 import mtr.Registry;
-import mtr.RegistryObject;
+import mtr.registry.RegistryObject;
 import mtr.item.ItemBridgeCreator;
 import mtr.item.ItemWithCreativeTabBase;
-import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.RegistryUtilities;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
@@ -23,9 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URISyntaxException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Locale;
-import java.util.function.BiConsumer;
 
 public class Main {
 
@@ -78,20 +74,20 @@ public class Main {
 			PARTICLE_STEAM_SMOKE = registries.createParticleType(true);
 			registries.registerParticleType("steam_smoke", PARTICLE_STEAM_SMOKE);
 
-			mtr.Registry.registerNetworkReceiver(PacketUpdateBlockEntity.PACKET_UPDATE_BLOCK_ENTITY,
+			Registry.registerNetworkReceiver(PacketUpdateBlockEntity.PACKET_UPDATE_BLOCK_ENTITY,
 					PacketUpdateBlockEntity::receiveUpdateC2S);
-			mtr.Registry.registerNetworkReceiver(PacketUpdateRail.PACKET_UPDATE_RAIL,
+			Registry.registerNetworkReceiver(PacketUpdateRail.PACKET_UPDATE_RAIL,
 					PacketUpdateRail::receiveUpdateC2S);
-			mtr.Registry.registerNetworkReceiver(PacketUpdateHoldingItem.PACKET_UPDATE_HOLDING_ITEM,
+			Registry.registerNetworkReceiver(PacketUpdateHoldingItem.PACKET_UPDATE_HOLDING_ITEM,
 					PacketUpdateHoldingItem::receiveUpdateC2S);
-			mtr.Registry.registerNetworkReceiver(PacketVirtualDrive.PACKET_VIRTUAL_DRIVE,
+			Registry.registerNetworkReceiver(PacketVirtualDrive.PACKET_VIRTUAL_DRIVE,
 					PacketVirtualDrive::receiveVirtualDriveC2S);
 
-			mtr.Registry.registerNetworkPacket(PacketVersionCheck.PACKET_VERSION_CHECK);
-			mtr.Registry.registerNetworkPacket(PacketScreen.PACKET_SHOW_SCREEN);
-			mtr.Registry.registerNetworkPacket(PacketVirtualDrivingPlayers.PACKET_VIRTUAL_DRIVING_PLAYERS);
+			Registry.registerNetworkPacket(PacketVersionCheck.PACKET_VERSION_CHECK);
+			Registry.registerNetworkPacket(PacketScreen.PACKET_SHOW_SCREEN);
+			Registry.registerNetworkPacket(PacketVirtualDrivingPlayers.PACKET_VIRTUAL_DRIVING_PLAYERS);
 
-			mtr.Registry.registerPlayerJoinEvent(PacketVersionCheck::sendVersionCheckS2C);
+			Registry.registerPlayerJoinEvent(PacketVersionCheck::sendVersionCheckS2C);
 		}
 
 		Registry.registerPlayerJoinEvent(PacketVirtualDrivingPlayers::sendVirtualDrivingPlayersS2C);

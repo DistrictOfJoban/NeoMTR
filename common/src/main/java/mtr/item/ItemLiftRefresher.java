@@ -1,6 +1,6 @@
 package mtr.item;
 
-import mtr.CreativeModeTabs;
+import mtr.registry.CreativeModeTabs;
 import mtr.block.BlockLiftTrack;
 import mtr.block.BlockLiftTrackFloor;
 import mtr.block.IBlock;

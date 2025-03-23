@@ -1,6 +1,6 @@
 package mtr.item;
 
-import mtr.CreativeModeTabs;
+import mtr.registry.CreativeModeTabs;
 import mtr.mappings.PlaceOnWaterBlockItem;
 import mtr.mappings.RegistryUtilities;
 import net.minecraft.world.item.Item;

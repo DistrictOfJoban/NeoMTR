@@ -2,9 +2,9 @@ package cn.zbx1425.mtrsteamloco.neoforge;
 
 import cn.zbx1425.mtrsteamloco.Main;
 import cn.zbx1425.mtrsteamloco.RegistriesWrapper;
-import mtr.CreativeModeTabs;
+import mtr.registry.CreativeModeTabs;
 import mtr.Registry;
-import mtr.RegistryObject;
+import mtr.registry.RegistryObject;
 import mtr.item.ItemWithCreativeTabBase;
 import mtr.mappings.RegistryUtilities;
 import mtr.neoforge.DeferredRegisterHolder;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.bus.EventBus;
 import net.neoforged.bus.api.IEventBus;
 
 public class RegistriesWrapperImpl implements RegistriesWrapper {

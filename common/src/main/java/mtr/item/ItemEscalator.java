@@ -1,7 +1,7 @@
 package mtr.item;
 
-import mtr.Blocks;
-import mtr.CreativeModeTabs;
+import mtr.registry.Blocks;
+import mtr.registry.CreativeModeTabs;
 import mtr.block.BlockEscalatorBase;
 import mtr.block.BlockEscalatorSide;
 import mtr.block.BlockEscalatorStep;

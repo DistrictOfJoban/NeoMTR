@@ -21,7 +21,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.ScoreAccess;
 
 import java.util.*;

@@ -1,6 +1,6 @@
 package cn.zbx1425.mtrsteamloco.block;
 
-import mtr.SoundEvents;
+import mtr.registry.SoundEvents;
 import mtr.block.IBlock;
 import mtr.data.TicketSystem;
 import mtr.mappings.BlockDirectionalMapper;

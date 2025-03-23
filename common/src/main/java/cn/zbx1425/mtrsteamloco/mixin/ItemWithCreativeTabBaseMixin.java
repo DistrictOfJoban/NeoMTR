@@ -2,8 +2,8 @@ package cn.zbx1425.mtrsteamloco.mixin;
 
 import cn.zbx1425.mtrsteamloco.gui.BrushEditRailScreen;
 import cn.zbx1425.mtrsteamloco.network.PacketScreen;
-import cn.zbx1425.mtrsteamloco.render.RailPicker;
 import mtr.item.ItemWithCreativeTabBase;
+import mtr.registry.Items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +25,7 @@ public abstract class ItemWithCreativeTabBaseMixin extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (this == mtr.Items.BRUSH.get()) {
+        if (this == Items.BRUSH.get()) {
             Level level = context.getLevel();
             BlockState blockState = level.getBlockState(context.getClickedPos());
             if (blockState.getBlock() instanceof mtr.block.BlockNode) {

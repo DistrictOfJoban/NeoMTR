@@ -1,6 +1,6 @@
 package mtr.block;
 
-import mtr.BlockEntityTypes;
+import mtr.registry.BlockEntityTypes;
 import mtr.data.RailwayData;
 import mtr.data.ScheduleEntry;
 import mtr.mappings.BlockEntityMapper;

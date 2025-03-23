@@ -1,7 +1,7 @@
 package mtr.block;
 
-import mtr.BlockEntityTypes;
-import mtr.Items;
+import mtr.registry.BlockEntityTypes;
+import mtr.registry.Items;
 import mtr.data.DataCache;
 import mtr.data.Platform;
 import mtr.data.RailwayData;
@@ -11,9 +11,7 @@ import mtr.mappings.EntityBlockMapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -160,7 +158,7 @@ public class BlockPSDTop extends BlockDirectionalMapper implements EntityBlockMa
 		}
 
 		final BlockState oldState = world.getBlockState(pos);
-		BlockState newState = (oldState.getBlock() instanceof BlockPSDTop ? oldState : mtr.Blocks.PSD_TOP.get().defaultBlockState()).setValue(AIR_LEFT, airLeft).setValue(AIR_RIGHT, airRight);
+		BlockState newState = (oldState.getBlock() instanceof BlockPSDTop ? oldState : mtr.registry.Blocks.PSD_TOP.get().defaultBlockState()).setValue(AIR_LEFT, airLeft).setValue(AIR_RIGHT, airRight);
 		if (facing != null) {
 			newState = newState.setValue(FACING, facing);
 		}

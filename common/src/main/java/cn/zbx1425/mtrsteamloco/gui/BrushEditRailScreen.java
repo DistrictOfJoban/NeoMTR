@@ -10,6 +10,7 @@ import mtr.client.IDrawing;
 import mtr.data.Rail;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
+import mtr.registry.Items;
 import mtr.screen.WidgetBetterCheckbox;
 import mtr.screen.WidgetBetterTextField;
 import net.minecraft.Util;
@@ -228,7 +229,7 @@ public class BrushEditRailScreen extends SelectListScreen {
     private CompoundTag getBrushTag() {
         if (Minecraft.getInstance().player == null) return null;
         ItemStack brushItem = Minecraft.getInstance().player.getMainHandItem();
-        if (!brushItem.is(mtr.Items.BRUSH.get())) return null;
+        if (!brushItem.is(Items.BRUSH.get())) return null;
         CompoundTag nteTag = brushItem.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         return nteTag;
     }
@@ -236,7 +237,7 @@ public class BrushEditRailScreen extends SelectListScreen {
     private void updateBrushTag(Consumer<CompoundTag> modifier) {
         if (Minecraft.getInstance().player == null) return;
         ItemStack brushItem = Minecraft.getInstance().player.getMainHandItem();
-        if (!brushItem.is(mtr.Items.BRUSH.get())) return;
+        if (!brushItem.is(Items.BRUSH.get())) return;
         CompoundTag nteTag = brushItem.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         modifier.accept(nteTag);
         brushItem.set(DataComponents.CUSTOM_DATA, CustomData.of(nteTag));

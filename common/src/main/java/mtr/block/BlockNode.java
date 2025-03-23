@@ -1,6 +1,6 @@
 package mtr.block;
 
-import mtr.BlockEntityTypes;
+import mtr.registry.BlockEntityTypes;
 import mtr.data.RailAngle;
 import mtr.data.RailwayData;
 import mtr.data.TransportMode;

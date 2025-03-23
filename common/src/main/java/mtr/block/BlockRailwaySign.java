@@ -1,6 +1,6 @@
 package mtr.block;
 
-import mtr.BlockEntityTypes;
+import mtr.registry.BlockEntityTypes;
 import mtr.MTR;
 import mtr.mappings.*;
 import mtr.packet.PacketTrainDataGuiServer;
@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +65,7 @@ public class BlockRailwaySign extends BlockDirectionalMapper implements EntityBl
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState newState, LevelAccessor world, BlockPos pos, BlockPos posFrom) {
 		final Direction facing = IBlock.getStatePropertySafe(state, FACING);
-		final boolean isNext = direction == facing.getClockWise() || state.is(mtr.Blocks.RAILWAY_SIGN_MIDDLE.get()) && direction == facing.getCounterClockWise();
+		final boolean isNext = direction == facing.getClockWise() || state.is(mtr.registry.Blocks.RAILWAY_SIGN_MIDDLE.get()) && direction == facing.getCounterClockWise();
 		if (isNext && !(newState.getBlock() instanceof BlockRailwaySign)) {
 			return Blocks.AIR.defaultBlockState();
 		} else {
@@ -97,7 +96,7 @@ public class BlockRailwaySign extends BlockDirectionalMapper implements EntityBl
 		if (!world.isClientSide) {
 			final Direction facing = IBlock.getStatePropertySafe(state, FACING);
 			for (int i = 1; i <= getMiddleLength(); i++) {
-				world.setBlock(pos.relative(facing.getClockWise(), i), mtr.Blocks.RAILWAY_SIGN_MIDDLE.get().defaultBlockState().setValue(FACING, facing), 3);
+				world.setBlock(pos.relative(facing.getClockWise(), i), mtr.registry.Blocks.RAILWAY_SIGN_MIDDLE.get().defaultBlockState().setValue(FACING, facing), 3);
 			}
 			world.setBlock(pos.relative(facing.getClockWise(), getMiddleLength() + 1), defaultBlockState().setValue(FACING, facing.getOpposite()), 3);
 			world.updateNeighborsAt(pos, Blocks.AIR);
@@ -108,7 +107,7 @@ public class BlockRailwaySign extends BlockDirectionalMapper implements EntityBl
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
 		final Direction facing = IBlock.getStatePropertySafe(state, FACING);
-		if (state.is(mtr.Blocks.RAILWAY_SIGN_MIDDLE.get())) {
+		if (state.is(mtr.registry.Blocks.RAILWAY_SIGN_MIDDLE.get())) {
 			return IBlock.getVoxelShapeByDirection(0, 0, 7, 16, 12, 9, facing);
 		} else {
 			final int xStart = getXStart();
@@ -131,7 +130,7 @@ public class BlockRailwaySign extends BlockDirectionalMapper implements EntityBl
 
 	@Override
 	public BlockEntityMapper createBlockEntity(BlockPos pos, BlockState state) {
-		if (this == mtr.Blocks.RAILWAY_SIGN_MIDDLE.get()) {
+		if (this == mtr.registry.Blocks.RAILWAY_SIGN_MIDDLE.get()) {
 			return null;
 		} else {
 			return new TileEntityRailwaySign(length, isOdd, pos, state);
@@ -167,7 +166,7 @@ public class BlockRailwaySign extends BlockDirectionalMapper implements EntityBl
 			final BlockState checkState = world.getBlockState(checkPos);
 			if (checkState.getBlock() instanceof BlockRailwaySign) {
 				final Direction facing = IBlock.getStatePropertySafe(checkState, FACING);
-				if (!checkState.is(mtr.Blocks.RAILWAY_SIGN_MIDDLE.get()) && (facing == direction || allowOpposite && facing == direction.getOpposite())) {
+				if (!checkState.is(mtr.registry.Blocks.RAILWAY_SIGN_MIDDLE.get()) && (facing == direction || allowOpposite && facing == direction.getOpposite())) {
 					return checkPos;
 				}
 			} else {

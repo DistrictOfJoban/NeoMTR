@@ -1,6 +1,6 @@
 package mtr.block;
 
-import mtr.SoundEvents;
+import mtr.registry.SoundEvents;
 import mtr.data.TicketSystem;
 import mtr.mappings.BlockDirectionalMapper;
 import mtr.mappings.Utilities;

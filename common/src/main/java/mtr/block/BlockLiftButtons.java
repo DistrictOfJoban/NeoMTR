@@ -1,14 +1,13 @@
 package mtr.block;
 
-import mtr.BlockEntityTypes;
-import mtr.Items;
+import mtr.registry.BlockEntityTypes;
+import mtr.registry.Items;
 import mtr.MTR;
 import mtr.data.LiftInstructions;
 import mtr.mappings.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;

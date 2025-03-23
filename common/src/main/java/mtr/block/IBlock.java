@@ -1,6 +1,6 @@
 package mtr.block;
 
-import mtr.Items;
+import mtr.registry.Items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
