@@ -1,6 +1,7 @@
 package mtr.entity;
 
 import mtr.EntityTypes;
+import mtr.MTR;
 import mtr.block.BlockLiftTrack;
 import mtr.item.ItemLiftRefresher;
 import mtr.mappings.Utilities;
@@ -41,7 +42,7 @@ public abstract class EntityLift extends EntityBase {
 		} else {
 			scanTrack();
 			if (removeCoolDown > 200) {
-				System.out.println(liftType + " lift at " + blockPosition() + " not converted");
+				MTR.LOGGER.info("[NeoMTR] {} lift at {} not converted", liftType, blockPosition());
 				kill();
 			} else {
 				removeCoolDown++;
@@ -67,7 +68,7 @@ public abstract class EntityLift extends EntityBase {
 				final BlockPos trackPos = blockPosition().offset(x, 0, z);
 				if (level().getBlockState(trackPos).getBlock() instanceof BlockLiftTrack) {
 					ItemLiftRefresher.refreshLift(level(), trackPos, (int) Math.round(getX() * 2) - trackPos.getX() * 2, (int) Math.round(getZ() * 2) - trackPos.getZ() * 2, liftType.width, liftType.depth, liftType.isDoubleSided, Direction.fromYRot(-Utilities.getYaw(this)));
-					System.out.println(liftType + " lift at " + blockPosition() + " converted");
+					MTR.LOGGER.info("[NeoMTR] {} lift at {} has been converted", liftType, blockPosition());
 					kill();
 					return;
 				}

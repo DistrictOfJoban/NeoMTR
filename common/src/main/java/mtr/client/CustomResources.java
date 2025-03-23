@@ -139,9 +139,9 @@ public class CustomResources implements IResourcePackCreatorProperties, ICustomR
 
 		RELOAD_LISTENERS.forEach(resourceManagerConsumer -> resourceManagerConsumer.accept(manager));
 
-		System.out.println("Loaded " + customTrains.size() + " custom train(s)");
+		MTR.LOGGER.info("[NeoMTR] Loaded {} custom train(s)", customTrains.size());
 		customTrains.forEach(System.out::println);
-		System.out.println("Loaded " + CUSTOM_SIGNS.size() + " custom sign(s)");
+		MTR.LOGGER.info("[NeoMTR] Loaded {} custom sign(s)", CUSTOM_SIGNS.size());
 		CUSTOM_SIGNS.keySet().forEach(System.out::println);
 	}
 
