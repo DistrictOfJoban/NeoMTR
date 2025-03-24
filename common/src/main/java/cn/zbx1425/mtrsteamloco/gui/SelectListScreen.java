@@ -1,6 +1,5 @@
 package cn.zbx1425.mtrsteamloco.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import mtr.client.IDrawing;
 import mtr.mappings.ScreenMapper;
@@ -8,9 +7,7 @@ import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.screen.WidgetBetterTextField;
 import net.minecraft.client.Minecraft;
-#if MC_VERSION >= "12000"
 import net.minecraft.client.gui.GuiGraphics;
-#endif
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -91,12 +88,7 @@ public abstract class SelectListScreen extends ScreenMapper {
 
     protected abstract List<Pair<String, String>> getRegistryEntries();
 
-#if MC_VERSION >= "12000"
     protected void renderSelectPage(GuiGraphics guiGraphics) {
-#else
-    protected void renderSelectPage(PoseStack guiGraphics) {
-#endif
-
     }
 
     @Override

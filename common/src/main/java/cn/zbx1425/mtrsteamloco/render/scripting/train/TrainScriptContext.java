@@ -86,11 +86,7 @@ public class TrainScriptContext extends AbstractScriptContext {
     public void playCarSound(ResourceLocation sound, int carIndex, float x, float y, float z, float volume, float pitch) {
         scriptResultWriting.addCarSound(
                 carIndex,
-#if MC_VERSION >= "11903"
                 SoundEvent.createVariableRangeEvent(sound),
-#else
-                new SoundEvent(sound),
-#endif
                 new Vector3f(x, y, z), volume, pitch
         );
     }
@@ -102,9 +98,7 @@ public class TrainScriptContext extends AbstractScriptContext {
                 Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance(
                         sound, SoundSource.BLOCKS,
                         volume, pitch,
-#if MC_VERSION >= "11900"
                         SoundInstance.createUnseededRandom(),
-#endif
                         false, 0, SoundInstance.Attenuation.NONE, 0.0, 0.0, 0.0, true
                 ));
             }

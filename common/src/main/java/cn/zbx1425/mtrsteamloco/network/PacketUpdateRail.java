@@ -36,11 +36,7 @@ public class PacketUpdateRail {
     }
 
     public static void receiveUpdateC2S(MinecraftServer server, ServerPlayer player, FriendlyByteBuf packet) {
-#if MC_VERSION >= "11903"
         ResourceKey<Level> levelKey = packet.readResourceKey(net.minecraft.core.registries.Registries.DIMENSION);
-#else
-        ResourceKey<Level> levelKey = ResourceKey.create(net.minecraft.core.Registry.DIMENSION_REGISTRY, packet.readResourceLocation());
-#endif
         BlockPos posStart = packet.readBlockPos();
         BlockPos posEnd = packet.readBlockPos();
         RailExtraSupplier extraTarget = (RailExtraSupplier)(new Rail(packet));

@@ -6,15 +6,10 @@ import cn.zbx1425.mtrsteamloco.render.scripting.ScriptContextManager;
 import cn.zbx1425.mtrsteamloco.render.scripting.ScriptHolder;
 import cn.zbx1425.mtrsteamloco.render.scripting.util.GraphicsTexture;
 import com.google.common.base.Splitter;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-#if MC_VERSION >= "12000"
 import net.minecraft.client.gui.GuiGraphics;
-#else
-import net.minecraft.client.gui.GuiComponent;
-#endif
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
@@ -24,13 +19,8 @@ import java.util.Map;
 
 public class ScriptDebugOverlay {
 
-#if MC_VERSION >= "12000"
     public static void render(GuiGraphics vdStuff) {
         PoseStack matrices = vdStuff.pose();
-#else
-    public static void render(PoseStack vdStuff) {
-        PoseStack matrices = vdStuff;
-#endif
         if (!ClientConfig.enableScriptDebugOverlay) return;
         if (Minecraft.getInstance().screen != null) return;
 
@@ -84,21 +74,10 @@ public class ScriptDebugOverlay {
         matrices.popPose();
     }
 
-
-#if MC_VERSION >= "12000"
     private static void drawText(GuiGraphics guiGraphics, Font font, String text, int x, int y, int color) {
         guiGraphics.drawString(font, text, x, y, color);
     }
     private static void blit(GuiGraphics guiGraphics, ResourceLocation texture, int x, int y, int width, int height) {
         guiGraphics.blit(texture, x, y, width, height, 0, 0, 1, 1, 1, 1);
     }
-#else
-    private static void drawText(PoseStack matrices, Font font, String text, int x, int y, int color) {
-        font.drawShadow(matrices, text, x, y, color);
-    }
-    private static void blit(PoseStack matrices, ResourceLocation texture, int x, int y, int width, int height) {
-        RenderSystem.setShaderTexture(0, texture);
-        GuiComponent.blit(matrices, x, y, width, height, 0, 0, 1, 1, 1, 1);
-    }
-#endif
 }

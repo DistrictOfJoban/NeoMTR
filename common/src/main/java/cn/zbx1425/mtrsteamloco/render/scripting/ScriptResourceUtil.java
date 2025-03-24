@@ -12,11 +12,7 @@ import mtr.mappings.Utilities;
 import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
-#if MC_VERSION >= "11903"
 import net.minecraft.core.registries.BuiltInRegistries;
-#else
-import net.minecraft.core.Registry;
-#endif
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
@@ -213,13 +209,8 @@ public class ScriptResourceUtil {
     }
 
     public static int getParticleTypeId(ResourceLocation identifier) {
-#if MC_VERSION >= "11903"
         Optional<ParticleType<?>> particleType = BuiltInRegistries.PARTICLE_TYPE.getOptional(identifier);
         return particleType.map(BuiltInRegistries.PARTICLE_TYPE::getId).orElse(-1);
-#else
-        Optional<ParticleType<?>> particleType = Registry.PARTICLE_TYPE.getOptional(identifier);
-        return particleType.map(Registry.PARTICLE_TYPE::getId).orElse(-1);
-#endif
     }
 
     public static CompoundTag parseNbtString(String text) throws CommandSyntaxException {

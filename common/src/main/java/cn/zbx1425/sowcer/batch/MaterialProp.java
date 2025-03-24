@@ -68,9 +68,6 @@ public class MaterialProp {
     public static final ResourceLocation WHITE_TEXTURE_LOCATION = ResourceLocation.parse("minecraft:textures/misc/white.png");
 
     public void setupCompositeState() {
-#if MC_VERSION <= "11903"
-        RenderSystem.enableTexture();
-#endif
         if (texture != null) {
             // TextureManager textureManager = Minecraft.getInstance().getTextureManager();
             // textureManager.getTexture(texture).setFilter(false, false);

@@ -4,7 +4,6 @@ import cn.zbx1425.mtrsteamloco.data.*;
 import cn.zbx1425.mtrsteamloco.network.PacketUpdateHoldingItem;
 import cn.zbx1425.mtrsteamloco.network.PacketUpdateRail;
 import cn.zbx1425.mtrsteamloco.render.RailPicker;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import mtr.client.IDrawing;
 import mtr.data.Rail;
@@ -15,9 +14,7 @@ import mtr.screen.WidgetBetterCheckbox;
 import mtr.screen.WidgetBetterTextField;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-#if MC_VERSION >= "12000"
 import net.minecraft.client.gui.GuiGraphics;
-#endif
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.core.BlockPos;
@@ -274,11 +271,7 @@ public class BrushEditRailScreen extends SelectListScreen {
     }
 
     @Override
-#if MC_VERSION >= "12000"
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-#else
-    public void render(PoseStack guiGraphics, int mouseX, int mouseY, float partialTick) {
-#endif
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         if (isSelectingModel) {

@@ -55,11 +55,7 @@ public class EyeCandyScriptContext extends AbstractScriptContext {
 
     public void playSound(ResourceLocation sound, float volume, float pitch) {
         scriptResultWriting.addSound(
-#if MC_VERSION >= "11903"
                 SoundEvent.createVariableRangeEvent(sound),
-#else
-                new SoundEvent(sound),
-#endif
                 volume, pitch
         );
     }

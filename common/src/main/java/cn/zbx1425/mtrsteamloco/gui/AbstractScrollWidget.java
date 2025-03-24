@@ -4,9 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-#if MC_VERSION >= "12000"
 import net.minecraft.client.gui.GuiGraphics;
-#endif
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -64,16 +62,8 @@ public abstract class AbstractScrollWidget extends AbstractWidget {
     }
 
     @Override
-#if MC_VERSION >= "12000"
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
-#elif MC_VERSION >= "11904"
-    public void renderWidget(PoseStack guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics;
-#else
-    public void renderButton(PoseStack guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics;
-#endif
         if (!this.visible) {
             return;
         }
@@ -116,17 +106,10 @@ public abstract class AbstractScrollWidget extends AbstractWidget {
         return Math.max(0, this.getContentHeight() - this.height);
     }
 
-#if MC_VERSION >= "12000"
     private void renderBackground(GuiGraphics guiGraphics) {
         guiGraphics.fill(this.getX(), this.getY() + 1, this.getX() + this.width, this.getY() + this.height - 1, this.isFocused() ? 0xffffffff : 0xffa0a0a0);
         guiGraphics.fill(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1, 0xff555555);
     }
-#else
-    private void renderBackground(PoseStack poseStack) {
-        fill(poseStack, this.getX(), this.getY() + 1, this.getX() + this.width, this.getY() + this.height - 1, this.isFocused() ? 0xffffffff : 0xffa0a0a0);
-        fill(poseStack, this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1, 0xff555555);
-    }
-#endif
 
     private void renderScrollBar() {
         int i = this.getScrollBarHeight();
@@ -158,20 +141,6 @@ public abstract class AbstractScrollWidget extends AbstractWidget {
 
     protected abstract double getScrollInterval();
 
-#if MC_VERSION >= "12000"
     protected abstract void renderContents(GuiGraphics var1, int var2, int var3, float var4);
-#else
-    protected abstract void renderContents(PoseStack var1, int var2, int var3, float var4);
-#endif
-
-#if MC_VERSION < "11903"
-    protected int getX() {
-        return x;
-    }
-
-    protected int getY() {
-        return y;
-    }
-#endif
 }
 
