@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -54,7 +55,10 @@ public class TrainClient extends Train implements IGui {
 	public final List<ScrollingText> scrollingTexts = new ArrayList<>();
 
 	private final Set<Runnable> trainTranslucentRenders = new HashSet<>();
+	private final CarOrientation[] carOrientations;
 
+	/** An assumed height of regular trains. Currently MTR does not have info regarding height. */
+	private static final float ASSUMED_TRAIN_HEIGHT = 3.0f;
 	private static final float CONNECTION_HEIGHT = 2.25F;
 	private static final float CONNECTION_Z_OFFSET = 0.5F;
 	private static final float CONNECTION_X_OFFSET = 0.25F;
@@ -64,6 +68,7 @@ public class TrainClient extends Train implements IGui {
 		final TrainProperties trainProperties = TrainClientRegistry.getTrainProperties(trainId);
 		trainRenderer = trainProperties.renderer.createTrainInstance(this);
 		trainSound = trainProperties.sound.createTrainInstance(this);
+		carOrientations = new CarOrientation[trainCars];
 	}
 
 	@Override
@@ -184,6 +189,8 @@ public class TrainClient extends Train implements IGui {
 					prevYaw[0] = yaw;
 					prevPitch[0] = pitch;
 					prevRoll[0] = roll;
+
+					carOrientations[ridingCar] = new CarOrientation(x, y, z, yaw, pitch, roll, realSpacing, doorLeftOpen, doorRightOpen);
 				});
 			}
 
@@ -232,6 +239,32 @@ public class TrainClient extends Train implements IGui {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Get the Y level of the top of the train, based on height from {@link TrainClient#ASSUMED_TRAIN_HEIGHT}
+	 * @return The Y level of the top of the train, or {@link Integer#MIN_VALUE} if the given x and z position is not in the train's region.
+	 */
+	public int getRoofAt(int checkX, int checkZ) {
+		for(int i = 0; i < trainCars; i++) {
+			if(carOrientations[i] != null) {
+				CarOrientation carDetail = carOrientations[i];
+				double halfLength = Math.ceil(carDetail.realSpacing / 2) + 2;
+				double halfWidth = (width / 2.0);
+
+				// Slight hack: Pad the width enough to fill a full block
+				if(halfWidth % 2 != 0) {
+					halfWidth += 0.5;
+				}
+				AABB trainBoundingBox = new AABB(-halfWidth, -64, -halfLength, halfWidth, 255, halfLength);
+				Vec3 transformedPos = new Vec3(checkX, 0, checkZ).subtract(carDetail.x, 0, carDetail.z).yRot(-carDetail.yaw).xRot(-carDetail.pitch);
+				if(trainBoundingBox.contains(transformedPos)) {
+					return (int)Math.round(carDetail.y + transformedPos.y + ASSUMED_TRAIN_HEIGHT);
+				}
+			}
+		}
+
+		return Integer.MIN_VALUE;
 	}
 
 	private static Vec3 withCarTransform(Vec3 child, double x, double y, double z, float yaw, float pitch, float roll, float railSurfaceOffset) {
@@ -556,5 +589,9 @@ public class TrainClient extends Train implements IGui {
 	@FunctionalInterface
 	public interface AnnouncementCallback {
 		void announcementCallback(int stopIndex, List<Long> routeIds);
+	}
+
+	public record CarOrientation(double x, double y, double z, float yaw, float pitch, float roll, double realSpacing,
+								 boolean leftDoorOpen, boolean rightDoorOpen) {
 	}
 }

@@ -28,6 +28,7 @@
 	},
 	"mixins": [
 		"mtr.mixins.json",
+		"mtr-common.mixins.json",
 		"mtrsteamloco.mixins.json"
 	],
 	"depends": {

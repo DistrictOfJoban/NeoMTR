@@ -3,11 +3,8 @@
 	"minVersion": "0.8",
 	"package": "mtr.mixin",
 	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-		"PlayerTeleportationStateAccessor"
-	],
+	"mixins": [],
 	"client": [
-		"PlayerRendererOffsetMixin",
 		"GameRendererMixin"
 	],
 	"server": [],

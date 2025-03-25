@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "mtr.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "PlayerTeleportationStateAccessor"
+  ],
+  "client": [
+    "qol.RainMixin",
+    "PlayerRendererOffsetMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
