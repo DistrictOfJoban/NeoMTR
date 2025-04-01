@@ -1,5 +1,7 @@
 package mtr.neoforge.mappings;
 
+import cn.zbx1425.mtrsteamloco.MainClient;
+import cn.zbx1425.sowcerext.model.integration.BufferSourceProxy;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import mtr.neoforge.DeferredRegisterHolder;
@@ -128,11 +130,17 @@ public class ForgeUtilities {
 				matrices.pushPose();
 				final Vec3 cameraPos = event.getCamera().getPosition();
 				matrices.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-				RenderTrains.render(null, 0, matrices, Minecraft.getInstance().renderBuffers().bufferSource());
+				RenderTrains.render(0, matrices, Minecraft.getInstance().renderBuffers().bufferSource());
 				matrices.popPose();
+			} else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
+				Minecraft.getInstance().level.getProfiler().popPush("NTEBlockEntities");
+				BufferSourceProxy vertexConsumersProxy = new BufferSourceProxy(Minecraft.getInstance().renderBuffers().bufferSource());
+				MainClient.drawScheduler.commit(vertexConsumersProxy, MainClient.drawContext);
+				vertexConsumersProxy.commit();
 			} else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
 				PoseStack matrices = event.getPoseStack();
 				ResourcePackCreatorScreen.render(matrices);
+				MainClient.drawContext.resetFrameProfiler();
 			}
 		}
 
