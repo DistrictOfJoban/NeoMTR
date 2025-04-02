@@ -6,7 +6,7 @@ import mtr.block.BlockPSDAPGBase;
 import mtr.block.BlockPSDAPGDoorBase;
 import mtr.block.BlockPlatform;
 import mtr.block.IBlock;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import mtr.path.PathData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -27,7 +27,7 @@ import org.msgpack.value.Value;
 import java.io.*;
 import java.util.*;
 
-public abstract class Train extends NameColorDataBase implements IPacket {
+public abstract class Train extends NameColorDataBase {
 
 	protected float speed;
 	protected double railProgress;

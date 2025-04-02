@@ -6,7 +6,7 @@ import mtr.data.*;
 import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class DashboardScreen extends ScreenMapper implements IGui, IPacket {
+public class DashboardScreen extends ScreenMapper implements IGui {
 
 	private SelectedTab selectedTab;
 	private AreaBase editingArea;
@@ -303,7 +303,7 @@ public class DashboardScreen extends ScreenMapper implements IGui, IPacket {
 
 	private void onSort() {
 		if (selectedTab == SelectedTab.ROUTES && editingRoute != null) {
-			editingRoute.setPlatformIds(packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_ROUTE, packet));
+			editingRoute.setPlatformIds(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_ROUTE, packet));
 		}
 	}
 
@@ -314,7 +314,7 @@ public class DashboardScreen extends ScreenMapper implements IGui, IPacket {
 					if (minecraft != null) {
 						final Station station = (Station) data;
 						UtilitiesClient.setScreen(minecraft, new DeleteConfirmationScreen(() -> {
-							PacketTrainDataGuiClient.sendDeleteData(PACKET_DELETE_STATION, station.id);
+							PacketTrainDataGuiClient.sendDeleteData(Networking.PACKET_DELETE_STATION, station.id);
 							ClientData.STATIONS.remove(station);
 						}, IGui.formatStationName(station.name), this));
 					}
@@ -324,20 +324,20 @@ public class DashboardScreen extends ScreenMapper implements IGui, IPacket {
 						if (minecraft != null && data instanceof Route) {
 							final Route route = (Route) data;
 							UtilitiesClient.setScreen(minecraft, new DeleteConfirmationScreen(() -> {
-								PacketTrainDataGuiClient.sendDeleteData(PACKET_DELETE_ROUTE, route.id);
+								PacketTrainDataGuiClient.sendDeleteData(Networking.PACKET_DELETE_ROUTE, route.id);
 								ClientData.ROUTES.remove(route);
 							}, IGui.formatStationName(route.name), this));
 						}
 					} else {
 						editingRoute.platformIds.remove(index);
-						editingRoute.setPlatformIds(packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_ROUTE, packet));
+						editingRoute.setPlatformIds(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_ROUTE, packet));
 					}
 					break;
 				case DEPOTS:
 					if (minecraft != null && data instanceof Depot) {
 						final Depot depot = (Depot) data;
 						UtilitiesClient.setScreen(minecraft, new DeleteConfirmationScreen(() -> {
-							PacketTrainDataGuiClient.sendDeleteData(PACKET_DELETE_DEPOT, depot.id);
+							PacketTrainDataGuiClient.sendDeleteData(Networking.PACKET_DELETE_DEPOT, depot.id);
 							ClientData.DEPOTS.remove(depot);
 						}, IGui.formatStationName(depot.name), this));
 					}
@@ -392,12 +392,12 @@ public class DashboardScreen extends ScreenMapper implements IGui, IPacket {
 	}
 
 	private void onDrawCornersMouseRelease() {
-		editingArea.setCorners(packet -> PacketTrainDataGuiClient.sendUpdate(editingArea instanceof Station ? PACKET_UPDATE_STATION : PACKET_UPDATE_DEPOT, packet));
+		editingArea.setCorners(packet -> PacketTrainDataGuiClient.sendUpdate(editingArea instanceof Station ? Networking.PACKET_UPDATE_STATION : Networking.PACKET_UPDATE_DEPOT, packet));
 	}
 
 	private void onClickAddPlatformToRoute(long platformId) {
 		editingRoute.platformIds.add(new Route.RoutePlatform(platformId));
-		editingRoute.setPlatformIds(packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_ROUTE, packet));
+		editingRoute.setPlatformIds(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_ROUTE, packet));
 	}
 
 	private void onClickEditSavedRail(SavedRailBase savedRail) {
@@ -420,7 +420,7 @@ public class DashboardScreen extends ScreenMapper implements IGui, IPacket {
 			}
 			editingArea.name = IGui.textOrUntitled(textFieldName.getValue());
 			editingArea.color = colorSelector.getColor();
-			editingArea.setNameColor(packet -> PacketTrainDataGuiClient.sendUpdate(isStation ? PACKET_UPDATE_STATION : PACKET_UPDATE_DEPOT, packet));
+			editingArea.setNameColor(packet -> PacketTrainDataGuiClient.sendUpdate(isStation ? Networking.PACKET_UPDATE_STATION : Networking.PACKET_UPDATE_DEPOT, packet));
 		}
 		stopEditing();
 	}
@@ -435,14 +435,14 @@ public class DashboardScreen extends ScreenMapper implements IGui, IPacket {
 		}
 		editingRoute.name = IGui.textOrUntitled(textFieldName.getValue());
 		editingRoute.color = colorSelector.getColor();
-		editingRoute.setNameColor(packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_ROUTE, packet));
+		editingRoute.setNameColor(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_ROUTE, packet));
 		stopEditing();
 	}
 
 	private void onDoneEditingRouteDestination() {
 		if (isValidRoutePlatformIndex()) {
 			editingRoute.platformIds.get(editingRoutePlatformIndex).customDestination = MultipartName.parse(textFieldCustomDestination.getValue());
-			editingRoute.setPlatformIds(packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_ROUTE, packet));
+			editingRoute.setPlatformIds(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_ROUTE, packet));
 		}
 		startEditingRoute(editingRoute, isNew);
 	}

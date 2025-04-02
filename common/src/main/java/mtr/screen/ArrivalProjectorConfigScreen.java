@@ -5,7 +5,7 @@ import mtr.client.IDrawing;
 import mtr.data.IGui;
 import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ArrivalProjectorConfigScreen extends ScreenMapper implements IGui, IPacket {
+public class ArrivalProjectorConfigScreen extends ScreenMapper implements IGui {
 
 	private final BlockPos pos;
 	private final Set<Long> filterPlatformIds;

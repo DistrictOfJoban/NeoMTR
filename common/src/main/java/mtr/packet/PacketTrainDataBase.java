@@ -1,6 +1,7 @@
 package mtr.packet;
 
 import mtr.data.*;
+import mtr.registry.Networking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.thread.ReentrantBlockableEventLoop;
 
@@ -12,7 +13,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public abstract class PacketTrainDataBase implements IPacket {
+public abstract class PacketTrainDataBase {
 
 	protected static <T extends NameColorDataBase, U extends ReentrantBlockableEventLoop<? extends Runnable>> void updateData(Set<T> dataSet, Map<Long, T> cacheMap, U minecraft, FriendlyByteBuf packet, PacketCallback packetCallback, BiFunction<Long, TransportMode, T> createDataWithId, BiConsumer<T, List<String>> dataCallback) {
 		final FriendlyByteBuf packetFullCopy = new FriendlyByteBuf(packet.copy());

@@ -1,7 +1,7 @@
 package mtr.data;
 
 import io.netty.buffer.Unpooled;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import mtr.path.PathData;
 import mtr.path.PathFinder;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class Siding extends SavedRailBase implements IPacket, IReducedSaveData {
+public class Siding extends SavedRailBase implements IReducedSaveData {
 
 	private Level world;
 	private Depot depot;

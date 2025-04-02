@@ -2,14 +2,13 @@ package mtr.sound;
 
 import mtr.MTR;
 import mtr.data.RailwayData;
-import mtr.mappings.RegistryUtilities;
 import mtr.mappings.SoundInstanceMapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.TickableSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
 public class LoopingSoundInstance extends SoundInstanceMapper implements TickableSoundInstance {
@@ -17,7 +16,7 @@ public class LoopingSoundInstance extends SoundInstanceMapper implements Tickabl
 	private static final int MAX_DISTANCE = 32;
 
 	public LoopingSoundInstance(String soundId) {
-		super(RegistryUtilities.createSoundEvent(MTR.id(soundId)), SoundSource.BLOCKS);
+		super(SoundEvent.createVariableRangeEvent(MTR.id(soundId)), SoundSource.BLOCKS);
 		looping = true;
 	}
 

@@ -2,7 +2,7 @@ package mtr.client;
 
 import cn.zbx1425.mtrsteamloco.game.TrainVirtualDrive;
 import cn.zbx1425.mtrsteamloco.game.VirtualDriveClientData;
-import mtr.KeyMappings;
+import mtr.registry.KeyMappings;
 import mtr.MTRClient;
 import mtr.data.*;
 import mtr.mappings.Text;

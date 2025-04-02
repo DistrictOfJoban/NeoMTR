@@ -8,7 +8,7 @@ import mtr.Registry;
 import mtr.RegistryClient;
 import mtr.data.Rail;
 import mtr.data.RailwayData;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -68,7 +68,7 @@ public class PacketUpdateRail {
             outboundPacket.writeLong(0); // We're actually updating instead of creating, so don't create saved rail
 
             for (ServerPlayer levelPlayer : level.players()) {
-                Registry.sendToPlayer(levelPlayer, IPacket.PACKET_CREATE_RAIL, outboundPacket);
+                Registry.sendToPlayer(levelPlayer, Networking.PACKET_CREATE_RAIL, outboundPacket);
             }
         });
     }

@@ -2,7 +2,6 @@ package mtr.item;
 
 import mtr.registry.CreativeModeTabs;
 import mtr.mappings.PlaceOnWaterBlockItem;
-import mtr.mappings.RegistryUtilities;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
@@ -13,12 +12,12 @@ public class ItemWithCreativeTabBase extends Item {
 	public final CreativeModeTabs.Wrapper creativeModeTab;
 
 	public ItemWithCreativeTabBase(CreativeModeTabs.Wrapper creativeModeTab) {
-		super(RegistryUtilities.createItemProperties(creativeModeTab::get));
+		super(new Properties());
 		this.creativeModeTab = creativeModeTab;
 	}
 
 	public ItemWithCreativeTabBase(CreativeModeTabs.Wrapper creativeModeTab, Function<Properties, Properties> propertiesConsumer) {
-		super(propertiesConsumer.apply(RegistryUtilities.createItemProperties(creativeModeTab::get)));
+		super(propertiesConsumer.apply(new Properties()));
 		this.creativeModeTab = creativeModeTab;
 	}
 
@@ -27,7 +26,7 @@ public class ItemWithCreativeTabBase extends Item {
 		public final CreativeModeTabs.Wrapper creativeModeTab;
 
 		public ItemPlaceOnWater(CreativeModeTabs.Wrapper creativeModeTab, Block block) {
-			super(block, RegistryUtilities.createItemProperties(creativeModeTab::get));
+			super(block, new Properties());
 			this.creativeModeTab = creativeModeTab;
 		}
 	}

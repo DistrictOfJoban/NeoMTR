@@ -9,7 +9,7 @@ import mtr.data.Route;
 import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.*;
 
-public abstract class TrainSensorScreenBase extends ScreenMapper implements IGui, IPacket {
+public abstract class TrainSensorScreenBase extends ScreenMapper implements IGui {
 
 	private boolean stoppedOnly;
 	private boolean movingOnly;

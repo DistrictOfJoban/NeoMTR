@@ -6,6 +6,7 @@ import mtr.data.*;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.packet.PacketTrainDataGuiClient;
+import mtr.registry.Networking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -267,7 +268,7 @@ public class EditDepotScreen extends EditNameColorScreenBase<Depot> {
 			e.printStackTrace();
 			data.cruisingAltitude = Depot.DEFAULT_CRUISING_ALTITUDE;
 		}
-		data.setData(packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_DEPOT, packet));
+		data.setData(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_DEPOT, packet));
 	}
 
 	private void toggleRealTime() {

@@ -4,7 +4,7 @@ import mtr.block.BlockLiftTrackFloor;
 import mtr.block.BlockPSDAPGDoorBase;
 import mtr.block.IBlock;
 import mtr.mappings.Utilities;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,7 +18,7 @@ import org.msgpack.value.Value;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class Lift extends NameColorDataBase implements IPacket {
+public abstract class Lift extends NameColorDataBase {
 
 	public int liftHeight;
 	public int liftWidth;

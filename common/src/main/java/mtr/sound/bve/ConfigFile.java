@@ -1,6 +1,5 @@
 package mtr.sound.bve;
 
-import mtr.mappings.RegistryUtilities;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -97,7 +96,7 @@ public class ConfigFile {
 					continue;
 				}
 
-				final SoundEvent valueAsSoundEvent = RegistryUtilities.createSoundEvent(ResourceLocation.parse(config.audioBaseName + value));
+				final SoundEvent valueAsSoundEvent = SoundEvent.createVariableRangeEvent(ResourceLocation.parse(config.audioBaseName + value));
 				switch (section) {
 					case "mtr":
 						switch (key) {

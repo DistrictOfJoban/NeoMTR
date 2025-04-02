@@ -34,14 +34,6 @@ public interface FabricRegistryUtilities {
 		FabricModelPredicateProviderRegistry.register(item, ResourceLocation.parse(id), (itemStack, clientWorld, livingEntity, i) -> itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).contains(tag) ? 1 : 0);
 	}
 
-	static <T extends BlockEntityMapper> void registerTileEntityRenderer(BlockEntityType<T> type, Function<BlockEntityRenderDispatcher, BlockEntityRendererMapper<T>> factory) {
-		BlockEntityRendererRegistry.register(type, context -> factory.apply(null));
-	}
-
-	static <T extends Entity> void registerEntityRenderer(EntityType<T> type, Function<EntityRendererProvider.Context, EntityRendererMapper<T>> factory) {
-		EntityRendererRegistry.register(type, factory::apply);
-	}
-
 	static void registerCommand(Consumer<CommandDispatcher<CommandSourceStack>> callback) {
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, commandSelection) -> callback.accept(dispatcher));
 	}

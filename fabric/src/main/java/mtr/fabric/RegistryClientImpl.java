@@ -1,7 +1,7 @@
 package mtr.fabric;
 
-import mtr.MTRClient;
 import mtr.MTRFabric;
+import mtr.data.RailwayData;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.BlockEntityRendererMapper;
 import mtr.mappings.EntityRendererMapper;
@@ -10,8 +10,9 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -39,11 +40,11 @@ public class RegistryClientImpl {
 	}
 
 	public static <T extends BlockEntityMapper> void registerTileEntityRenderer(BlockEntityType<T> type, Function<BlockEntityRenderDispatcher, BlockEntityRendererMapper<T>> function) {
-		FabricRegistryUtilities.registerTileEntityRenderer(type, function);
+		BlockEntityRendererRegistry.register(type, context -> function.apply(null));
 	}
 
 	public static <T extends Entity> void registerEntityRenderer(EntityType<T> type, Function<Object, EntityRendererMapper<T>> function) {
-		FabricRegistryUtilities.registerEntityRenderer(type, function::apply);
+		EntityRendererRegistry.register(type, function::apply);
 	}
 
 	public static void registerKeyBinding(KeyMapping keyMapping) {
@@ -51,7 +52,7 @@ public class RegistryClientImpl {
 	}
 
 	public static void registerBlockColors(Block block) {
-		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> MTRClient.getStationColor(pos), block);
+		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> RailwayData.getStationColor(pos), block);
 	}
 
 	public static void registerNetworkReceiver(ResourceLocation resourceLocation, Consumer<FriendlyByteBuf> consumer) {

@@ -2,7 +2,7 @@ package mtr.data;
 
 import io.netty.buffer.Unpooled;
 import mtr.Registry;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.*;
 
-public class UpdateNearbyMovingObjects<T extends NameColorDataBase> implements IPacket {
+public class UpdateNearbyMovingObjects<T extends NameColorDataBase> {
 
 	public final Map<Player, Set<T>> newDataSetInPlayerRange = new HashMap<>();
 	public final Set<T> dataSetToSync = new HashSet<>();
@@ -41,7 +41,7 @@ public class UpdateNearbyMovingObjects<T extends NameColorDataBase> implements I
 						packet.writeInt(0);
 					}
 
-					if (packet.readableBytes() <= MAX_PACKET_BYTES) {
+					if (packet.readableBytes() <= Networking.MAX_PACKET_BYTES) {
 						Registry.sendToPlayer((ServerPlayer) player, deletePacketId, packet);
 					}
 
@@ -56,7 +56,7 @@ public class UpdateNearbyMovingObjects<T extends NameColorDataBase> implements I
 				if (dataSetToSync.contains(data) || !dataSetInPlayerRange.containsKey(player) || !dataSetInPlayerRange.get(player).contains(data)) {
 					final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 					data.writePacket(packet);
-					if (packet.readableBytes() < MAX_PACKET_BYTES) {
+					if (packet.readableBytes() < Networking.MAX_PACKET_BYTES) {
 						dataSetPacketsToUpdate.add(packet);
 					}
 				}
@@ -67,7 +67,7 @@ public class UpdateNearbyMovingObjects<T extends NameColorDataBase> implements I
 
 				while (!dataSetPacketsToUpdate.isEmpty()) {
 					final FriendlyByteBuf dataPacket = dataSetPacketsToUpdate.get(0);
-					if (packet.readableBytes() + dataPacket.readableBytes() < MAX_PACKET_BYTES) {
+					if (packet.readableBytes() + dataPacket.readableBytes() < Networking.MAX_PACKET_BYTES) {
 						packet.writeBytes(dataPacket);
 						dataSetPacketsToUpdate.remove(0);
 					} else {

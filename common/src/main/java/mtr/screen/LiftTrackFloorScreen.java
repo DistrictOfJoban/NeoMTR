@@ -5,7 +5,6 @@ import mtr.client.IDrawing;
 import mtr.data.IGui;
 import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
-import mtr.packet.IPacket;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class LiftTrackFloorScreen extends ScreenMapper implements IGui, IPacket {
+public class LiftTrackFloorScreen extends ScreenMapper implements IGui {
 
 	private final WidgetBetterTextField textFieldFloorNumber;
 	private final WidgetBetterTextField textFieldFloorDescription;

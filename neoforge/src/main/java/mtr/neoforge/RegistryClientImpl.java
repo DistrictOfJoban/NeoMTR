@@ -7,7 +7,7 @@ import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.architectury.registry.client.rendering.ColorHandlerRegistry;
 import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import dev.architectury.registry.item.ItemPropertiesRegistry;
-import mtr.MTRClient;
+import mtr.data.RailwayData;
 import mtr.neoforge.mappings.ForgeUtilities;
 import mtr.mappings.*;
 import net.minecraft.client.KeyMapping;
@@ -80,7 +80,7 @@ public class RegistryClientImpl {
 
 		@Override
 		public int getColor(BlockState blockState, BlockAndTintGetter blockAndTintGetter, BlockPos pos, int i) {
-			return MTRClient.getStationColor(pos);
+			return RailwayData.getStationColor(pos);
 		}
 	}
 

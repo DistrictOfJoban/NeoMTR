@@ -10,9 +10,9 @@ import mtr.block.BlockTrainSensorBase;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.*;
-import mtr.mappings.RegistryUtilities;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
+import mtr.registry.Networking;
 import mtr.screen.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,6 +21,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -169,7 +170,7 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 			final ClientLevel world = minecraftClient.level;
 			final LocalPlayer player = minecraftClient.player;
 			if (!soundIdString.isEmpty() && world != null && player != null) {
-				world.playLocalSound(player.blockPosition(), RegistryUtilities.createSoundEvent(ResourceLocation.parse(soundIdString)), SoundSource.BLOCKS, 1000000, 1, false);
+				world.playLocalSound(player.blockPosition(), SoundEvent.createVariableRangeEvent(ResourceLocation.parse(soundIdString)), SoundSource.BLOCKS, 1000000, 1, false);
 			}
 		});
 	}
@@ -295,7 +296,7 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 		for (final String string : strings) {
 			packet.writeUtf(string);
 		}
-		RegistryClient.sendToServer(PACKET_UPDATE_TRAIN_SENSOR, packet);
+		RegistryClient.sendToServer(Networking.PACKET_UPDATE_TRAIN_SENSOR, packet);
 	}
 
 	public static void sendLiftTrackFloorC2S(BlockPos pos, String floorNumber, String floorDescription, boolean shouldDing, boolean disableCarCall) {
@@ -305,7 +306,7 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 		packet.writeUtf(floorDescription);
 		packet.writeBoolean(shouldDing);
 		packet.writeBoolean(disableCarCall);
-		RegistryClient.sendToServer(PACKET_UPDATE_LIFT_TRACK_FLOOR, packet);
+		RegistryClient.sendToServer(Networking.PACKET_UPDATE_LIFT_TRACK_FLOOR, packet);
 	}
 
 	public static void generatePathS2C(Minecraft minecraftClient, FriendlyByteBuf packet) {
@@ -322,7 +323,7 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 	public static void generatePathC2S(long sidingId) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeLong(sidingId);
-		RegistryClient.sendToServer(PACKET_GENERATE_PATH, packet);
+		RegistryClient.sendToServer(Networking.PACKET_GENERATE_PATH, packet);
 	}
 
 	public static void clearTrainsC2S(long depotId, Collection<Siding> sidings) {
@@ -330,7 +331,7 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 		packet.writeLong(depotId);
 		packet.writeInt(sidings.size());
 		sidings.forEach(siding -> packet.writeLong(siding.id));
-		RegistryClient.sendToServer(PACKET_CLEAR_TRAINS, packet);
+		RegistryClient.sendToServer(Networking.PACKET_CLEAR_TRAINS, packet);
 	}
 
 	public static void sendUpdateEntitySeatPassengerPosition(double x, double y, double z) {
@@ -338,7 +339,7 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 		packet.writeDouble(x);
 		packet.writeDouble(y);
 		packet.writeDouble(z);
-		RegistryClient.sendToServer(PACKET_UPDATE_ENTITY_SEAT_POSITION, packet);
+		RegistryClient.sendToServer(Networking.PACKET_UPDATE_ENTITY_SEAT_POSITION, packet);
 	}
 
 	public static void sendSignIdsC2S(BlockPos signPos, Set<Long> selectedIds, String[] signIds) {
@@ -350,7 +351,7 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 		for (final String signType : signIds) {
 			packet.writeUtf(signType == null ? "" : signType);
 		}
-		RegistryClient.sendToServer(PACKET_SIGN_TYPES, packet);
+		RegistryClient.sendToServer(Networking.PACKET_SIGN_TYPES, packet);
 	}
 
 	public static void sendDriveTrainC2S(boolean pressingAccelerate, boolean pressingBrake, boolean pressingDoors) {
@@ -359,7 +360,7 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 			packet.writeBoolean(pressingAccelerate);
 			packet.writeBoolean(pressingBrake);
 			packet.writeBoolean(pressingDoors);
-			RegistryClient.sendToServer(PACKET_DRIVE_TRAIN, packet);
+			RegistryClient.sendToServer(Networking.PACKET_DRIVE_TRAIN, packet);
 		}
 	}
 
@@ -367,14 +368,14 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeLong(id);
 		packet.writeInt(floor);
-		RegistryClient.sendToServer(PACKET_PRESS_LIFT_BUTTON, packet);
+		RegistryClient.sendToServer(Networking.PACKET_PRESS_LIFT_BUTTON, packet);
 	}
 
 	public static void addBalanceC2S(int addAmount, int emeralds) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeInt(addAmount);
 		packet.writeInt(emeralds);
-		RegistryClient.sendToServer(PACKET_ADD_BALANCE, packet);
+		RegistryClient.sendToServer(Networking.PACKET_ADD_BALANCE, packet);
 	}
 
 	public static void sendPIDSConfigC2S(BlockPos pos1, BlockPos pos2, String[] messages, boolean[] hideArrival, Set<Long> filterPlatformIds, int displayPage) {
@@ -392,7 +393,7 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 		packet.writeInt(filterPlatformIds.size());
 		filterPlatformIds.forEach(packet::writeLong);
 		packet.writeInt(displayPage);
-		RegistryClient.sendToServer(PACKET_PIDS_UPDATE, packet);
+		RegistryClient.sendToServer(Networking.PACKET_PIDS_UPDATE, packet);
 	}
 
 	public static void sendArrivalProjectorConfigC2S(BlockPos pos, Set<Long> filterPlatformIds, int displayPage) {
@@ -401,12 +402,12 @@ public class PacketTrainDataGuiClient extends PacketTrainDataBase {
 		packet.writeInt(filterPlatformIds.size());
 		filterPlatformIds.forEach(packet::writeLong);
 		packet.writeInt(displayPage);
-		RegistryClient.sendToServer(PACKET_ARRIVAL_PROJECTOR_UPDATE, packet);
+		RegistryClient.sendToServer(Networking.PACKET_ARRIVAL_PROJECTOR_UPDATE, packet);
 	}
 
 	public static void sendUseTimeAndWindSyncC2S(boolean useTimeAndWindSync) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeBoolean(useTimeAndWindSync);
-		RegistryClient.sendToServer(PACKET_USE_TIME_AND_WIND_SYNC, packet);
+		RegistryClient.sendToServer(Networking.PACKET_USE_TIME_AND_WIND_SYNC, packet);
 	}
 }

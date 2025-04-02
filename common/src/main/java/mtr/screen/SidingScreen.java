@@ -10,7 +10,7 @@ import mtr.client.TrainProperties;
 import mtr.data.*;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -237,7 +237,7 @@ public class SidingScreen extends SavedRailScreenBase<Siding> implements Icons {
 
 	@Override
 	protected ResourceLocation getPacketIdentifier() {
-		return PACKET_UPDATE_SIDING;
+		return Networking.PACKET_UPDATE_SIDING;
 	}
 
 	private void onSelectingTrain() {
@@ -272,7 +272,7 @@ public class SidingScreen extends SavedRailScreenBase<Siding> implements Icons {
 		if (data instanceof TrainForList) {
 			final String baseTrainType = ((TrainForList) data).trainProperties.baseTrainType;
 			if (savedRailBase.isValidVehicle(TrainType.getSpacing(baseTrainType))) {
-				savedRailBase.setTrainIdAndBaseType(((TrainForList) data).trainId, baseTrainType, packet -> PacketTrainDataGuiClient.sendUpdate(IPacket.PACKET_UPDATE_SIDING, packet));
+				savedRailBase.setTrainIdAndBaseType(((TrainForList) data).trainId, baseTrainType, packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_SIDING, packet));
 				setIsSelectingTrain(false);
 			}
 		}

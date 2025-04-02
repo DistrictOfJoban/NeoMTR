@@ -8,13 +8,13 @@ import mtr.data.TransportMode;
 import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public abstract class SavedRailScreenBase<T extends SavedRailBase> extends ScreenMapper implements IGui, IPacket {
+public abstract class SavedRailScreenBase<T extends SavedRailBase> extends ScreenMapper implements IGui {
 
 	protected final T savedRailBase;
 	protected final int textWidth;

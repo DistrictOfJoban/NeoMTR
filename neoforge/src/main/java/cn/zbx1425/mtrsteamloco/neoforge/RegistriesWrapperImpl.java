@@ -6,7 +6,6 @@ import mtr.registry.CreativeModeTabs;
 import mtr.Registry;
 import mtr.registry.RegistryObject;
 import mtr.item.ItemWithCreativeTabBase;
-import mtr.mappings.RegistryUtilities;
 import mtr.neoforge.DeferredRegisterHolder;
 import mtr.neoforge.mappings.ForgeUtilities;
 import net.minecraft.core.particles.ParticleType;
@@ -40,7 +39,7 @@ public class RegistriesWrapperImpl implements RegistriesWrapper {
     public void registerBlockAndItem(String id, RegistryObject<Block> block, CreativeModeTabs.Wrapper tab) {
         BLOCKS.register(id, block::get);
         ITEMS.register(id, () -> {
-            final BlockItem blockItem = new BlockItem(block.get(), RegistryUtilities.createItemProperties(tab::get));
+            final BlockItem blockItem = new BlockItem(block.get(), new Item.Properties());
             Registry.registerCreativeModeTab(tab.resourceLocation, blockItem);
             return blockItem;
         });

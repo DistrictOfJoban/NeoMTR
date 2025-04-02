@@ -8,6 +8,7 @@ import mtr.data.Station;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.packet.PacketTrainDataGuiClient;
+import mtr.registry.Networking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -169,7 +170,7 @@ public class EditStationScreen extends EditNameColorScreenBase<Station> {
 		} catch (Exception ignored) {
 			data.zone = 0;
 		}
-		data.setZone(packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_STATION, packet));
+		data.setZone(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_STATION, packet));
 	}
 
 	private void changeEditingExit(String editingExit, int editingDestinationIndex) {
@@ -204,7 +205,7 @@ public class EditStationScreen extends EditNameColorScreenBase<Station> {
 		if (!parentLetter.isEmpty() && !parentNumber.isEmpty()) {
 			try {
 				final String exitParent = parentLetter + Integer.parseInt(parentNumber);
-				data.setExitParent(editingExit, exitParent, packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_STATION, packet));
+				data.setExitParent(editingExit, exitParent, packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_STATION, packet));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -221,7 +222,7 @@ public class EditStationScreen extends EditNameColorScreenBase<Station> {
 			} else {
 				destinations.add(destination);
 			}
-			data.setExitDestinations(editingExit, packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_STATION, packet));
+			data.setExitDestinations(editingExit, packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_STATION, packet));
 		}
 		changeEditingExit(editingExit, -1);
 	}
@@ -231,7 +232,7 @@ public class EditStationScreen extends EditNameColorScreenBase<Station> {
 	}
 
 	private void onDeleteExitParent(NameColorDataBase listData, int index) {
-		data.deleteExitParent(formatExitName(listData.name), packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_STATION, packet));
+		data.deleteExitParent(formatExitName(listData.name), packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_STATION, packet));
 		changeEditingExit(null, -1);
 	}
 
@@ -240,14 +241,14 @@ public class EditStationScreen extends EditNameColorScreenBase<Station> {
 	}
 
 	private void onSortExitDestination() {
-		data.setExitDestinations(editingExit, packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_STATION, packet));
+		data.setExitDestinations(editingExit, packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_STATION, packet));
 		changeEditingExit(editingExit, -1);
 	}
 
 	private void onDeleteExitDestination(NameColorDataBase listData, int index) {
 		if (parentExists()) {
 			data.exits.get(editingExit).remove(listData.name);
-			data.setExitDestinations(editingExit, packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_STATION, packet));
+			data.setExitDestinations(editingExit, packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_STATION, packet));
 		}
 		changeEditingExit(editingExit, -1);
 	}

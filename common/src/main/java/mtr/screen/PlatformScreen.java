@@ -5,6 +5,7 @@ import mtr.data.TransportMode;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.packet.PacketTrainDataGuiClient;
+import mtr.registry.Networking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +40,7 @@ public class PlatformScreen extends SavedRailScreenBase<Platform> {
 	public void onClose() {
 		final int minutes = sliderDwellTimeMin.getIntValue();
 		final float second = sliderDwellTimeSec.getIntValue() / 2F;
-		savedRailBase.setDwellTime((int) ((second + minutes * SECONDS_PER_MINUTE) * 2), packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_PLATFORM, packet));
+		savedRailBase.setDwellTime((int) ((second + minutes * SECONDS_PER_MINUTE) * 2), packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_PLATFORM, packet));
 		super.onClose();
 	}
 
@@ -50,6 +51,6 @@ public class PlatformScreen extends SavedRailScreenBase<Platform> {
 
 	@Override
 	protected ResourceLocation getPacketIdentifier() {
-		return PACKET_UPDATE_PLATFORM;
+		return Networking.PACKET_UPDATE_PLATFORM;
 	}
 }

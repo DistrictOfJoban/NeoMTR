@@ -6,6 +6,7 @@ import mtr.MTRClient;
 import mtr.block.BlockPSDAPGDoorBase;
 import mtr.block.IBlock;
 import mtr.client.*;
+import mtr.registry.Networking;
 import mtr.render.RenderDrivingOverlay;
 import mtr.render.TrainRendererBase;
 import mtr.sound.TrainSoundBase;
@@ -51,7 +52,7 @@ public class TrainClient extends Train implements IGui {
 
 	public final TrainRendererBase trainRenderer;
 	public final TrainSoundBase trainSound;
-	public final VehicleRidingClient vehicleRidingClient = new VehicleRidingClient(ridingEntities, PACKET_UPDATE_TRAIN_PASSENGER_POSITION);
+	public final VehicleRidingClient vehicleRidingClient = new VehicleRidingClient(ridingEntities, Networking.PACKET_UPDATE_TRAIN_PASSENGER_POSITION);
 	public final List<ScrollingText> scrollingTexts = new ArrayList<>();
 
 	private final Set<Runnable> trainTranslucentRenders = new HashSet<>();

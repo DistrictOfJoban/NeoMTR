@@ -103,7 +103,7 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 	@Override
 	protected void init() {
 		super.init();
-		Config.refreshProperties();
+		Config.readConfig();
 		useMTRFont = Config.useMTRFont();
 		showAnnouncementMessages = Config.showAnnouncementMessages();
 		useTTSAnnouncements = Config.useTTSAnnouncements();

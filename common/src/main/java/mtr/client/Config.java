@@ -152,7 +152,7 @@ public class Config {
 		writeToFile();
 	}
 
-	public static void refreshProperties() {
+	public static void readConfig() {
 		MTR.LOGGER.info("[NeoMTR] Reading config file...");
 
 		try {

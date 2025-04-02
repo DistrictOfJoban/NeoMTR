@@ -1,10 +1,11 @@
 package mtr.data;
 
 import io.netty.buffer.Unpooled;
-import mtr.KeyMappings;
+import mtr.registry.KeyMappings;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.model.ModelLift1;
+import mtr.registry.Networking;
 import mtr.render.RenderTrains;
 import mtr.screen.LiftSelectionScreen;
 import net.minecraft.client.Minecraft;
@@ -12,14 +13,13 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.UUID;
 import java.util.function.Consumer;
 
 public class LiftClient extends Lift {
 
-	private final VehicleRidingClient vehicleRidingClient = new VehicleRidingClient(ridingEntities, PACKET_UPDATE_LIFT_PASSENGER_POSITION);
+	private final VehicleRidingClient vehicleRidingClient = new VehicleRidingClient(ridingEntities, Networking.PACKET_UPDATE_LIFT_PASSENGER_POSITION);
 
 	private ModelLift1 liftModel;
 

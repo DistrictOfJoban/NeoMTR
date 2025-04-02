@@ -9,7 +9,6 @@ import mtr.Registry;
 import mtr.registry.RegistryObject;
 import mtr.item.ItemBridgeCreator;
 import mtr.item.ItemWithCreativeTabBase;
-import mtr.mappings.RegistryUtilities;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -54,7 +53,7 @@ public class Main {
 
 	public static final RegistryObject<ItemWithCreativeTabBase> BRIDGE_CREATOR_1 = new RegistryObject<>(() -> new ItemBridgeCreator(1));
 
-	public static final SoundEvent SOUND_EVENT_BELL = RegistryUtilities.createSoundEvent(Main.id("bell"));
+	public static final SoundEvent SOUND_EVENT_BELL = SoundEvent.createVariableRangeEvent(Main.id("bell"));
 
 	public static SimpleParticleType PARTICLE_STEAM_SMOKE;
 
@@ -95,6 +94,6 @@ public class Main {
 
 	@FunctionalInterface
 	public interface RegisterBlockItem {
-		void accept(String string, RegistryObject<Block> block, CreativeModeTabs.Wrapper tab);
+		void accept(String string, RegistryObject<Block> block, CreativeModeTabs tab);
 	}
 }

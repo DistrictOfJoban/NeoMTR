@@ -6,10 +6,12 @@ import io.netty.buffer.Unpooled;
 import mtr.MTR;
 import mtr.Registry;
 import mtr.block.BlockNode;
+import mtr.client.ClientData;
 import mtr.mappings.PersistentStateMapper;
 import mtr.mappings.Utilities;
 import mtr.packet.*;
 import mtr.path.PathData;
+import mtr.registry.Networking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -38,7 +40,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RailwayData extends PersistentStateMapper implements IPacket {
+public class RailwayData extends PersistentStateMapper {
 
 	public final Set<Station> stations = new HashSet<>();
 	public final Set<Platform> platforms = new HashSet<>();
@@ -109,8 +111,18 @@ public class RailwayData extends PersistentStateMapper implements IPacket {
 		railwayDataDriveTrainModule = new RailwayDataDriveTrainModule(this, world, rails);
 		railwayDataRouteFinderModule = new RailwayDataRouteFinderModule(this, world, rails);
 
-		updateNearbyTrains = new UpdateNearbyMovingObjects<>(PACKET_DELETE_TRAINS, PACKET_UPDATE_TRAINS);
-		updateNearbyLifts = new UpdateNearbyMovingObjects<>(PACKET_DELETE_LIFTS, PACKET_UPDATE_LIFTS);
+		updateNearbyTrains = new UpdateNearbyMovingObjects<>(Networking.PACKET_DELETE_TRAINS, Networking.PACKET_UPDATE_TRAINS);
+		updateNearbyLifts = new UpdateNearbyMovingObjects<>(Networking.PACKET_DELETE_LIFTS, Networking.PACKET_UPDATE_LIFTS);
+	}
+
+	public static int getStationColor(BlockPos pos) {
+		final int defaultColor = 0x7F7F7F;
+		if (pos == null) {
+			return defaultColor;
+		} else {
+			final Station station = getStation(ClientData.STATIONS, ClientData.DATA_CACHE, pos);
+			return station == null ? defaultColor : station.color;
+		}
 	}
 
 	@Override
@@ -294,8 +306,8 @@ public class RailwayData extends PersistentStateMapper implements IPacket {
 					});
 				});
 
-				if (packet.readableBytes() <= MAX_PACKET_BYTES) {
-					Registry.sendToPlayer((ServerPlayer) player, PACKET_WRITE_RAILS, packet);
+				if (packet.readableBytes() <= Networking.MAX_PACKET_BYTES) {
+					Registry.sendToPlayer((ServerPlayer) player, Networking.PACKET_WRITE_RAILS, packet);
 				}
 				playerLastUpdatedPositions.put(player, playerBlockPos);
 			}
@@ -383,8 +395,8 @@ public class RailwayData extends PersistentStateMapper implements IPacket {
 					packet.writeBoolean(occupied);
 				});
 
-				if (packet.readableBytes() <= MAX_PACKET_BYTES) {
-					Registry.sendToPlayer((ServerPlayer) player, PACKET_UPDATE_SCHEDULE, packet);
+				if (packet.readableBytes() <= Networking.MAX_PACKET_BYTES) {
+					Registry.sendToPlayer((ServerPlayer) player, Networking.PACKET_UPDATE_SCHEDULE, packet);
 				}
 			}
 		}
@@ -434,7 +446,7 @@ public class RailwayData extends PersistentStateMapper implements IPacket {
 		validateData();
 		final FriendlyByteBuf packet = signalBlocks.getValidationPacket(rails);
 		if (packet != null) {
-			world.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, PACKET_REMOVE_SIGNALS, packet));
+			world.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
 		}
 	}
 
@@ -452,7 +464,7 @@ public class RailwayData extends PersistentStateMapper implements IPacket {
 		validateData();
 		final FriendlyByteBuf packet = signalBlocks.getValidationPacket(rails);
 		if (packet != null) {
-			world.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, PACKET_REMOVE_SIGNALS, packet));
+			world.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
 		}
 	}
 
@@ -510,8 +522,8 @@ public class RailwayData extends PersistentStateMapper implements IPacket {
 	}
 
 	private void validateData() {
-		removeSavedRailS2C(world, platforms, rails, PACKET_DELETE_PLATFORM);
-		removeSavedRailS2C(world, sidings, rails, PACKET_DELETE_SIDING);
+		removeSavedRailS2C(world, platforms, rails, Networking.PACKET_DELETE_PLATFORM);
+		removeSavedRailS2C(world, sidings, rails, Networking.PACKET_DELETE_SIDING);
 
 		final List<BlockPos> railsToRemove = new ArrayList<>();
 		rails.forEach((startPos, railMap) -> railMap.forEach((endPos, rail) -> {

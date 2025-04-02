@@ -1,8 +1,17 @@
 package mtr.registry;
 
+import mtr.Keys;
+import mtr.MTR;
 import mtr.Registry;
+import mtr.RegistryClient;
 import mtr.block.*;
+import mtr.data.PIDSType;
+import mtr.mappings.BlockEntityMapper;
+import mtr.render.*;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+
+import java.util.function.BiConsumer;
 
 public class BlockEntityTypes {
 	public static final RegistryObject<BlockEntityType<BlockArrivalProjector1Small.TileEntityArrivalProjector1Small>> ARRIVAL_PROJECTOR_1_SMALL_TILE_ENTITY = new RegistryObject<>(() -> Registry.getBlockEntityType(BlockArrivalProjector1Small.TileEntityArrivalProjector1Small::new, Blocks.ARRIVAL_PROJECTOR_1_SMALL.get()));
@@ -67,4 +76,133 @@ public class BlockEntityTypes {
 	public static final RegistryObject<BlockEntityType<BlockTrainCargoUnloader.TileEntityTrainCargoUnloader>> TRAIN_CARGO_UNLOADER_TILE_ENTITY = new RegistryObject<>(() -> Registry.getBlockEntityType(BlockTrainCargoUnloader.TileEntityTrainCargoUnloader::new, Blocks.TRAIN_CARGO_UNLOADER.get()));
 	public static final RegistryObject<BlockEntityType<BlockTrainRedstoneSensor.TileEntityTrainRedstoneSensor>> TRAIN_REDSTONE_SENSOR_TILE_ENTITY = new RegistryObject<>(() -> Registry.getBlockEntityType(BlockTrainRedstoneSensor.TileEntityTrainRedstoneSensor::new, Blocks.TRAIN_REDSTONE_SENSOR.get()));
 	public static final RegistryObject<BlockEntityType<BlockTrainScheduleSensor.TileEntityTrainScheduleSensor>> TRAIN_SCHEDULE_SENSOR_TILE_ENTITY = new RegistryObject<>(() -> Registry.getBlockEntityType(BlockTrainScheduleSensor.TileEntityTrainScheduleSensor::new, Blocks.TRAIN_SCHEDULE_SENSOR.get()));
+
+	public static void register(MTR.RegisterCallback<RegistryObject<? extends BlockEntityType<? extends BlockEntityMapper>>> registerCallback) {
+		registerCallback.register("lift_buttons_1", BlockEntityTypes.LIFT_BUTTONS_1_TILE_ENTITY);
+		registerCallback.register("lift_panel_even_1", BlockEntityTypes.LIFT_PANEL_EVEN_1_TILE_ENTITY);
+		registerCallback.register("lift_panel_odd_1", BlockEntityTypes.LIFT_PANEL_ODD_1_TILE_ENTITY);
+		registerCallback.register("lift_panel_even_2", BlockEntityTypes.LIFT_PANEL_EVEN_2_TILE_ENTITY);
+		registerCallback.register("lift_panel_odd_2", BlockEntityTypes.LIFT_PANEL_ODD_2_TILE_ENTITY);
+		registerCallback.register("lift_track_floor_1", BlockEntityTypes.LIFT_TRACK_FLOOR_1_TILE_ENTITY);
+		registerCallback.register("lift_door_1", BlockEntityTypes.LIFT_DOOR_EVEN_1_TILE_ENTITY);
+		registerCallback.register("lift_door_odd_1", BlockEntityTypes.LIFT_DOOR_ODD_1_TILE_ENTITY);
+
+		if (!Keys.LIFTS_ONLY) {
+			registerCallback.register("arrival_projector_1_small", BlockEntityTypes.ARRIVAL_PROJECTOR_1_SMALL_TILE_ENTITY);
+			registerCallback.register("arrival_projector_1_medium", BlockEntityTypes.ARRIVAL_PROJECTOR_1_MEDIUM_TILE_ENTITY);
+			registerCallback.register("arrival_projector_1_large", BlockEntityTypes.ARRIVAL_PROJECTOR_1_LARGE_TILE_ENTITY);
+			registerCallback.register("boat_node", BlockEntityTypes.BOAT_NODE_TILE_ENTITY);
+			registerCallback.register("clock", BlockEntityTypes.CLOCK_TILE_ENTITY);
+			registerCallback.register("psd_door_1", BlockEntityTypes.PSD_DOOR_1_TILE_ENTITY);
+			registerCallback.register("psd_door_2", BlockEntityTypes.PSD_DOOR_2_TILE_ENTITY);
+			registerCallback.register("psd_top", BlockEntityTypes.PSD_TOP_TILE_ENTITY);
+			registerCallback.register("apg_glass", BlockEntityTypes.APG_GLASS_TILE_ENTITY);
+			registerCallback.register("apg_door", BlockEntityTypes.APG_DOOR_TILE_ENTITY);
+			registerCallback.register("pids_1", BlockEntityTypes.PIDS_1_TILE_ENTITY);
+			registerCallback.register("pids_2", BlockEntityTypes.PIDS_2_TILE_ENTITY);
+			registerCallback.register("pids_3", BlockEntityTypes.PIDS_3_TILE_ENTITY);
+			registerCallback.register("pids_4", BlockEntityTypes.PIDS_4_TILE_ENTITY);
+			registerCallback.register("pids_single_arrival_1", BlockEntityTypes.PIDS_SINGLE_ARRIVAL_1_TILE_ENTITY);
+			registerCallback.register("railway_sign_2_even", BlockEntityTypes.RAILWAY_SIGN_2_EVEN_TILE_ENTITY);
+			registerCallback.register("railway_sign_2_odd", BlockEntityTypes.RAILWAY_SIGN_2_ODD_TILE_ENTITY);
+			registerCallback.register("railway_sign_3_even", BlockEntityTypes.RAILWAY_SIGN_3_EVEN_TILE_ENTITY);
+			registerCallback.register("railway_sign_3_odd", BlockEntityTypes.RAILWAY_SIGN_3_ODD_TILE_ENTITY);
+			registerCallback.register("railway_sign_4_even", BlockEntityTypes.RAILWAY_SIGN_4_EVEN_TILE_ENTITY);
+			registerCallback.register("railway_sign_4_odd", BlockEntityTypes.RAILWAY_SIGN_4_ODD_TILE_ENTITY);
+			registerCallback.register("railway_sign_5_even", BlockEntityTypes.RAILWAY_SIGN_5_EVEN_TILE_ENTITY);
+			registerCallback.register("railway_sign_5_odd", BlockEntityTypes.RAILWAY_SIGN_5_ODD_TILE_ENTITY);
+			registerCallback.register("railway_sign_6_even", BlockEntityTypes.RAILWAY_SIGN_6_EVEN_TILE_ENTITY);
+			registerCallback.register("railway_sign_6_odd", BlockEntityTypes.RAILWAY_SIGN_6_ODD_TILE_ENTITY);
+			registerCallback.register("railway_sign_7_even", BlockEntityTypes.RAILWAY_SIGN_7_EVEN_TILE_ENTITY);
+			registerCallback.register("railway_sign_7_odd", BlockEntityTypes.RAILWAY_SIGN_7_ODD_TILE_ENTITY);
+			registerCallback.register("route_sign_standing_light", BlockEntityTypes.ROUTE_SIGN_STANDING_LIGHT_TILE_ENTITY);
+			registerCallback.register("route_sign_standing_metal", BlockEntityTypes.ROUTE_SIGN_STANDING_METAL_TILE_ENTITY);
+			registerCallback.register("route_sign_wall_light", BlockEntityTypes.ROUTE_SIGN_WALL_LIGHT_TILE_ENTITY);
+			registerCallback.register("route_sign_wall_metal", BlockEntityTypes.ROUTE_SIGN_WALL_METAL_TILE_ENTITY);
+			registerCallback.register("signal_light_1", BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_1);
+			registerCallback.register("signal_light_2", BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_2);
+			registerCallback.register("signal_light_3", BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_3);
+			registerCallback.register("signal_light_4", BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_4);
+			registerCallback.register("signal_light_3_aspect_1", BlockEntityTypes.SIGNAL_LIGHT_3_ASPECT_1);
+			registerCallback.register("signal_light_3_aspect_2", BlockEntityTypes.SIGNAL_LIGHT_3_ASPECT_2);
+			registerCallback.register("signal_light_4_aspect_1", BlockEntityTypes.SIGNAL_LIGHT_4_ASPECT_1);
+			registerCallback.register("signal_light_4_aspect_2", BlockEntityTypes.SIGNAL_LIGHT_4_ASPECT_2);
+			registerCallback.register("signal_semaphore_1", BlockEntityTypes.SIGNAL_SEMAPHORE_1);
+			registerCallback.register("signal_semaphore_2", BlockEntityTypes.SIGNAL_SEMAPHORE_2);
+			registerCallback.register("station_name_entrance", BlockEntityTypes.STATION_NAME_ENTRANCE_TILE_ENTITY);
+			registerCallback.register("station_name_wall", BlockEntityTypes.STATION_NAME_WALL_WHITE_TILE_ENTITY);
+			registerCallback.register("station_name_wall_gray", BlockEntityTypes.STATION_NAME_WALL_GRAY_TILE_ENTITY);
+			registerCallback.register("station_name_wall_black", BlockEntityTypes.STATION_NAME_WALL_BLACK_TILE_ENTITY);
+			registerCallback.register("station_name_tall_block", BlockEntityTypes.STATION_NAME_TALL_BLOCK_TILE_ENTITY);
+			registerCallback.register("station_name_tall_block_double_sided", BlockEntityTypes.STATION_NAME_TALL_BLOCK_DOUBLE_SIDED_TILE_ENTITY);
+			registerCallback.register("station_name_tall_wall", BlockEntityTypes.STATION_NAME_TALL_WALL_TILE_ENTITY);
+			registerCallback.register("tactile_map", BlockEntityTypes.TACTILE_MAP_TILE_ENTITY);
+			registerCallback.register("train_announcer", BlockEntityTypes.TRAIN_ANNOUNCER_TILE_ENTITY);
+			registerCallback.register("train_cargo_loader", BlockEntityTypes.TRAIN_CARGO_LOADER_TILE_ENTITY);
+			registerCallback.register("train_cargo_unloader", BlockEntityTypes.TRAIN_CARGO_UNLOADER_TILE_ENTITY);
+			registerCallback.register("train_redstone_sensor", BlockEntityTypes.TRAIN_REDSTONE_SENSOR_TILE_ENTITY);
+			registerCallback.register("train_schedule_sensor", BlockEntityTypes.TRAIN_SCHEDULE_SENSOR_TILE_ENTITY);
+		}
+	}
+
+	public static void registerClient() {
+		if (!Keys.LIFTS_ONLY) {
+			RegistryClient.registerTileEntityRenderer(ARRIVAL_PROJECTOR_1_SMALL_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 12, 1, 1, 15, 16, 14, 14, false, false, PIDSType.ARRIVAL_PROJECTOR, 0xFF9900, 0xFF9900));
+			RegistryClient.registerTileEntityRenderer(ARRIVAL_PROJECTOR_1_MEDIUM_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 12, 1, -15, 15, 16, 30, 46, false, false, PIDSType.ARRIVAL_PROJECTOR, 0xFF9900, 0xFF9900));
+			RegistryClient.registerTileEntityRenderer(ARRIVAL_PROJECTOR_1_LARGE_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 16, 1, -15, 15, 16, 46, 46, false, false, PIDSType.ARRIVAL_PROJECTOR, 0xFF9900, 0xFF9900));
+			RegistryClient.registerTileEntityRenderer(BOAT_NODE_TILE_ENTITY.get(), RenderBoatNode::new);
+			RegistryClient.registerTileEntityRenderer(CLOCK_TILE_ENTITY.get(), RenderClock::new);
+			RegistryClient.registerTileEntityRenderer(PSD_DOOR_1_TILE_ENTITY.get(), dispatcher -> new RenderPSDAPGDoor<>(dispatcher, 0));
+			RegistryClient.registerTileEntityRenderer(PSD_DOOR_2_TILE_ENTITY.get(), dispatcher -> new RenderPSDAPGDoor<>(dispatcher, 1));
+			RegistryClient.registerTileEntityRenderer(PSD_TOP_TILE_ENTITY.get(), RenderPSDTop::new);
+			RegistryClient.registerTileEntityRenderer(APG_GLASS_TILE_ENTITY.get(), RenderAPGGlass::new);
+			RegistryClient.registerTileEntityRenderer(APG_DOOR_TILE_ENTITY.get(), dispatcher -> new RenderPSDAPGDoor<>(dispatcher, 2));
+			RegistryClient.registerTileEntityRenderer(PIDS_1_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, BlockPIDS1.TileEntityBlockPIDS1.MAX_ARRIVALS, BlockPIDS1.TileEntityBlockPIDS1.LINES_PER_ARRIVAL, 1, 3.25F, 6, 2.5F, 30, true, false, PIDSType.PIDS, 0xFF9900, 0xFF9900));
+			RegistryClient.registerTileEntityRenderer(PIDS_2_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, BlockPIDS2.TileEntityBlockPIDS2.MAX_ARRIVALS, BlockPIDS2.TileEntityBlockPIDS2.LINES_PER_ARRIVAL, 1.5F, 7.5F, 6, 6.5F, 29, true, true, PIDSType.PIDS, 0xFF9900, 0xFF9900));
+			RegistryClient.registerTileEntityRenderer(PIDS_3_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, BlockPIDS3.TileEntityBlockPIDS3.MAX_ARRIVALS, BlockPIDS3.TileEntityBlockPIDS3.LINES_PER_ARRIVAL, 2.5F, 7.5F, 6, 6.5F, 27, true, false, PIDSType.PIDS, 0xFF9900, 0x33CC00, 1.25F, true));
+			RegistryClient.registerTileEntityRenderer(PIDS_4_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, BlockPIDS4.TileEntityBlockPIDS4.MAX_ARRIVALS, BlockPIDS4.TileEntityBlockPIDS4.LINES_PER_ARRIVAL, 2F, 14F, 15, 28F, 12, false, false, PIDSType.PIDS_VERTICAL, 0xFF9900, 0xFF9900));
+			RegistryClient.registerTileEntityRenderer(PIDS_SINGLE_ARRIVAL_1_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, BlockPIDSSingleArrival1.TileEntityBlockPIDSSingleArrival1.MAX_ARRIVALS, BlockPIDSSingleArrival1.TileEntityBlockPIDSSingleArrival1.LINES_PER_ARRIVAL, 2F, 14F, 15, 28F, 12, false, false, PIDSType.PIDS_SINGLE_ARRIVAL, 0xFF9900, 0xFF9900));
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_2_EVEN_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_2_ODD_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_3_EVEN_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_3_ODD_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_4_EVEN_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_4_ODD_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_5_EVEN_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_5_ODD_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_6_EVEN_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_6_ODD_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_7_EVEN_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(RAILWAY_SIGN_7_ODD_TILE_ENTITY.get(), RenderRailwaySign::new);
+			RegistryClient.registerTileEntityRenderer(ROUTE_SIGN_STANDING_LIGHT_TILE_ENTITY.get(), RenderRouteSign::new);
+			RegistryClient.registerTileEntityRenderer(ROUTE_SIGN_STANDING_METAL_TILE_ENTITY.get(), RenderRouteSign::new);
+			RegistryClient.registerTileEntityRenderer(ROUTE_SIGN_WALL_LIGHT_TILE_ENTITY.get(), RenderRouteSign::new);
+			RegistryClient.registerTileEntityRenderer(ROUTE_SIGN_WALL_METAL_TILE_ENTITY.get(), RenderRouteSign::new);
+			RegistryClient.registerTileEntityRenderer(SIGNAL_LIGHT_2_ASPECT_1.get(), dispatcher -> new RenderSignalLight2Aspect<>(dispatcher, true, false, 0xFF0000FF));
+			RegistryClient.registerTileEntityRenderer(SIGNAL_LIGHT_2_ASPECT_2.get(), dispatcher -> new RenderSignalLight2Aspect<>(dispatcher, false, false, 0xFF0000FF));
+			RegistryClient.registerTileEntityRenderer(SIGNAL_LIGHT_2_ASPECT_3.get(), dispatcher -> new RenderSignalLight2Aspect<>(dispatcher, true, true, 0xFF00FF00));
+			RegistryClient.registerTileEntityRenderer(SIGNAL_LIGHT_2_ASPECT_4.get(), dispatcher -> new RenderSignalLight2Aspect<>(dispatcher, false, true, 0xFF00FF00));
+			RegistryClient.registerTileEntityRenderer(SIGNAL_LIGHT_3_ASPECT_1.get(), dispatcher -> new RenderSignalLight3Aspect<>(dispatcher, true));
+			RegistryClient.registerTileEntityRenderer(SIGNAL_LIGHT_3_ASPECT_2.get(), dispatcher -> new RenderSignalLight3Aspect<>(dispatcher, false));
+			RegistryClient.registerTileEntityRenderer(SIGNAL_LIGHT_4_ASPECT_1.get(), dispatcher -> new RenderSignalLight4Aspect<>(dispatcher, true));
+			RegistryClient.registerTileEntityRenderer(SIGNAL_LIGHT_4_ASPECT_2.get(), dispatcher -> new RenderSignalLight4Aspect<>(dispatcher, false));
+			RegistryClient.registerTileEntityRenderer(SIGNAL_SEMAPHORE_1.get(), dispatcher -> new RenderSignalSemaphore<>(dispatcher, true));
+			RegistryClient.registerTileEntityRenderer(SIGNAL_SEMAPHORE_2.get(), dispatcher -> new RenderSignalSemaphore<>(dispatcher, false));
+			RegistryClient.registerTileEntityRenderer(STATION_NAME_ENTRANCE_TILE_ENTITY.get(), dispatcher -> new RenderStationNameTiled<>(dispatcher, true));
+			RegistryClient.registerTileEntityRenderer(STATION_NAME_TALL_BLOCK_TILE_ENTITY.get(), RenderStationNameTall::new);
+			RegistryClient.registerTileEntityRenderer(STATION_NAME_TALL_BLOCK_DOUBLE_SIDED_TILE_ENTITY.get(), RenderStationNameTall::new);
+			RegistryClient.registerTileEntityRenderer(STATION_NAME_TALL_WALL_TILE_ENTITY.get(), RenderStationNameTall::new);
+			RegistryClient.registerTileEntityRenderer(STATION_NAME_WALL_WHITE_TILE_ENTITY.get(), dispatcher -> new RenderStationNameTiled<>(dispatcher, false));
+			RegistryClient.registerTileEntityRenderer(STATION_NAME_WALL_GRAY_TILE_ENTITY.get(), dispatcher -> new RenderStationNameTiled<>(dispatcher, false));
+			RegistryClient.registerTileEntityRenderer(STATION_NAME_WALL_BLACK_TILE_ENTITY.get(), dispatcher -> new RenderStationNameTiled<>(dispatcher, false));
+		}
+
+		RegistryClient.registerTileEntityRenderer(LIFT_BUTTONS_1_TILE_ENTITY.get(), RenderLiftButtons::new);
+		RegistryClient.registerTileEntityRenderer(LIFT_PANEL_EVEN_1_TILE_ENTITY.get(), dispatcher -> new RenderLiftPanel<>(dispatcher, false, false));
+		RegistryClient.registerTileEntityRenderer(LIFT_PANEL_ODD_1_TILE_ENTITY.get(), dispatcher -> new RenderLiftPanel<>(dispatcher, true, false));
+		RegistryClient.registerTileEntityRenderer(LIFT_PANEL_EVEN_2_TILE_ENTITY.get(), dispatcher -> new RenderLiftPanel<>(dispatcher, false, true));
+		RegistryClient.registerTileEntityRenderer(LIFT_PANEL_ODD_2_TILE_ENTITY.get(), dispatcher -> new RenderLiftPanel<>(dispatcher, true, true));
+		RegistryClient.registerTileEntityRenderer(LIFT_DOOR_EVEN_1_TILE_ENTITY.get(), dispatcher -> new RenderPSDAPGDoor<>(dispatcher, 3));
+		RegistryClient.registerTileEntityRenderer(LIFT_DOOR_ODD_1_TILE_ENTITY.get(), dispatcher -> new RenderPSDAPGDoor<>(dispatcher, 4));
+	}
 }

@@ -3,7 +3,6 @@ package mtr.screen;
 import mtr.block.BlockTrainAnnouncer;
 import mtr.data.DataConverter;
 import mtr.data.RailwayData;
-import mtr.mappings.RegistryUtilities;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.Minecraft;
@@ -11,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -50,7 +50,7 @@ public class TrainAnnouncerScreen extends TrainSensorScreenBase {
 		availableSoundsList = new DashboardList((data, color) -> {
 			final String soundIdString = data.name;
 			if (!soundIdString.isEmpty() && world != null && minecraft.player != null) {
-				world.playLocalSound(pos, RegistryUtilities.createSoundEvent(ResourceLocation.parse(soundIdString)), SoundSource.BLOCKS, 1000000, 1, false);
+				world.playLocalSound(pos, SoundEvent.createVariableRangeEvent(ResourceLocation.parse(soundIdString)), SoundSource.BLOCKS, 1000000, 1, false);
 			}
 		}, null, null, null, (data, color) -> {
 			textFields[1].setValue(data.name);

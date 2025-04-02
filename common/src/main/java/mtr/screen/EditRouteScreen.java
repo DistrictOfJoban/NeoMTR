@@ -5,7 +5,7 @@ import mtr.client.IDrawing;
 import mtr.data.*;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Locale;
 
-public class EditRouteScreen extends EditNameColorScreenBase<Route> implements IGui, IPacket {
+public class EditRouteScreen extends EditNameColorScreenBase<Route> implements IGui {
 
 	private RouteType routeType;
 
@@ -120,7 +120,7 @@ public class EditRouteScreen extends EditNameColorScreenBase<Route> implements I
 			data.circularState = Route.CircularState.NONE;
 		}
 
-		data.setExtraData(packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_ROUTE, packet));
+		data.setExtraData(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_ROUTE, packet));
 	}
 
 	private void setRouteTypeText(TransportMode transportMode, RouteType newRouteType) {

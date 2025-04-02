@@ -7,11 +7,11 @@ import mtr.data.IGui;
 import mtr.data.NameColorDataBase;
 import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class RailActionsScreen extends ScreenMapper implements IGui, IPacket {
+public class RailActionsScreen extends ScreenMapper implements IGui {
 
 	final DashboardList railActionsList;
 
@@ -71,6 +71,6 @@ public class RailActionsScreen extends ScreenMapper implements IGui, IPacket {
 	private void onDelete(NameColorDataBase data, int index) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeLong(data.id);
-		RegistryClient.sendToServer(PACKET_REMOVE_RAIL_ACTION, packet);
+		RegistryClient.sendToServer(Networking.PACKET_REMOVE_RAIL_ACTION, packet);
 	}
 }

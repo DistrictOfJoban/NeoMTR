@@ -6,7 +6,7 @@ import mtr.data.*;
 import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PIDSConfigScreen extends ScreenMapper implements IGui, IPacket {
+public class PIDSConfigScreen extends ScreenMapper implements IGui {
 
 	private final BlockPos pos1;
 	private final BlockPos pos2;

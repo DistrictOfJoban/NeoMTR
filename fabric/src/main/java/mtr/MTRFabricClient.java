@@ -9,6 +9,7 @@ import cn.zbx1425.sowcerext.model.integration.BufferSourceProxy;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mtr.client.CustomResources;
 import mtr.client.ICustomResources;
+import mtr.registry.Items;
 import mtr.render.RenderDrivingOverlay;
 import mtr.render.RenderTrains;
 import mtr.screen.ResourcePackCreatorScreen;
@@ -31,7 +32,7 @@ public class MTRFabricClient implements ClientModInitializer, ICustomResources {
 	@Override
 	public void onInitializeClient() {
 		MTRClient.init();
-		MTRClient.initItemModelPredicate();
+		Items.initItemModelPredicate();
 		MainClient.init();
 
 		WorldRenderEvents.AFTER_ENTITIES.register(context -> {

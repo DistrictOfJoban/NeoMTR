@@ -8,13 +8,11 @@ import mtr.item.ItemBlockEnchanted;
 import mtr.item.ItemWithCreativeTabBase;
 import mtr.mappings.BlockEntityMapper;
 import mtr.neoforge.mappings.ForgeUtilities;
-import mtr.mappings.RegistryUtilities;
 import mtr.registry.CreativeModeTabs;
-import mtr.registry.EntityTypes;
 import mtr.Registry;
+import mtr.registry.Items;
 import mtr.registry.RegistryObject;
 import mtr.render.RenderDrivingOverlay;
-import mtr.render.RenderTrains;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -102,7 +100,7 @@ public class MTRForge {
 	private static void registerBlock(String path, RegistryObject<Block> block, CreativeModeTabs.Wrapper creativeModeTabWrapper) {
 		registerBlock(path, block);
 		ITEMS.register(path, () -> {
-			final BlockItem blockItem = new BlockItem(block.get(), RegistryUtilities.createItemProperties(creativeModeTabWrapper::get));
+			final BlockItem blockItem = new BlockItem(block.get(), new Item.Properties());
 			Registry.registerCreativeModeTab(creativeModeTabWrapper.resourceLocation, blockItem);
 			return blockItem;
 		});
@@ -111,7 +109,7 @@ public class MTRForge {
 	private static void registerEnchantedBlock(String path, RegistryObject<Block> block, CreativeModeTabs.Wrapper creativeModeTab) {
 		registerBlock(path, block);
 		ITEMS.register(path, () -> {
-			final ItemBlockEnchanted itemBlockEnchanted = new ItemBlockEnchanted(block.get(), RegistryUtilities.createItemProperties(creativeModeTab::get));
+			final ItemBlockEnchanted itemBlockEnchanted = new ItemBlockEnchanted(block.get(), new Item.Properties());
 			Registry.registerCreativeModeTab(creativeModeTab.resourceLocation, itemBlockEnchanted);
 			return itemBlockEnchanted;
 		});
@@ -134,7 +132,7 @@ public class MTRForge {
 		@SubscribeEvent
 		public static void onClientSetupEvent(FMLClientSetupEvent event) {
 			MTRClient.init();
-			event.enqueueWork(MTRClient::initItemModelPredicate);
+			event.enqueueWork(Items::initItemModelPredicate);
 			ForgeUtilities.registerTextureStitchEvent(textureAtlas -> {
 				if (((TextureAtlas) textureAtlas).location().getPath().equals("textures/atlas/blocks.png")) {
 					CustomResources.reload(Minecraft.getInstance().getResourceManager());

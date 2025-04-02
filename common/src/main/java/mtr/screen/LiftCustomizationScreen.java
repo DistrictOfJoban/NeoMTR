@@ -7,8 +7,8 @@ import mtr.data.LiftClient;
 import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.packet.IPacket;
 import mtr.packet.PacketTrainDataGuiClient;
+import mtr.registry.Networking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Locale;
 
-public class LiftCustomizationScreen extends ScreenMapper implements IGui, IPacket {
+public class LiftCustomizationScreen extends ScreenMapper implements IGui {
 
 	private final LiftClient lift;
 	private final Button buttonHeightMinus;
@@ -172,7 +172,7 @@ public class LiftCustomizationScreen extends ScreenMapper implements IGui, IPack
 	@Override
 	public void onClose() {
 		super.onClose();
-		lift.setExtraData(packet -> PacketTrainDataGuiClient.sendUpdate(PACKET_UPDATE_LIFT, packet));
+		lift.setExtraData(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_LIFT, packet));
 	}
 
 	@Override

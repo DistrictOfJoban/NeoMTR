@@ -6,14 +6,14 @@ import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.Utilities;
 import mtr.mappings.UtilitiesClient;
-import mtr.packet.IPacket;
+import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 
-public class TicketMachineScreen extends ScreenMapper implements IGui, IPacket {
+public class TicketMachineScreen extends ScreenMapper implements IGui {
 
 	private final Button[] buttons = new Button[BUTTON_COUNT];
 	private final Component balanceText;

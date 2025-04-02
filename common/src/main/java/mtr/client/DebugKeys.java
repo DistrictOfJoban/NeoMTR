@@ -1,6 +1,6 @@
 package mtr.client;
 
-import mtr.KeyMappings;
+import mtr.registry.KeyMappings;
 import mtr.MTRClient;
 import mtr.data.RailwayData;
 import mtr.mappings.Text;
