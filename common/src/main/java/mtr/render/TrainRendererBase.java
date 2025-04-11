@@ -5,18 +5,15 @@ import mtr.MTRClient;
 import mtr.client.Config;
 import mtr.client.TrainClientRegistry;
 import mtr.client.TrainProperties;
-import mtr.data.RailwayData;
 import mtr.data.TrainClient;
-import mtr.mappings.Utilities;
 import mtr.mappings.UtilitiesClient;
+import mtr.util.BlockUtil;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -80,7 +77,7 @@ public abstract class TrainRendererBase {
 	}
 
 	public static BlockPos applyAverageTransform(double x, double y, double z) {
-		final BlockPos posAverage = RailwayData.newBlockPos(x, y, z);
+		final BlockPos posAverage = BlockUtil.newBlockPos(x, y, z);
 		if (RenderTrains.shouldNotRender(posAverage, UtilitiesClient.getRenderDistance() * (Config.trainRenderDistanceRatio() + 1), null)) {
 			return null;
 		}

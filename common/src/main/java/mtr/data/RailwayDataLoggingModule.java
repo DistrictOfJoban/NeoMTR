@@ -1,13 +1,17 @@
 package mtr.data;
 
 import com.google.gson.JsonParser;
+import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CollectionTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NumericTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelResource;
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
@@ -18,18 +22,24 @@ import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class RailwayDataLoggingModule extends RailwayDataModuleBase {
+public class RailwayDataLoggingModule extends RailwayDataModule {
 
+	public static final String NAME = "logging";
 	private final Path logsPath;
 	private final Path filePath;
 	private final List<String> queuedEvents = new ArrayList<>();
 
-	public RailwayDataLoggingModule(RailwayData railwayData, Level world, Map<BlockPos, Map<BlockPos, Rail>> rails, Path savePath) {
-		super(railwayData, world, rails);
+	public RailwayDataLoggingModule(RailwayData railwayData, Level world, Map<BlockPos, Map<BlockPos, Rail>> rails) {
+		super(NAME, railwayData, world, rails);
+		final ResourceLocation dimensionLocation = world.dimension().location();
+		final Path worldRoot = ((ServerLevel) world).getServer().getWorldPath(LevelResource.ROOT);
+		final Path savePath = worldRoot.resolve("mtr").resolve(dimensionLocation.getNamespace()).resolve(dimensionLocation.getPath());
+
 		logsPath = savePath.resolve("logs");
 		filePath = logsPath.resolve(new SimpleDateFormat("yyyyMMdd-HHmmssSSS").format(new Date()) + ".csv");
 	}
 
+	@Override
 	public void save() {
 		if (!queuedEvents.isEmpty()) {
 			try {
@@ -101,8 +111,8 @@ public class RailwayDataLoggingModule extends RailwayDataModuleBase {
 					formatString(IGui.formatStationName(name)),
 					formatString(String.join("\n", positionsList)),
 					formatString((oldDataDiff.isEmpty() ? LoggingEditType.CREATE : newDataDiff.isEmpty() ? LoggingEditType.DELETE : LoggingEditType.EDIT).toString()),
-					formatString(RailwayData.prettyPrint(new JsonParser().parse(String.format("{%s}", String.join(",", oldDataDiff))))),
-					formatString(RailwayData.prettyPrint(new JsonParser().parse(String.format("{%s}", String.join(",", newDataDiff)))))
+					formatString(Util.prettyPrintJson(JsonParser.parseString(String.format("{%s}", String.join(",", oldDataDiff))))),
+					formatString(Util.prettyPrintJson(JsonParser.parseString(String.format("{%s}", String.join(",", newDataDiff)))))
 			));
 		}
 	}
@@ -175,6 +185,11 @@ public class RailwayDataLoggingModule extends RailwayDataModuleBase {
 
 	private static String formatString(String text) {
 		return String.format("\"%s\"", text.replace("\"", "\"\""));
+	}
+
+	@Override
+	public void tick() {
+
 	}
 
 	private enum LoggingEditType {

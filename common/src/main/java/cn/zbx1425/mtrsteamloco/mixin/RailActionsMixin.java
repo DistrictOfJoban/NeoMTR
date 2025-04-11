@@ -3,7 +3,7 @@ package cn.zbx1425.mtrsteamloco.mixin;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import mtr.data.Rail;
-import mtr.data.RailwayData;
+import mtr.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -49,7 +48,7 @@ public abstract class RailActionsMixin {
     private boolean createBridge() {
         return this.create(false, (editPos) -> {
             double refY = editPos.y;
-            BlockPos pos = RailwayData.newBlockPos(editPos.x, refY, editPos.z);
+            BlockPos pos = BlockUtil.newBlockPos(editPos.x, refY, editPos.z);
             boolean isTopHalf = refY - Math.floor(refY) >= 0.5;
 
             BlockPos placePos, airPos;

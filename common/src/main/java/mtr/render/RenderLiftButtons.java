@@ -8,11 +8,11 @@ import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.IGui;
 import mtr.data.Lift;
-import mtr.data.RailwayData;
 import mtr.item.ItemLiftButtonsLinkModifier;
 import mtr.mappings.BlockEntityRendererMapper;
 import mtr.mappings.Utilities;
 import mtr.mappings.UtilitiesClient;
+import mtr.util.BlockUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -79,7 +79,7 @@ public class RenderLiftButtons extends BlockEntityRendererMapper<BlockLiftButton
 						buttonStates[3] = true;
 					}
 
-					final BlockPos liftPos = RailwayData.newBlockPos(lift.getPositionX(), 0, lift.getPositionZ());
+					final BlockPos liftPos = BlockUtil.newBlockPos(lift.getPositionX(), 0, lift.getPositionZ());
 					liftPositions.add(liftPos);
 					liftDisplays.put(liftPos, new Tuple<>(ClientData.DATA_CACHE.requestLiftFloorText(lift.getCurrentFloorBlockPos())[0], lift.getLiftDirection()));
 				}
@@ -98,7 +98,7 @@ public class RenderLiftButtons extends BlockEntityRendererMapper<BlockLiftButton
 			final double hitX = hitLocation.x - Math.floor(hitLocation.x);
 			final double hitY = hitLocation.y - Math.floor(hitLocation.y);
 			final double hitZ = hitLocation.z - Math.floor(hitLocation.z);
-			final boolean inBlock = hitX > 0 && hitY > 0 && hitZ > 0 && RailwayData.newBlockPos(hitLocation).equals(pos);
+			final boolean inBlock = hitX > 0 && hitY > 0 && hitZ > 0 && BlockUtil.newBlockPos(hitLocation).equals(pos);
 			lookingAtTopHalf = inBlock && (!buttonStates[1] || hitY > 0.25 && hitY < 0.5);
 			lookingAtBottomHalf = inBlock && (!buttonStates[0] || hitY < 0.25);
 		}

@@ -2,6 +2,8 @@ package mtr.data;
 
 import mtr.block.BlockNode;
 import mtr.mappings.Text;
+import mtr.util.BlockUtil;
+import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -517,7 +519,7 @@ public class Rail extends SerializedDataBase {
 		public void writePacket(FriendlyByteBuf packet) {
 			packet.writeLong(id);
 			packet.writeUtf(playerName);
-			packet.writeFloat(RailwayData.round(length, 1));
+			packet.writeFloat(Util.round(length, 1));
 			packet.writeUtf(state == null ? "" : state.getBlock().getDescriptionId());
 			packet.writeUtf(railActionType.nameTranslation);
 			packet.writeInt(railActionType.color);
@@ -525,7 +527,7 @@ public class Rail extends SerializedDataBase {
 
 		private boolean createTunnel() {
 			return create(true, editPos -> {
-				final BlockPos pos = RailwayData.newBlockPos(editPos);
+				final BlockPos pos = BlockUtil.newBlockPos(editPos);
 				if (!blacklistedPos.contains(pos) && canPlace(world, pos)) {
 					world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 					blacklistedPos.add(pos);
@@ -535,7 +537,7 @@ public class Rail extends SerializedDataBase {
 
 		private boolean createTunnelWall() {
 			return create(false, editPos -> {
-				final BlockPos pos = RailwayData.newBlockPos(editPos);
+				final BlockPos pos = BlockUtil.newBlockPos(editPos);
 				if (!blacklistedPos.contains(pos) && canPlace(world, pos)) {
 					world.setBlockAndUpdate(pos, state);
 					blacklistedPos.add(pos);
@@ -545,7 +547,7 @@ public class Rail extends SerializedDataBase {
 
 		private boolean createBridge() {
 			return create(false, editPos -> {
-				final BlockPos pos = RailwayData.newBlockPos(editPos);
+				final BlockPos pos = BlockUtil.newBlockPos(editPos);
 				final boolean isTopHalf = editPos.y - Math.floor(editPos.y) >= 0.5;
 				blacklistedPos.add(getHalfPos(pos, isTopHalf));
 
@@ -600,7 +602,7 @@ public class Rail extends SerializedDataBase {
 				}
 			}
 
-			showProgressMessage(RailwayData.round(100 * distance / length, 1));
+			showProgressMessage(Util.round(100 * distance / length, 1));
 			return false;
 		}
 
@@ -616,7 +618,7 @@ public class Rail extends SerializedDataBase {
 		}
 
 		private static BlockPos getHalfPos(BlockPos pos, boolean isTopHalf) {
-			return RailwayData.newBlockPos(pos.getX(), pos.getY() * 2 + (isTopHalf ? 1 : 0), pos.getZ());
+			return BlockUtil.newBlockPos(pos.getX(), pos.getY() * 2 + (isTopHalf ? 1 : 0), pos.getZ());
 		}
 	}
 

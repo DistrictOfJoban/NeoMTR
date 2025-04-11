@@ -26,10 +26,6 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 	private int languageOptions;
 	private boolean useDynamicFPS;
 
-	private final boolean hasTimeAndWindControls;
-	private final boolean useTimeAndWindSync;
-
-	private final WidgetBetterCheckbox checkboxUseTimeAndWindSync;
 	private final Button buttonUseMTRFont;
 	private final Button buttonShowAnnouncementMessages;
 	private final Button buttonUseTTSAnnouncements;
@@ -47,20 +43,7 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 	private static final int BUTTON_HEIGHT = TEXT_HEIGHT + TEXT_PADDING;
 
 	public ConfigScreen() {
-		this(false, false);
-	}
-
-	public ConfigScreen(boolean useTimeAndWindSync) {
-		this(true, useTimeAndWindSync);
-	}
-
-	private ConfigScreen(boolean hasTimeAndWindControls, boolean useTimeAndWindSync) {
 		super(Text.literal(""));
-
-		this.hasTimeAndWindControls = hasTimeAndWindControls && ClientData.hasPermission();
-		this.useTimeAndWindSync = useTimeAndWindSync;
-
-		checkboxUseTimeAndWindSync = new WidgetBetterCheckbox(0, 0, 0, SQUARE_SIZE, Text.translatable("gui.mtr.use_time_and_wind_sync"), PacketTrainDataGuiClient::sendUseTimeAndWindSyncC2S);
 
 		buttonUseMTRFont = UtilitiesClient.newButton(BUTTON_HEIGHT, Text.literal(""), button -> {
 			useMTRFont = Config.setUseMTRFont(!useMTRFont);
@@ -113,14 +96,7 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 		languageOptions = Config.languageOptions();
 		useDynamicFPS = Config.useDynamicFPS();
 
-		final int offsetY;
-		if (hasTimeAndWindControls) {
-			IDrawing.setPositionAndWidth(checkboxUseTimeAndWindSync, SQUARE_SIZE, SQUARE_SIZE, width);
-			checkboxUseTimeAndWindSync.setChecked(useTimeAndWindSync);
-			offsetY = SQUARE_SIZE;
-		} else {
-			offsetY = 0;
-		}
+		final int offsetY = 0;
 
 		int i = 1;
 		IDrawing.setPositionAndWidth(buttonUseMTRFont, width - SQUARE_SIZE - BUTTON_WIDTH, SQUARE_SIZE + offsetY, BUTTON_WIDTH);
@@ -153,9 +129,6 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 		sliderTrainRenderDistanceRatio.setValue(Config.trainRenderDistanceRatio());
 		buttonSupportPatreon.setMessage(Text.translatable("gui.mtr.support"));
 
-		if (hasTimeAndWindControls) {
-			addDrawableChild(checkboxUseTimeAndWindSync);
-		}
 		addDrawableChild(buttonUseMTRFont);
 		if (!Keys.LIFTS_ONLY) {
 			addDrawableChild(buttonShowAnnouncementMessages);
@@ -180,7 +153,7 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 			guiGraphics.pose().translate(0, 0, -100);
 			guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.mtr_options"), width / 2, TEXT_PADDING, ARGB_WHITE);
 
-			final int yStart1 = SQUARE_SIZE + TEXT_PADDING / 2 + (hasTimeAndWindControls ? SQUARE_SIZE : 0);
+			final int yStart1 = SQUARE_SIZE + TEXT_PADDING / 2;
 			int i = 1;
 			guiGraphics.drawString(font, Text.translatable("options.mtr.use_mtr_font"), SQUARE_SIZE, yStart1, ARGB_WHITE);
 			if (!Keys.LIFTS_ONLY) {

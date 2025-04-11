@@ -2,9 +2,9 @@ package mtr.screen;
 
 import mtr.block.BlockTrainAnnouncer;
 import mtr.data.DataConverter;
-import mtr.data.RailwayData;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
+import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -82,9 +82,9 @@ public class TrainAnnouncerScreen extends TrainSensorScreenBase {
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		if (button == 0) {
-			if (RailwayData.isBetween(mouseX, UtilitiesClient.getWidgetX(textFields[1]), UtilitiesClient.getWidgetX(textFields[1]) + textFields[1].getWidth()) && RailwayData.isBetween(mouseY, UtilitiesClient.getWidgetY(textFields[1]), UtilitiesClient.getWidgetY(textFields[1]) + textFields[1].getHeight())) {
+			if (Util.isBetween(mouseX, UtilitiesClient.getWidgetX(textFields[1]), UtilitiesClient.getWidgetX(textFields[1]) + textFields[1].getWidth()) && Util.isBetween(mouseY, UtilitiesClient.getWidgetY(textFields[1]), UtilitiesClient.getWidgetY(textFields[1]) + textFields[1].getHeight())) {
 				setListVisibility(true);
-			} else if (!RailwayData.isBetween(mouseX, availableSoundsList.x, availableSoundsList.x + availableSoundsList.width) || !RailwayData.isBetween(mouseY, availableSoundsList.y, availableSoundsList.y + availableSoundsList.height)) {
+			} else if (!Util.isBetween(mouseX, availableSoundsList.x, availableSoundsList.x + availableSoundsList.width) || !Util.isBetween(mouseY, availableSoundsList.y, availableSoundsList.y + availableSoundsList.height)) {
 				setListVisibility(false);
 			}
 		}

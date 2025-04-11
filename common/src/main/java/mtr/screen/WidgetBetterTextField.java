@@ -1,9 +1,9 @@
 package mtr.screen;
 
 import mtr.data.IGui;
-import mtr.data.RailwayData;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
+import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 
@@ -59,7 +59,7 @@ public class WidgetBetterTextField extends EditBox implements IGui {
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		if (isVisible() && RailwayData.isBetween(mouseX, UtilitiesClient.getWidgetX(this), UtilitiesClient.getWidgetX(this) + width) && RailwayData.isBetween(mouseY, UtilitiesClient.getWidgetY(this), UtilitiesClient.getWidgetY(this) + height)) {
+		if (isVisible() && Util.isBetween(mouseX, UtilitiesClient.getWidgetX(this), UtilitiesClient.getWidgetX(this) + width) && Util.isBetween(mouseY, UtilitiesClient.getWidgetY(this), UtilitiesClient.getWidgetY(this) + height)) {
 			if (button == 1) {
 				setValue("");
 			}

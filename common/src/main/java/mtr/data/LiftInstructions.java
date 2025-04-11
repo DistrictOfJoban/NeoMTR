@@ -1,6 +1,7 @@
 package mtr.data;
 
 import mtr.block.BlockLiftButtons;
+import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
@@ -185,7 +186,7 @@ public class LiftInstructions {
 		}
 
 		private boolean canInsert(LiftInstruction previousInstruction, int newFloor, boolean newMovingUp) {
-			if (RailwayData.isBetween(newFloor, previousInstruction.floor, floor) && newMovingUp == movingUp) {
+			if (Util.isBetween(newFloor, previousInstruction.floor, floor) && newMovingUp == movingUp) {
 				return true;
 			} else {
 				return previousInstruction.movingUp != movingUp && previousInstruction.movingUp == (newFloor > previousInstruction.floor);

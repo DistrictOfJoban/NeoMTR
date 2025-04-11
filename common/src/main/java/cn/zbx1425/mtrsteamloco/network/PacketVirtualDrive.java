@@ -4,6 +4,7 @@ import cn.zbx1425.mtrsteamloco.Main;
 import io.netty.buffer.Unpooled;
 import mtr.RegistryClient;
 import mtr.data.RailwayData;
+import mtr.data.RailwayDataMountModule;
 import mtr.data.Siding;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -23,9 +24,9 @@ public class PacketVirtualDrive {
     public static void receiveVirtualDriveC2S(MinecraftServer server, ServerPlayer player, FriendlyByteBuf packet) {
         final boolean isDriving = packet.readBoolean();
         server.execute(() -> {
+            RailwayDataMountModule railwayDataMountModule = RailwayData.getInstance(player.level()).getModule(RailwayDataMountModule.NAME);
             if (isDriving) {
-                RailwayData.getInstance(player.level()).railwayDataCoolDownModule
-                        .updatePlayerInVirtualDrive(player, true);
+                railwayDataMountModule.updatePlayerInVirtualDrive(player, true);
                 // Unmount the player from the train they're currently riding
                 // Mounting cooldown is still applied by playerInVirtualDrive
                 // And thus the player wouldn't get mounted onto another real train
@@ -33,8 +34,7 @@ public class PacketVirtualDrive {
                     siding.unmountPlayer(player);
                 }
             } else {
-                RailwayData.getInstance(player.level()).railwayDataCoolDownModule
-                        .updatePlayerInVirtualDrive(player, false);
+                railwayDataMountModule.updatePlayerInVirtualDrive(player, false);
             }
             for (ServerPlayer target : player.serverLevel().players()) {
                 PacketVirtualDrivingPlayers.sendVirtualDrivingPlayersS2C(target);

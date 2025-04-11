@@ -39,10 +39,9 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		Registry.sendToPlayer(player, Networking.PACKET_VERSION_CHECK, packet);
 	}
 
-	public static void openDashboardScreenS2C(ServerPlayer player, TransportMode transportMode, boolean useTimeAndWindSync) {
+	public static void openDashboardScreenS2C(ServerPlayer player, TransportMode transportMode) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeUtf(transportMode.toString());
-		packet.writeBoolean(useTimeAndWindSync);
 		Registry.sendToPlayer(player, Networking.PACKET_OPEN_DASHBOARD_SCREEN, packet);
 	}
 
@@ -210,10 +209,12 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 			}
 		};
 
+		RailwayDataLoggingModule loggingModule = railwayData.getModule(RailwayDataLoggingModule.NAME);
+
 		if (isDelete) {
-			deleteData(dataSet.apply(railwayData), cacheMap.apply(railwayData), minecraftServer, packet, packetCallback, data -> railwayData.railwayDataLoggingModule.addEvent(player, data.getClass(), data.id, data.name, RailwayDataLoggingModule.getData(data), new ArrayList<>()));
+			deleteData(dataSet.apply(railwayData), cacheMap.apply(railwayData), minecraftServer, packet, packetCallback, data -> loggingModule.addEvent(player, data.getClass(), data.id, data.name, RailwayDataLoggingModule.getData(data), new ArrayList<>()));
 		} else {
-			updateData(dataSet.apply(railwayData), cacheMap.apply(railwayData), minecraftServer, packet, packetCallback, createDataWithId, (data, oldData) -> railwayData.railwayDataLoggingModule.addEvent(player, data.getClass(), data.id, data.name, oldData, RailwayDataLoggingModule.getData(data)));
+			updateData(dataSet.apply(railwayData), cacheMap.apply(railwayData), minecraftServer, packet, packetCallback, createDataWithId, (data, oldData) -> loggingModule.addEvent(player, data.getClass(), data.id, data.name, oldData, RailwayDataLoggingModule.getData(data)));
 		}
 	}
 
@@ -229,7 +230,8 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		final RailwayData railwayData = RailwayData.getInstance(world);
 		if (railwayData != null) {
 			final long depotId = packet.readLong();
-			minecraftServer.execute(() -> railwayData.railwayDataPathGenerationModule.generatePath(minecraftServer, depotId));
+			RailwayDataPathGenerationModule pathGenerationModule = railwayData.getModule(RailwayDataPathGenerationModule.NAME);
+			minecraftServer.execute(() -> pathGenerationModule.generatePath(minecraftServer, depotId));
 		}
 	}
 
@@ -335,7 +337,8 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 			final boolean pressingAccelerate = packet.readBoolean();
 			final boolean pressingBrake = packet.readBoolean();
 			final boolean pressingDoors = packet.readBoolean();
-			minecraftServer.execute(() -> railwayData.railwayDataDriveTrainModule.drive(player, pressingAccelerate, pressingBrake, pressingDoors));
+			RailwayDataDriveTrainModule driveTrainModule = railwayData.getModule(RailwayDataDriveTrainModule.NAME);
+			minecraftServer.execute(() -> driveTrainModule.drive(player, pressingAccelerate, pressingBrake, pressingDoors));
 		}
 	}
 
@@ -422,30 +425,15 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		});
 	}
 
-	public static void receiveUseTimeAndWindSyncC2S(MinecraftServer minecraftServer, ServerPlayer player, FriendlyByteBuf packet) {
-		if (RailwayData.hasNoPermission(player) || !player.hasPermissions(1)) {
-			return;
-		}
-
-		final Level world = player.level();
-		final RailwayData railwayData = RailwayData.getInstance(world);
-		if (railwayData != null) {
-			final boolean useTimeAndWindSync = packet.readBoolean();
-			minecraftServer.execute(() -> {
-				final boolean useTimeAndWindSyncOld = railwayData.getUseTimeAndWindSync();
-				railwayData.setUseTimeAndWindSync(useTimeAndWindSync);
-				final String key = "\"use_time_and_wind_sync\":";
-				railwayData.railwayDataLoggingModule.addEvent(player, RailwayData.class, Collections.singletonList(key + useTimeAndWindSyncOld), Collections.singletonList(key + useTimeAndWindSync));
-			});
-		}
-	}
-
 	public static void receiveRemoveRailAction(MinecraftServer minecraftServer, Player player, FriendlyByteBuf packet) {
 		final Level world = player.level();
 		final RailwayData railwayData = RailwayData.getInstance(world);
 		if (railwayData != null) {
 			final long id = packet.readLong();
-			minecraftServer.execute(() -> railwayData.railwayDataRailActionsModule.removeRailAction(id));
+			minecraftServer.execute(() -> {
+				final RailwayDataRailActionsModule railActionsModule = railwayData.getModule(RailwayDataRailActionsModule.NAME);
+				railActionsModule.removeRailAction(id);
+			});
 		}
 	}
 
@@ -524,7 +512,8 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 			final CompoundTag compoundTagNew = new CompoundTag();
 			entities[0].writeCompoundTag(compoundTagNew);
 
-			railwayData.railwayDataLoggingModule.addEvent(player, entities[0].getClass(), RailwayDataLoggingModule.getData(compoundTagOld), RailwayDataLoggingModule.getData(compoundTagNew), blockPos);
+			RailwayDataLoggingModule loggingModule = railwayData.getModule(RailwayDataLoggingModule.NAME);
+			loggingModule.addEvent(player, entities[0].getClass(), RailwayDataLoggingModule.getData(compoundTagOld), RailwayDataLoggingModule.getData(compoundTagNew), blockPos);
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package mtr.data;
 
 import io.netty.buffer.Unpooled;
+import mtr.util.BlockUtil;
+import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -101,7 +103,7 @@ public abstract class AreaBase extends NameColorDataBase {
 	}
 
 	public boolean inArea(int x, int z) {
-		return nonNullCorners(this) && RailwayData.isBetween(x, corner1.getA(), corner2.getA()) && RailwayData.isBetween(z, corner1.getB(), corner2.getB());
+		return nonNullCorners(this) && Util.isBetween(x, corner1.getA(), corner2.getA()) && Util.isBetween(z, corner1.getB(), corner2.getB());
 	}
 
 	public boolean intersecting(AreaBase areaBase) {
@@ -109,7 +111,7 @@ public abstract class AreaBase extends NameColorDataBase {
 	}
 
 	public BlockPos getCenter() {
-		return nonNullCorners(this) ? RailwayData.newBlockPos((corner1.getA() + corner2.getA()) / 2, 0, (corner1.getB() + corner2.getB()) / 2) : null;
+		return nonNullCorners(this) ? BlockUtil.newBlockPos((corner1.getA() + corner2.getA()) / 2, 0, (corner1.getB() + corner2.getB()) / 2) : null;
 	}
 
 	private void setCorners(int corner1a, int corner1b, int corner2a, int corner2b) {

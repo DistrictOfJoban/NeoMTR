@@ -6,9 +6,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import mtr.MTR;
 import mtr.data.*;
 import mtr.mappings.Utilities;
+import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 
@@ -796,7 +796,7 @@ public class RouteMapGenerator implements IGui {
 	}
 
 	private static void blendPixel(NativeImage nativeImage, int x, int y, int color) {
-		if (RailwayData.isBetween(x, 0, nativeImage.getWidth() - 1) && RailwayData.isBetween(y, 0, nativeImage.getHeight() - 1)) {
+		if (Util.isBetween(x, 0, nativeImage.getWidth() - 1) && Util.isBetween(y, 0, nativeImage.getHeight() - 1)) {
 			final float percent = (float) ((color >> 24) & 0xFF) / 0xFF;
 			if (percent > 0) {
 				final int existingPixel = nativeImage.getPixelRGBA(x, y);
@@ -815,7 +815,7 @@ public class RouteMapGenerator implements IGui {
 	}
 
 	private static void drawPixelSafe(NativeImage nativeImage, int x, int y, int color) {
-		if (RailwayData.isBetween(x, 0, nativeImage.getWidth() - 1) && RailwayData.isBetween(y, 0, nativeImage.getHeight() - 1)) {
+		if (Util.isBetween(x, 0, nativeImage.getWidth() - 1) && Util.isBetween(y, 0, nativeImage.getHeight() - 1)) {
 			nativeImage.setPixelRGBA(x, y, invertColor(color));
 		}
 	}

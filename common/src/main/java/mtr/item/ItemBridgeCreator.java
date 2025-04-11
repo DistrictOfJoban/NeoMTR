@@ -1,6 +1,7 @@
 package mtr.item;
 
 import mtr.data.RailwayData;
+import mtr.data.RailwayDataRailActionsModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +16,7 @@ public class ItemBridgeCreator extends ItemNodeModifierSelectableBlockBase {
 	@Override
 	protected boolean onConnect(Player player, ItemStack stack, RailwayData railwayData, BlockPos posStart, BlockPos posEnd, int radius, int height) {
 		final BlockState state = getSavedState(stack);
-		return state == null || railwayData.railwayDataRailActionsModule.markRailForBridge(player, posStart, posEnd, radius, state);
+		final RailwayDataRailActionsModule railActionsModule = railwayData.getModule(RailwayDataRailActionsModule.NAME);
+		return state == null || railActionsModule.markRailForBridge(player, posStart, posEnd, radius, state);
 	}
 }

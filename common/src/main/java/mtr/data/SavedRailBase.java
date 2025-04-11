@@ -1,5 +1,6 @@
 package mtr.data;
 
+import mtr.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -105,7 +106,7 @@ public abstract class SavedRailBase extends NameColorDataBase {
 
 	public BlockPos getMidPos(boolean zeroY) {
 		final BlockPos pos = getPosition(0).offset(getPosition(1));
-		return RailwayData.newBlockPos(pos.getX() / 2, zeroY ? 0 : pos.getY() / 2, pos.getZ() / 2);
+		return BlockUtil.newBlockPos(pos.getX() / 2, zeroY ? 0 : pos.getY() / 2, pos.getZ() / 2);
 	}
 
 	public Direction.Axis getAxis() {
@@ -172,7 +173,7 @@ public abstract class SavedRailBase extends NameColorDataBase {
 	}
 
 	private BlockPos getPosition(int index) {
-		return positions.size() > index ? new ArrayList<>(positions).get(index) : RailwayData.newBlockPos(0, 0, 0);
+		return positions.size() > index ? new ArrayList<>(positions).get(index) : BlockUtil.newBlockPos(0, 0, 0);
 	}
 
 	public static boolean isInvalidSavedRail(Map<BlockPos, Map<BlockPos, Rail>> rails, BlockPos pos1, BlockPos pos2) {

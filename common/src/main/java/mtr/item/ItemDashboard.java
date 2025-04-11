@@ -25,7 +25,7 @@ public class ItemDashboard extends ItemWithCreativeTabBase {
 		if (!world.isClientSide()) {
 			final RailwayData railwayData = RailwayData.getInstance(world);
 			if (railwayData != null) {
-				PacketTrainDataGuiServer.openDashboardScreenS2C((ServerPlayer) player, transportMode, railwayData.getUseTimeAndWindSync());
+				PacketTrainDataGuiServer.openDashboardScreenS2C((ServerPlayer) player, transportMode);
 			}
 		}
 		return super.use(world, player, interactionHand);

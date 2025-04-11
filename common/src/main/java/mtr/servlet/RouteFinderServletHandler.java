@@ -3,6 +3,7 @@ package mtr.servlet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import mtr.data.*;
+import mtr.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -45,7 +46,8 @@ public class RouteFinderServletHandler extends HttpServlet {
 					final PositionInfo startPositionInfo = getPosition(world, railwayData, parameterStartPlayer, parameterStartStation, parameterStartPos, true, errors);
 					final PositionInfo endPositionInfo = getPosition(world, railwayData, parameterEndPlayer, parameterEndStation, parameterEndPos, false, errors);
 					if (startPositionInfo != null && endPositionInfo != null && errors.isEmpty()) {
-						if (!railwayData.railwayDataRouteFinderModule.findRoute(startPositionInfo.pos, endPositionInfo.pos, maxTickTime, (dataList, duration) -> {
+						RailwayDataRouteFinderModule routeFinderModule = railwayData.getModule(RailwayDataRouteFinderModule.NAME);
+						if (!routeFinderModule.findRoute(startPositionInfo.pos, endPositionInfo.pos, maxTickTime, (dataList, duration) -> {
 							final JsonObject jsonObject = new JsonObject();
 							jsonObject.add("start", startPositionInfo.toJsonObject());
 							jsonObject.add("end", endPositionInfo.toJsonObject());
@@ -149,7 +151,7 @@ public class RouteFinderServletHandler extends HttpServlet {
 		} else if (parameterPos != null) {
 			try {
 				final String[] coordinates = parameterPos.split(",");
-				return new PositionInfo(RailwayData.newBlockPos(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]), Double.parseDouble(coordinates[2])), railwayData, null, null, false);
+				return new PositionInfo(BlockUtil.newBlockPos(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]), Double.parseDouble(coordinates[2])), railwayData, null, null, false);
 			} catch (Exception ignored) {
 			}
 			errors.add(String.format("The block position '%s' is not formatted correctly.", parameterPos));

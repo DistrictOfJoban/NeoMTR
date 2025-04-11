@@ -12,6 +12,7 @@ import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
+import mtr.util.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -196,7 +197,7 @@ public class SidingScreen extends SavedRailScreenBase<Siding> implements Icons {
 		}
 		float accelerationConstant;
 		try {
-			accelerationConstant = RailwayData.round(Mth.clamp((float) sliderAccelerationConstant.getIntValue() / SLIDER_SCALE + Train.MIN_ACCELERATION, Train.MIN_ACCELERATION, Train.MAX_ACCELERATION), 4);
+			accelerationConstant = Util.round(Mth.clamp((float) sliderAccelerationConstant.getIntValue() / SLIDER_SCALE + Train.MIN_ACCELERATION, Train.MIN_ACCELERATION, Train.MAX_ACCELERATION), 4);
 		} catch (Exception ignored) {
 			accelerationConstant = Train.ACCELERATION_DEFAULT;
 		}
@@ -280,7 +281,7 @@ public class SidingScreen extends SavedRailScreenBase<Siding> implements Icons {
 
 	private String accelerationSliderFormatter(int value) {
 		final float valueMeterPerTickSquared = ((float) value / SLIDER_SCALE + Train.MIN_ACCELERATION);
-		return String.format("%s m/s² (%s km/h/s)", RailwayData.round(valueMeterPerTickSquared * ACCELERATION_UNIT_CONVERSION_1, 1), RailwayData.round(valueMeterPerTickSquared * ACCELERATION_UNIT_CONVERSION_2, 1));
+		return String.format("%s m/s² (%s km/h/s)", Util.round(valueMeterPerTickSquared * ACCELERATION_UNIT_CONVERSION_1, 1), Util.round(valueMeterPerTickSquared * ACCELERATION_UNIT_CONVERSION_2, 1));
 	}
 
 	private String speedSliderFormatter(int value) {

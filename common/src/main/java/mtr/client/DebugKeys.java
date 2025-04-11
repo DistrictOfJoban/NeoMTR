@@ -2,8 +2,8 @@ package mtr.client;
 
 import mtr.registry.KeyMappings;
 import mtr.MTRClient;
-import mtr.data.RailwayData;
 import mtr.mappings.Text;
+import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 
@@ -77,14 +77,14 @@ public class DebugKeys {
 	}
 
 	public float getField1(int category) {
-		return RailwayData.round(field1[Math.abs(category) % categories] * scale, 5);
+		return Util.round(field1[Math.abs(category) % categories] * scale, 5);
 	}
 
 	public float getField2(int category) {
-		return RailwayData.round(field2[Math.abs(category) % categories] * scale, 5);
+		return Util.round(field2[Math.abs(category) % categories] * scale, 5);
 	}
 
 	public float getField3(int category) {
-		return RailwayData.round(field3[Math.abs(category) % categories] * scale, 5);
+		return Util.round(field3[Math.abs(category) % categories] * scale, 5);
 	}
 }

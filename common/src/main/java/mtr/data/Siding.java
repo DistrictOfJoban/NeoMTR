@@ -1,9 +1,10 @@
 package mtr.data;
 
 import io.netty.buffer.Unpooled;
-import mtr.registry.Networking;
 import mtr.path.PathData;
 import mtr.path.PathFinder;
+import mtr.util.BlockUtil;
+import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
 
 public class Siding extends SavedRailBase implements IReducedSaveData {
 
-	private Level world;
+	private Level level;
 	private Depot depot;
 	private String trainId;
 	private String baseTrainType;
@@ -54,7 +55,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 
 	public Siding(long id, TransportMode transportMode, BlockPos pos1, BlockPos pos2, float railLength) {
 		super(id, transportMode, pos1, pos2);
-		this.railLength = RailwayData.round(railLength, 3);
+		this.railLength = Util.round(railLength, 3);
 		setTrainDetails();
 		unlimitedTrains = transportMode.continuousMovement;
 		accelerationConstant = transportMode.continuousMovement ? Train.MAX_ACCELERATION : Train.ACCELERATION_DEFAULT;
@@ -62,7 +63,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 
 	public Siding(TransportMode transportMode, BlockPos pos1, BlockPos pos2, float railLength) {
 		super(transportMode, pos1, pos2);
-		this.railLength = RailwayData.round(railLength, 3);
+		this.railLength = Util.round(railLength, 3);
 		setTrainDetails();
 		unlimitedTrains = transportMode.continuousMovement;
 		accelerationConstant = transportMode.continuousMovement ? Train.MAX_ACCELERATION : Train.ACCELERATION_DEFAULT;
@@ -71,7 +72,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 	public Siding(Map<String, Value> map) {
 		super(map);
 		final MessagePackHelper messagePackHelper = new MessagePackHelper(map);
-		railLength = RailwayData.round(messagePackHelper.getFloat(KEY_RAIL_LENGTH), 3);
+		railLength = Util.round(messagePackHelper.getFloat(KEY_RAIL_LENGTH), 3);
 		setTrainDetails(messagePackHelper.getString(KEY_TRAIN_ID), messagePackHelper.getString(KEY_BASE_TRAIN_TYPE), false);
 		unlimitedTrains = transportMode.continuousMovement || messagePackHelper.getBoolean(KEY_UNLIMITED_TRAINS);
 		maxTrains = messagePackHelper.getInt(KEY_MAX_TRAINS);
@@ -79,7 +80,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 		maxManualSpeed = messagePackHelper.getInt(KEY_MAX_MANUAL_SPEED);
 		repeatIndex1 = messagePackHelper.getInt(KEY_REPEAT_INDEX_1);
 		repeatIndex2 = messagePackHelper.getInt(KEY_REPEAT_INDEX_2);
-		final float tempAccelerationConstant = RailwayData.round(messagePackHelper.getFloat(KEY_ACCELERATION_CONSTANT, Train.ACCELERATION_DEFAULT), 4);
+		final float tempAccelerationConstant = Util.round(messagePackHelper.getFloat(KEY_ACCELERATION_CONSTANT, Train.ACCELERATION_DEFAULT), 4);
 		accelerationConstant = transportMode.continuousMovement ? Train.MAX_ACCELERATION : tempAccelerationConstant <= 0 ? Train.ACCELERATION_DEFAULT : tempAccelerationConstant;
 
 		messagePackHelper.iterateArrayValue(KEY_PATH, pathSection -> path.add(new PathData(RailwayData.castMessagePackValueToSKMap(pathSection))));
@@ -94,7 +95,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 	public Siding(CompoundTag compoundTag) {
 		super(compoundTag);
 
-		railLength = RailwayData.round(compoundTag.getFloat(KEY_RAIL_LENGTH), 3);
+		railLength = Util.round(compoundTag.getFloat(KEY_RAIL_LENGTH), 3);
 		setTrainDetails(compoundTag.getString(KEY_TRAIN_ID), compoundTag.getString(KEY_BASE_TRAIN_TYPE), false);
 		unlimitedTrains = transportMode.continuousMovement || compoundTag.getBoolean(KEY_UNLIMITED_TRAINS);
 		maxTrains = compoundTag.getInt(KEY_MAX_TRAINS);
@@ -119,13 +120,13 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 
 	public Siding(FriendlyByteBuf packet) {
 		super(packet);
-		railLength = RailwayData.round(packet.readFloat(), 3);
+		railLength = Util.round(packet.readFloat(), 3);
 		setTrainDetails(packet.readUtf(PACKET_STRING_READ_LENGTH), packet.readUtf(PACKET_STRING_READ_LENGTH), false);
 		unlimitedTrains = packet.readBoolean() || transportMode.continuousMovement;
 		maxTrains = packet.readInt();
 		isManual = packet.readBoolean();
 		maxManualSpeed = packet.readInt();
-		final float tempAccelerationConstant = RailwayData.round(packet.readFloat(), 4);
+		final float tempAccelerationConstant = Util.round(packet.readFloat(), 4);
 		accelerationConstant = transportMode.continuousMovement ? Train.MAX_ACCELERATION : tempAccelerationConstant <= 0 ? Train.ACCELERATION_DEFAULT : tempAccelerationConstant;
 	}
 
@@ -191,7 +192,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 				maxTrains = packet.readInt();
 				isManual = packet.readBoolean();
 				maxManualSpeed = packet.readInt();
-				final float newAccelerationConstant = RailwayData.round(packet.readFloat(), 4);
+				final float newAccelerationConstant = Util.round(packet.readFloat(), 4);
 				accelerationConstant = transportMode.continuousMovement ? Train.MAX_ACCELERATION : newAccelerationConstant;
 				if (packet.readBoolean()) {
 					trains.clear();
@@ -226,7 +227,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 		packet.writeInt(maxTrains);
 		packet.writeBoolean(isManual);
 		packet.writeInt(maxManualSpeed);
-		final float tempAccelerationConstant = RailwayData.round(accelerationConstant, 4);
+		final float tempAccelerationConstant = Util.round(accelerationConstant, 4);
 		packet.writeFloat(tempAccelerationConstant);
 		packet.writeBoolean(clearTrains);
 		sendPacket.accept(packet);
@@ -249,7 +250,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 	}
 
 	public void setSidingData(Level world, Depot depot, Map<BlockPos, Map<BlockPos, Rail>> rails) {
-		this.world = world;
+		this.level = world;
 		this.depot = depot;
 
 		if (depot == null) {
@@ -361,7 +362,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 				trainsToSync.add(train);
 			}
 
-			if (train.simulateTrain(world, 1, depot, dataCache, trainPositions, trainsInPlayerRange, schedulesForPlatform, trainDelays)) {
+			if (train.simulateTrain(level, 1, depot, dataCache, trainPositions, trainsInPlayerRange, schedulesForPlatform, trainDelays)) {
 				trainsToSync.add(train);
 			}
 
@@ -454,7 +455,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 	private void generateDefaultPath(Map<BlockPos, Map<BlockPos, Rail>> rails) {
 		trains.clear();
 
-		final List<BlockPos> orderedPositions = getOrderedPositions(RailwayData.newBlockPos(0, 0, 0), false);
+		final List<BlockPos> orderedPositions = getOrderedPositions(BlockUtil.newBlockPos(0, 0, 0), false);
 		final BlockPos pos1 = orderedPositions.get(0);
 		final BlockPos pos2 = orderedPositions.get(1);
 		if (RailwayData.containsRail(rails, pos1, pos2)) {
@@ -576,7 +577,7 @@ public class Siding extends SavedRailBase implements IReducedSaveData {
 			this.startSpeed = startSpeed;
 			this.startTime = startTime;
 			this.speedChange = Integer.compare(speedChange, 0);
-			final float tempAccelerationConstant = RailwayData.round(accelerationConstant, 4);
+			final float tempAccelerationConstant = Util.round(accelerationConstant, 4);
 			this.accelerationConstant = tempAccelerationConstant <= 0 ? Train.ACCELERATION_DEFAULT : tempAccelerationConstant;
 		}
 

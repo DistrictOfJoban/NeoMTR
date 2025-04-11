@@ -1,18 +1,15 @@
 package mtr.data;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import io.netty.buffer.Unpooled;
 import mtr.MTR;
 import mtr.Registry;
 import mtr.block.BlockNode;
 import mtr.client.ClientData;
 import mtr.mappings.PersistentStateMapper;
-import mtr.mappings.Utilities;
 import mtr.packet.*;
 import mtr.path.PathData;
 import mtr.registry.Networking;
-import net.minecraft.commands.CommandSourceStack;
+import mtr.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -21,12 +18,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.msgpack.core.MessagePack;
@@ -36,7 +31,6 @@ import org.msgpack.value.Value;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,24 +44,14 @@ public class RailwayData extends PersistentStateMapper {
 	public final Set<LiftServer> lifts = new HashSet<>();
 	public final DataCache dataCache = new DataCache(stations, platforms, sidings, routes, depots, lifts);
 
-	public final RailwayDataLoggingModule railwayDataLoggingModule;
-	public final RailwayDataCoolDownModule railwayDataCoolDownModule;
-	public final RailwayDataPathGenerationModule railwayDataPathGenerationModule;
-	public final RailwayDataRailActionsModule railwayDataRailActionsModule;
-	public final RailwayDataDriveTrainModule railwayDataDriveTrainModule;
-	public final RailwayDataRouteFinderModule railwayDataRouteFinderModule;
-
 	private int prevPlatformCount;
 	private int prevSidingCount;
-	private boolean useTimeAndWindSync;
 
-	private final Level world;
+	private final Level level;
 	private final Map<BlockPos, Map<BlockPos, Rail>> rails = new HashMap<>();
 	private final SignalBlocks signalBlocks = new SignalBlocks();
 
-	private final RailwayDataFileSaveModule railwayDataFileSaveModule;
-
-	private final List<Map<UUID, Long>> trainPositions = new ArrayList<>(2);
+    private final List<Map<UUID, Long>> trainPositions = new ArrayList<>(2);
 	private final Map<Player, BlockPos> playerLastUpdatedPositions = new HashMap<>();
 	private final List<Player> playersToSyncSchedules = new ArrayList<>();
 	private final UpdateNearbyMovingObjects<TrainServer> updateNearbyTrains;
@@ -91,25 +75,30 @@ public class RailwayData extends PersistentStateMapper {
 	private static final String KEY_LIFTS = "lifts";
 	private static final String KEY_RAILS = "rails";
 	private static final String KEY_SIGNAL_BLOCKS = "signal_blocks";
-	private static final String KEY_USE_TIME_AND_WIND_SYNC = "use_time_and_wind_sync";
 
-	public RailwayData(Level world) {
+	private final HashMap<String, RailwayDataModule> modules;
+	private static final List<RailwayDataModuleCallback> railwayModulesCallbacks = new ArrayList<>();
+
+	public RailwayData(Level level) {
 		super(NAME);
-		this.world = world;
+		this.level = level;
+		this.modules =  new HashMap<>();
 
 		trainPositions.add(new HashMap<>());
 		trainPositions.add(new HashMap<>());
 
-		final ResourceLocation dimensionLocation = world.dimension().location();
-		final Path savePath = ((ServerLevel) world).getServer().getWorldPath(LevelResource.ROOT).resolve("mtr").resolve(dimensionLocation.getNamespace()).resolve(dimensionLocation.getPath());
+		addModule(RailwayDataFileSaveModule.NAME, new RailwayDataFileSaveModule(this, level, rails, signalBlocks));
+		addModule(RailwayDataLoggingModule.NAME, new RailwayDataLoggingModule(this, level, rails));
+		addModule(RailwayDataPathGenerationModule.NAME, new RailwayDataPathGenerationModule(this, level, rails));
+		addModule(RailwayDataRailActionsModule.NAME, new RailwayDataRailActionsModule(this, level, rails));
+		addModule(RailwayDataMountModule.NAME, new RailwayDataMountModule(this, level, rails));
+		addModule(RailwayDataDriveTrainModule.NAME, new RailwayDataDriveTrainModule(this, level, rails));
+		addModule(RailwayDataRouteFinderModule.NAME, new RailwayDataRouteFinderModule(this, level, rails));
 
-		railwayDataFileSaveModule = new RailwayDataFileSaveModule(this, world, rails, savePath, signalBlocks);
-		railwayDataLoggingModule = new RailwayDataLoggingModule(this, world, rails, savePath);
-		railwayDataPathGenerationModule = new RailwayDataPathGenerationModule(this, world, rails);
-		railwayDataRailActionsModule = new RailwayDataRailActionsModule(this, world, rails);
-		railwayDataCoolDownModule = new RailwayDataCoolDownModule(this, world, rails);
-		railwayDataDriveTrainModule = new RailwayDataDriveTrainModule(this, world, rails);
-		railwayDataRouteFinderModule = new RailwayDataRouteFinderModule(this, world, rails);
+		for(RailwayDataModuleCallback railwayDataModuleCallback : railwayModulesCallbacks) {
+			RailwayDataModule module = railwayDataModuleCallback.getModule(this, level, rails);
+			addModule(module.getName(), module);
+		}
 
 		updateNearbyTrains = new UpdateNearbyMovingObjects<>(Networking.PACKET_DELETE_TRAINS, Networking.PACKET_UPDATE_TRAINS);
 		updateNearbyLifts = new UpdateNearbyMovingObjects<>(Networking.PACKET_DELETE_LIFTS, Networking.PACKET_UPDATE_LIFTS);
@@ -232,26 +221,26 @@ public class RailwayData extends PersistentStateMapper {
 			}
 		}
 
-		railwayDataFileSaveModule.load();
+		for(RailwayDataModule railwayDataModule : modules.values()) {
+			railwayDataModule.load();
+		}
+
 		validateData();
 		dataCache.sync();
 		signalBlocks.writeCache();
 
-		useTimeAndWindSync = compoundTag.getBoolean(KEY_USE_TIME_AND_WIND_SYNC);
-		runRealTimeSync();
-
 		try {
-			UpdateDynmap.updateDynmap(world, this);
+			UpdateDynmap.updateDynmap(level, this);
 			MTR.LOGGER.info("[NeoMTR] Dynmap is detected");
 		} catch (NoClassDefFoundError | Exception ignored) {
 		}
         try {
-			UpdateBlueMap.updateBlueMap(world, this);
+			UpdateBlueMap.updateBlueMap(level, this);
 			MTR.LOGGER.info("[NeoMTR] BlueMap is detected");
 		} catch (NoClassDefFoundError | Exception ignored) {
 		}
         try {
-			UpdateSquaremap.updateSquaremap(world, this);
+			UpdateSquaremap.updateSquaremap(level, this);
 			MTR.LOGGER.info("[NeoMTR] Squaremap is detected");
 		} catch (NoClassDefFoundError | Exception ignored) {
 		}
@@ -259,25 +248,28 @@ public class RailwayData extends PersistentStateMapper {
 
 	@Override
 	public void save(File file, HolderLookup.Provider registries) {
-		final MinecraftServer minecraftServer = ((ServerLevel) world).getServer();
+		final MinecraftServer minecraftServer = ((ServerLevel) level).getServer();
 		if (minecraftServer.isStopped() || !minecraftServer.isRunning()) {
-			railwayDataFileSaveModule.fullSave();
+			for(RailwayDataModule railwayDataModule : modules.values()) {
+				railwayDataModule.fullSave();
+			}
 		} else {
-			railwayDataFileSaveModule.autoSave();
+			for(RailwayDataModule railwayDataModule : modules.values()) {
+				railwayDataModule.autoSave();
+			}
 		}
-		railwayDataLoggingModule.save();
+
 		setDirty();
 		super.save(file, registries);
 	}
 
 	@Override
 	public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider registries) {
-		compoundTag.putBoolean(KEY_USE_TIME_AND_WIND_SYNC, useTimeAndWindSync);
 		return compoundTag;
 	}
 
 	public void simulateTrains(ServerLevel serverLevel) {
-		final List<? extends Player> players = world.players();
+		final List<? extends Player> players = level.players();
 		players.forEach(player -> {
 			final BlockPos playerBlockPos = player.blockPosition();
 			final Vec3 playerPos = player.position();
@@ -314,23 +306,22 @@ public class RailwayData extends PersistentStateMapper {
 		});
 
 		updateNearbyTrains.startTick();
-		trainPositions.remove(0);
+		trainPositions.removeFirst();
 		trainPositions.add(new HashMap<>());
 		schedulesForPlatform.clear();
 		signalBlocks.resetOccupied();
 		sidings.forEach(siding -> {
-			siding.setSidingData(world, dataCache.sidingIdToDepot.get(siding.id), rails);
-			siding.simulateTrain(dataCache, railwayDataDriveTrainModule, trainPositions, signalBlocks, updateNearbyTrains.newDataSetInPlayerRange, updateNearbyTrains.dataSetToSync, schedulesForPlatform, trainDelays);
+			siding.setSidingData(level, dataCache.sidingIdToDepot.get(siding.id), rails);
+			siding.simulateTrain(dataCache, getModule(RailwayDataDriveTrainModule.NAME), trainPositions, signalBlocks, updateNearbyTrains.newDataSetInPlayerRange, updateNearbyTrains.dataSetToSync, schedulesForPlatform, trainDelays);
 		});
-		depots.forEach(depot -> depot.deployTrain(this, world));
+		depots.forEach(depot -> depot.deployTrain(this, level));
 
 		updateNearbyLifts.startTick();
-		lifts.forEach(lift -> lift.tickServer(world, updateNearbyLifts.newDataSetInPlayerRange, updateNearbyLifts.dataSetToSync));
+		lifts.forEach(lift -> lift.tickServer(level, updateNearbyLifts.newDataSetInPlayerRange, updateNearbyLifts.dataSetToSync));
 
-		railwayDataCoolDownModule.tick();
-		railwayDataDriveTrainModule.tick();
-		railwayDataRailActionsModule.tick();
-		// railwayDataRouteFinderModule.tick();
+		for(RailwayDataModule railwayDataModule : modules.values()) {
+			railwayDataModule.tick();
+		}
 		updateNearbyTrains.tick();
 		updateNearbyLifts.tick();
 
@@ -342,7 +333,7 @@ public class RailwayData extends PersistentStateMapper {
 			});
 		}
 		if (!playersToSyncSchedules.isEmpty()) {
-			final Player player = playersToSyncSchedules.remove(0);
+			final Player player = playersToSyncSchedules.removeFirst();
 			final BlockPos playerBlockPos = player.blockPosition();
 			final Vec3 playerPos = player.position();
 
@@ -407,17 +398,23 @@ public class RailwayData extends PersistentStateMapper {
 		prevPlatformCount = platforms.size();
 		prevSidingCount = sidings.size();
 
-		railwayDataFileSaveModule.autoSaveTick();
+		for(RailwayDataModule railwayDataModule : modules.values()) {
+			railwayDataModule.lateTick();
+		}
 	}
 
 	public void onPlayerJoin(ServerPlayer serverPlayer) {
 		PacketTrainDataGuiServer.sendAllInChunks(serverPlayer, stations, platforms, sidings, routes, depots, lifts, signalBlocks);
-		railwayDataCoolDownModule.onPlayerJoin(serverPlayer);
+
+		for(RailwayDataModule railwayDataModule : modules.values()) {
+			railwayDataModule.onPlayerJoin(serverPlayer);
+		}
 	}
 
 	// writing data
 
 	public long addRail(Player player, TransportMode transportMode, BlockPos posStart, BlockPos posEnd, Rail rail, boolean validate) {
+		final RailwayDataLoggingModule loggingModule = getModule(RailwayDataLoggingModule.NAME);
 		final long newId = validate ? new Random().nextLong() : 0;
 		addRail(rails, platforms, sidings, transportMode, posStart, posEnd, rail, newId);
 
@@ -427,7 +424,7 @@ public class RailwayData extends PersistentStateMapper {
 				final List<String> dataList = new ArrayList<>();
 				dataList.add(String.format("type:%s", rail.railType));
 				dataList.add(String.format("one_way:%s", backwardsRail.railType == RailType.NONE));
-				railwayDataLoggingModule.addEvent((ServerPlayer) player, Rail.class, new ArrayList<>(), dataList, posStart, posEnd);
+				loggingModule.addEvent((ServerPlayer) player, Rail.class, new ArrayList<>(), dataList, posStart, posEnd);
 			}
 			validateData();
 		}
@@ -436,40 +433,43 @@ public class RailwayData extends PersistentStateMapper {
 	}
 
 	public long addSignal(Player player, DyeColor color, BlockPos posStart, BlockPos posEnd) {
-		railwayDataLoggingModule.addEvent((ServerPlayer) player, SignalBlocks.SignalBlock.class, new ArrayList<>(), Collections.singletonList(String.format("color:%s", color)), posStart, posEnd);
+		final RailwayDataLoggingModule loggingModule = getModule(RailwayDataLoggingModule.NAME);
+		loggingModule.addEvent((ServerPlayer) player, SignalBlocks.SignalBlock.class, new ArrayList<>(), Collections.singletonList(String.format("color:%s", color)), posStart, posEnd);
 		return signalBlocks.add(0, color, PathData.getRailProduct(posStart, posEnd));
 	}
 
 	public void removeNode(Player player, BlockPos pos, TransportMode transportMode) {
-		railwayDataLoggingModule.addEvent((ServerPlayer) player, BlockNode.class, Collections.singletonList(String.format("type:%s", transportMode)), new ArrayList<>(), pos);
-		removeNode(world, rails, pos);
+		RailwayDataLoggingModule loggingModule = getModule(RailwayDataLoggingModule.NAME);
+		loggingModule.addEvent((ServerPlayer) player, BlockNode.class, Collections.singletonList(String.format("type:%s", transportMode)), new ArrayList<>(), pos);
+		removeNode(level, rails, pos);
 		validateData();
 		final FriendlyByteBuf packet = signalBlocks.getValidationPacket(rails);
 		if (packet != null) {
-			world.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
+			level.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
 		}
 	}
 
 	public void removeRailConnection(Player player, BlockPos pos1, BlockPos pos2) {
 		final Rail rail1 = DataCache.tryGet(rails, pos1, pos2);
 		final Rail rail2 = DataCache.tryGet(rails, pos2, pos1);
+		final RailwayDataLoggingModule loggingModule = getModule(RailwayDataLoggingModule.NAME);
 		if (rail1 != null && rail2 != null) {
 			final List<String> dataList = new ArrayList<>();
 			dataList.add(String.format("type:%s", (rail1.railType == RailType.NONE ? rail2 : rail1).railType));
 			dataList.add(String.format("one_way:%s", (rail1.railType == RailType.NONE ? rail1 : rail2).railType == RailType.NONE));
-			railwayDataLoggingModule.addEvent((ServerPlayer) player, Rail.class, dataList, new ArrayList<>(), pos1, pos2);
+			loggingModule.addEvent((ServerPlayer) player, Rail.class, dataList, new ArrayList<>(), pos1, pos2);
 		}
 
-		removeRailConnection(world, rails, pos1, pos2);
+		removeRailConnection(level, rails, pos1, pos2);
 		validateData();
 		final FriendlyByteBuf packet = signalBlocks.getValidationPacket(rails);
 		if (packet != null) {
-			world.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
+			level.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
 		}
 	}
 
 	public void removeLiftFloorTrack(BlockPos pos) {
-		removeLiftFloorTrack(world, lifts, pos);
+		removeLiftFloorTrack(level, lifts, pos);
 		dataCache.sync();
 	}
 
@@ -482,14 +482,40 @@ public class RailwayData extends PersistentStateMapper {
 	}
 
 	public long removeSignal(Player player, DyeColor color, BlockPos posStart, BlockPos posEnd) {
-		railwayDataLoggingModule.addEvent((ServerPlayer) player, SignalBlocks.SignalBlock.class, Collections.singletonList(String.format("color:%s", color)), new ArrayList<>(), posStart, posEnd);
+		final RailwayDataLoggingModule loggingModule = getModule(RailwayDataLoggingModule.NAME);
+		loggingModule.addEvent((ServerPlayer) player, SignalBlocks.SignalBlock.class, Collections.singletonList(String.format("color:%s", color)), new ArrayList<>(), posStart, posEnd);
 		return signalBlocks.remove(0, color, PathData.getRailProduct(posStart, posEnd));
 	}
 
 	public void disconnectPlayer(Player player) {
-		railwayDataCoolDownModule.onPlayerDisconnect(player);
+		for(RailwayDataModule railwayDataModule : modules.values()) {
+			railwayDataModule.onPlayerDisconnect(player);
+		}
 		playerLastUpdatedPositions.remove(player);
 	}
+
+
+
+	public <T extends RailwayDataModule> T getModule(String key) {
+		RailwayDataModule module = modules.get(key);
+		if(module == null) throw new IllegalArgumentException("Railway module \"" + key + "\" doesn't exist!");
+		return (T)module;
+	}
+
+	public boolean hasModule(String key) {
+		return modules.containsKey(key);
+	}
+
+	private void addModule(String key, RailwayDataModule module) {
+		if(modules.containsKey(key)) throw new IllegalStateException("Railway module \"" + key + "\" has already been added!");
+		modules.put(key, module);
+	}
+
+	public static void registerRailwayModule(RailwayDataModuleCallback createRailwayModule) {
+		railwayModulesCallbacks.add(createRailwayModule);
+	}
+
+
 
 	public void getSchedulesForStation(Map<Long, List<ScheduleEntry>> schedulesForStation, long stationId) {
 		schedulesForPlatform.forEach((platformId, schedules) -> {
@@ -512,18 +538,9 @@ public class RailwayData extends PersistentStateMapper {
 		depot.routeIds.forEach(trainDelays::remove);
 	}
 
-	public boolean getUseTimeAndWindSync() {
-		return useTimeAndWindSync;
-	}
-
-	public void setUseTimeAndWindSync(boolean useTimeAndWindSync) {
-		this.useTimeAndWindSync = useTimeAndWindSync;
-		runRealTimeSync();
-	}
-
 	private void validateData() {
-		removeSavedRailS2C(world, platforms, rails, Networking.PACKET_DELETE_PLATFORM);
-		removeSavedRailS2C(world, sidings, rails, Networking.PACKET_DELETE_SIDING);
+		removeSavedRailS2C(level, platforms, rails, Networking.PACKET_DELETE_PLATFORM);
+		removeSavedRailS2C(level, sidings, rails, Networking.PACKET_DELETE_SIDING);
 
 		final List<BlockPos> railsToRemove = new ArrayList<>();
 		rails.forEach((startPos, railMap) -> railMap.forEach((endPos, rail) -> {
@@ -534,21 +551,6 @@ public class RailwayData extends PersistentStateMapper {
 		}));
 		for (int i = 0; i < railsToRemove.size() - 1; i += 2) {
 			removeRailConnection(null, rails, railsToRemove.get(i), railsToRemove.get(i + 1));
-		}
-	}
-
-	private void runRealTimeSync() {
-		if (useTimeAndWindSync) {
-			final MinecraftServer server = world.getServer();
-			if (server != null) {
-				final CommandSourceStack commandSourceStack = server.createCommandSourceStack();
-				runCommand(server, commandSourceStack, "/gamerule doDaylightCycle true");
-				runCommand(server, commandSourceStack, "/taw set-cycle-length " + world.dimension().location() + " 864000 864000");
-				runCommand(server, commandSourceStack, "/taw reload");
-				final Calendar calendar = Calendar.getInstance();
-				final long ticks = Math.round((calendar.get(Calendar.HOUR_OF_DAY) + Depot.HOURS_IN_DAY - 6) * 1000 + calendar.get(Calendar.MINUTE) / 0.06 + calendar.get(Calendar.SECOND) / 3.6) % 24000;
-				runCommand(server, commandSourceStack, "/time set " + ticks);
-			}
 		}
 	}
 
@@ -701,22 +703,6 @@ public class RailwayData extends PersistentStateMapper {
 		return false;
 	}
 
-	public static boolean isBetween(double value, double value1, double value2) {
-		return isBetween(value, value1, value2, 0);
-	}
-
-	public static boolean isBetween(double value, double value1, double value2, double padding) {
-		return value >= Math.min(value1, value2) - padding && value <= Math.max(value1, value2) + padding;
-	}
-
-	public static float round(double value, int decimalPlaces) {
-		int factor = 1;
-		for (int i = 0; i < decimalPlaces; i++) {
-			factor *= 10;
-		}
-		return (float) Math.round(value * factor) / factor;
-	}
-
 	public static void writeMessagePackDataset(MessagePacker messagePacker, Collection<? extends SerializedDataBase> dataSet, String key) throws IOException {
 		messagePacker.packString(key);
 		messagePacker.packArrayHeader(dataSet.size());
@@ -741,30 +727,6 @@ public class RailwayData extends PersistentStateMapper {
 		return gameType == GameType.CREATIVE || gameType == GameType.SURVIVAL;
 	}
 
-	public static boolean chunkLoaded(Level world, BlockPos pos) {
-		return world.getChunkSource().getChunkNow(pos.getX() / 16, pos.getZ() / 16) != null && world.hasChunk(pos.getX() / 16, pos.getZ() / 16);
-	}
-
-	public static String prettyPrint(JsonElement jsonElement) {
-		return new GsonBuilder().setPrettyPrinting().create().toJson(jsonElement);
-	}
-
-	public static BlockPos newBlockPos(Vec3 vec3) {
-		return newBlockPos(vec3.x, vec3.y, vec3.z);
-	}
-
-	public static BlockPos newBlockPos(double x, double y, double z) {
-		return RailwayData.newBlockPos(Mth.floor(x), Mth.floor(y), Mth.floor(z));
-	}
-
-	public static BlockPos newBlockPos(int x, int y, int z) {
-		return new BlockPos(x, y, z);
-	}
-
-	public static BlockPos offsetBlockPos(BlockPos pos, double x, double y, double z) {
-		return x == 0 && y == 0 && z == 0 ? pos : newBlockPos(pos.getX() + x, pos.getY() + y, pos.getZ() + z);
-	}
-
 	public static RailwayData getInstance(Level world) {
 		return getInstance(world, () -> new RailwayData(world), NAME);
 	}
@@ -782,7 +744,7 @@ public class RailwayData extends PersistentStateMapper {
 		final Set<BlockPos> railsToRemove = new HashSet<>();
 		final Set<BlockPos> railsNodesToRemove = new HashSet<>();
 		rails.forEach((startPos, railMap) -> {
-			final boolean chunkLoaded = chunkLoaded(world, startPos);
+			final boolean chunkLoaded = BlockUtil.chunkLoaded(world, startPos);
 			if (chunkLoaded && !(world.getBlockState(startPos).getBlock() instanceof BlockNode)) {
 				railsNodesToRemove.add(startPos);
 			}
@@ -809,11 +771,6 @@ public class RailwayData extends PersistentStateMapper {
 			}
 			return delete;
 		});
-	}
-
-	private static void runCommand(MinecraftServer server, CommandSourceStack commandSourceStack, String command) {
-		MTR.LOGGER.info("[NeoMTR] Running command {}", command);
-		Utilities.sendCommand(server, commandSourceStack, command);
 	}
 
 	// TODO temporary code start
@@ -887,5 +844,10 @@ public class RailwayData extends PersistentStateMapper {
 	@FunctionalInterface
 	public interface RouteAndStationsCallback {
 		void routeAndStationsCallback(int currentStationIndex, Route thisRoute, Route nextRoute, Station thisStation, Station nextStation, Station lastStation);
+	}
+
+	@FunctionalInterface
+	public interface RailwayDataModuleCallback {
+		RailwayDataModule getModule(RailwayData railwayData, Level level, Map<BlockPos, Map<BlockPos, Rail>> rails);
 	}
 }

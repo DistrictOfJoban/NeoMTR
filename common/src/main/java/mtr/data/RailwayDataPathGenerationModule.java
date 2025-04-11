@@ -9,12 +9,13 @@ import net.minecraft.world.level.Level;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RailwayDataPathGenerationModule extends RailwayDataModuleBase {
+public class RailwayDataPathGenerationModule extends RailwayDataModule {
 
+	public static final String NAME = "path_generation";
 	private final Map<Long, Thread> generatingPathThreads = new HashMap<>();
 
 	public RailwayDataPathGenerationModule(RailwayData railwayData, Level world, Map<BlockPos, Map<BlockPos, Rail>> rails) {
-		super(railwayData, world, rails);
+		super(NAME, railwayData, world, rails);
 	}
 
 	public void generatePath(MinecraftServer minecraftServer, long depotId) {
@@ -27,10 +28,10 @@ public class RailwayDataPathGenerationModule extends RailwayDataModuleBase {
 			} else {
 				MTR.LOGGER.info("[NeoMTR] Starting path generation {}", (depot.name.isEmpty() ? "" : " for " + depot.name));
 			}
-			depot.generateMainRoute(minecraftServer, world, railwayData.dataCache, rails, railwayData.sidings, thread -> generatingPathThreads.put(depotId, thread));
+			depot.generateMainRoute(minecraftServer, level, railwayData.dataCache, rails, railwayData.sidings, thread -> generatingPathThreads.put(depotId, thread));
 			railwayData.resetTrainDelays(depot);
 		} else {
-			PacketTrainDataGuiServer.generatePathS2C(world, depotId, 0);
+			PacketTrainDataGuiServer.generatePathS2C(level, depotId, 0);
 			MTR.LOGGER.info("[NeoMTR] Failed to generate path, depot is null");
 		}
 	}

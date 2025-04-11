@@ -113,7 +113,8 @@ public class DataServletHandler extends HttpServlet {
 							}
 
 							if (prevPlatformPos != null && thisPlatformPos != null && railwayData != null) {
-								routeDensityArray.add(railwayData.railwayDataRouteFinderModule.getConnectionDensity(prevPlatformPos, thisPlatformPos));
+								RailwayDataRouteFinderModule routeFinderModule = railwayData.getModule(RailwayDataRouteFinderModule.NAME);
+								routeDensityArray.add(routeFinderModule.getConnectionDensity(prevPlatformPos, thisPlatformPos));
 							} else {
 								routeDensityArray.add(0);
 							}

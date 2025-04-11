@@ -11,11 +11,12 @@ import mtr.block.BlockSignalSemaphoreBase;
 import mtr.client.*;
 import mtr.data.*;
 import mtr.item.ItemNodeModifierBase;
-import mtr.mappings.EntityRendererMapper;
 import mtr.mappings.Text;
 import mtr.mappings.Utilities;
 import mtr.mappings.UtilitiesClient;
 import mtr.path.PathData;
+import mtr.util.BlockUtil;
+import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
@@ -103,7 +104,7 @@ public class RenderTrains implements IGui {
 			if (showShiftProgressBar() && (!train.isCurrentlyManual() || !Train.isHoldingKey(player))) {
 				if (train.getDoorValue() == 0 || thisRoute == null || thisStation == null || lastStation == null) {
 					if (!(train instanceof TrainVirtualDrive)) { // TODO something more elegant
-						player.displayClientMessage(Text.translatable("gui.mtr.vehicle_speed", RailwayData.round(speed, 1), RailwayData.round(speed * 3.6F, 1)), true);
+						player.displayClientMessage(Text.translatable("gui.mtr.vehicle_speed", Util.round(speed, 1), Util.round(speed * 3.6F, 1)), true);
 					}
 				} else {
 					final Component text;
@@ -247,7 +248,7 @@ public class RenderTrains implements IGui {
 		final int maxRailDistance = renderDistanceChunks * 16;
 		final Map<UUID, RailType> renderedRailMap = new HashMap<>();
 		ClientData.RAILS.forEach((startPos, railMap) -> railMap.forEach((endPos, rail) -> {
-			if (!RailwayData.isBetween(player.getX(), startPos.getX(), endPos.getX(), maxRailDistance) || !RailwayData.isBetween(player.getZ(), startPos.getZ(), endPos.getZ(), maxRailDistance)) {
+			if (!Util.isBetween(player.getX(), startPos.getX(), endPos.getX(), maxRailDistance) || !Util.isBetween(player.getZ(), startPos.getZ(), endPos.getZ(), maxRailDistance)) {
 				return;
 			}
 
@@ -388,7 +389,7 @@ public class RenderTrains implements IGui {
 		final float shiftHoldingTicks = ClientData.getShiftHoldingTicks();
 
 		if (shiftHoldingTicks > 0 && player != null) {
-			final int progressFilled = Mth.clamp((int) (shiftHoldingTicks * DISMOUNT_PROGRESS_BAR_LENGTH / RailwayDataCoolDownModule.SHIFT_ACTIVATE_TICKS), 0, DISMOUNT_PROGRESS_BAR_LENGTH);
+			final int progressFilled = Mth.clamp((int) (shiftHoldingTicks * DISMOUNT_PROGRESS_BAR_LENGTH / RailwayDataMountModule.SHIFT_ACTIVATE_TICKS), 0, DISMOUNT_PROGRESS_BAR_LENGTH);
 			final String progressBar = String.format("§6%s§7%s", StringUtils.repeat('|', progressFilled), StringUtils.repeat('|', DISMOUNT_PROGRESS_BAR_LENGTH - progressFilled));
 			player.displayClientMessage(Text.translatable("gui.mtr.dismount_hold", client.options.keyShift.getTranslatedKeyMessage(), progressBar), true);
 			return false;
@@ -453,7 +454,7 @@ public class RenderTrains implements IGui {
 		final int maxRailDistance = UtilitiesClient.getRenderDistance() * 16;
 
 		rail.render((x1, z1, x2, z2, x3, z3, x4, z4, y1, y2) -> {
-			final BlockPos pos2 = RailwayData.newBlockPos(x1, y1, z1);
+			final BlockPos pos2 = BlockUtil.newBlockPos(x1, y1, z1);
 			if (shouldNotRender(pos2, maxRailDistance, null)) {
 				return;
 			}
@@ -491,7 +492,7 @@ public class RenderTrains implements IGui {
 
 			final int color = ARGB_BLACK | signalBlock.color.getMapColor().col;
 			rail.render((x1, z1, x2, z2, x3, z3, x4, z4, y1, y2) -> {
-				final BlockPos pos2 = RailwayData.newBlockPos(x1, y1, z1);
+				final BlockPos pos2 = BlockUtil.newBlockPos(x1, y1, z1);
 				if (shouldNotRender(pos2, maxRailDistance, null)) {
 					return;
 				}

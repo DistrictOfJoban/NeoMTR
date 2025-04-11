@@ -36,8 +36,13 @@ public class LiftServer extends Lift {
 		tick(world, 1);
 
 		final int ridingEntitiesCount = ridingEntities.size();
-		VehicleRidingServer.mountRider(world, ridingEntities, id, 1, currentPositionX + liftOffsetX / 2F, currentPositionY + liftOffsetY, currentPositionZ + liftOffsetZ / 2F, liftWidth - 1, liftDepth - 1, getYaw(), 0, doorValue > 0, true, 0, Networking.PACKET_UPDATE_LIFT_PASSENGERS, player -> true, player -> {
-		});
+		final RailwayData railwayData = RailwayData.getInstance(world);
+
+		if(railwayData != null) {
+			final RailwayDataMountModule mountModule = railwayData.getModule(RailwayDataMountModule.NAME);
+			mountModule.tryMountRider(ridingEntities, id, 1, currentPositionX + liftOffsetX / 2F, currentPositionY + liftOffsetY, currentPositionZ + liftOffsetZ / 2F, liftWidth - 1, liftDepth - 1, getYaw(), 0, doorValue > 0, true, 0, Networking.PACKET_UPDATE_LIFT_PASSENGERS, player -> true, player -> {
+			});
+		}
 
 		if (liftInstructions.isDirty() || ridingEntitiesCount != ridingEntities.size()) {
 			liftsToSync.add(this);

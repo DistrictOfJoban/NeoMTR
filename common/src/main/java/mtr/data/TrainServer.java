@@ -4,6 +4,8 @@ import mtr.TrigCache;
 import mtr.block.*;
 import mtr.path.PathData;
 import mtr.registry.Networking;
+import mtr.util.BlockUtil;
+import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -105,11 +107,15 @@ public class TrainServer extends Train {
 			double prevCarX, double prevCarY, double prevCarZ, float prevCarYaw, float prevCarPitch, float prevCarRoll,
 			boolean doorLeftOpen, boolean doorRightOpen, double realSpacing
 	) {
-		VehicleRidingServer.mountRider(world, ridingEntities, id, routeId, carX, carY, carZ, realSpacing, width, carYaw, carPitch, doorLeftOpen || doorRightOpen, isManualAllowed || doorLeftOpen || doorRightOpen, ridingCar, Networking.PACKET_UPDATE_TRAIN_PASSENGERS, player -> !isManualAllowed || doorLeftOpen || doorRightOpen || Train.isHoldingKey(player), player -> {
-			if (isHoldingKey(player)) {
-				manualCoolDown = 0;
-			}
-		});
+		final RailwayData railwayData = RailwayData.getInstance(world);
+		if(railwayData != null) {
+			final RailwayDataMountModule mountModule = railwayData.getModule(RailwayDataMountModule.NAME);
+			mountModule.tryMountRider(ridingEntities, id, routeId, carX, carY, carZ, realSpacing, width, carYaw, carPitch, doorLeftOpen || doorRightOpen, isManualAllowed || doorLeftOpen || doorRightOpen, ridingCar, Networking.PACKET_UPDATE_TRAIN_PASSENGERS, player -> !isManualAllowed || doorLeftOpen || doorRightOpen || Train.isHoldingKey(player), player -> {
+				if (isHoldingKey(player)) {
+					manualCoolDown = 0;
+				}
+			});
+		}
 	}
 
 	@Override
@@ -127,10 +133,10 @@ public class TrainServer extends Train {
 			}
 		});
 
-		final BlockPos frontPos = RailwayData.newBlockPos(reversed ? positions[positions.length - 1] : positions[0]);
-		if (RailwayData.chunkLoaded(world, frontPos)) {
+		final BlockPos frontPos = BlockUtil.newBlockPos(reversed ? positions[positions.length - 1] : positions[0]);
+		if (BlockUtil.chunkLoaded(world, frontPos)) {
 			checkBlock(frontPos, checkPos -> {
-				if (RailwayData.chunkLoaded(world, checkPos)) {
+				if (BlockUtil.chunkLoaded(world, checkPos)) {
 					final BlockState state = world.getBlockState(checkPos);
 					final Block block = state.getBlock();
 
@@ -141,9 +147,9 @@ public class TrainServer extends Train {
 			});
 		}
 
-		if (!ridingEntities.isEmpty() && RailwayData.chunkLoaded(world, frontPos)) {
+		if (!ridingEntities.isEmpty() && BlockUtil.chunkLoaded(world, frontPos)) {
 			checkBlock(frontPos, checkPos -> {
-				if (RailwayData.chunkLoaded(world, checkPos) && world.getBlockState(checkPos).getBlock() instanceof BlockTrainAnnouncer) {
+				if (BlockUtil.chunkLoaded(world, checkPos) && world.getBlockState(checkPos).getBlock() instanceof BlockTrainAnnouncer) {
 					final BlockEntity entity = world.getBlockEntity(checkPos);
 					if (entity instanceof BlockTrainAnnouncer.TileEntityTrainAnnouncer && ((BlockTrainAnnouncer.TileEntityTrainAnnouncer) entity).matchesFilter(routeId, speed)) {
 						ridingEntities.forEach(uuid -> ((BlockTrainAnnouncer.TileEntityTrainAnnouncer) entity).announce(world.getPlayerByUUID(uuid)));
@@ -228,7 +234,7 @@ public class TrainServer extends Train {
 		double currentTime = -1;
 		int startingIndex = 0;
 		for (final Siding.TimeSegment timeSegment : timeSegments) {
-			if (RailwayData.isBetween(railProgress, timeSegment.startRailProgress, timeSegment.endRailProgress)) {
+			if (Util.isBetween(railProgress, timeSegment.startRailProgress, timeSegment.endRailProgress)) {
 				currentTime = timeSegment.getTime(railProgress);
 				break;
 			}

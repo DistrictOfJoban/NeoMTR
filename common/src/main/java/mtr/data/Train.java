@@ -6,8 +6,9 @@ import mtr.block.BlockPSDAPGBase;
 import mtr.block.BlockPSDAPGDoorBase;
 import mtr.block.BlockPlatform;
 import mtr.block.IBlock;
-import mtr.registry.Networking;
 import mtr.path.PathData;
+import mtr.util.BlockUtil;
+import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -84,7 +85,7 @@ public abstract class Train extends NameColorDataBase {
 	public Train(long id, long sidingId, float railLength, String trainId, String baseTrainType, int trainCars, List<PathData> path, List<Double> distances, int repeatIndex1, int repeatIndex2, float accelerationConstant, boolean isManualAllowed, int maxManualSpeed, int manualToAutomaticTime) {
 		super(id);
 		this.sidingId = sidingId;
-		this.railLength = RailwayData.round(railLength, 3);
+		this.railLength = Util.round(railLength, 3);
 		this.trainId = trainId;
 		// TODO temporary code for backwards compatibility
 		baseTrainType = baseTrainType.startsWith("base_") ? baseTrainType.replace("base_", "train_") : baseTrainType;
@@ -102,7 +103,7 @@ public abstract class Train extends NameColorDataBase {
 		this.distances = distances;
 		this.repeatIndex1 = repeatIndex1;
 		this.repeatIndex2 = repeatIndex2;
-		final float tempAccelerationConstant = RailwayData.round(accelerationConstant, 4);
+		final float tempAccelerationConstant = Util.round(accelerationConstant, 4);
 		this.accelerationConstant = tempAccelerationConstant <= 0 ? ACCELERATION_DEFAULT : tempAccelerationConstant;
 	}
 
@@ -116,7 +117,7 @@ public abstract class Train extends NameColorDataBase {
 		final MessagePackHelper messagePackHelper = new MessagePackHelper(map);
 
 		this.sidingId = sidingId;
-		this.railLength = RailwayData.round(railLength, 3);
+		this.railLength = Util.round(railLength, 3);
 		this.path = path;
 		this.distances = distances;
 		this.repeatIndex1 = repeatIndex1;
@@ -173,7 +174,7 @@ public abstract class Train extends NameColorDataBase {
 		super(compoundTag);
 
 		this.sidingId = sidingId;
-		this.railLength = RailwayData.round(railLength, 3);
+		this.railLength = Util.round(railLength, 3);
 		this.path = path;
 		this.distances = distances;
 		this.repeatIndex1 = repeatIndex1;
@@ -219,9 +220,9 @@ public abstract class Train extends NameColorDataBase {
 		repeatIndex2 = packet.readVarInt();
 
 		sidingId = packet.readLong();
-		railLength = RailwayData.round(packet.readFloat(), 3);
+		railLength = Util.round(packet.readFloat(), 3);
 		speed = packet.readFloat();
-		final float tempAccelerationConstant = RailwayData.round(packet.readFloat(), 4);
+		final float tempAccelerationConstant = Util.round(packet.readFloat(), 4);
 		accelerationConstant = tempAccelerationConstant <= 0 ? ACCELERATION_DEFAULT : tempAccelerationConstant;
 		railProgress = packet.readDouble();
 		elapsedDwellTicks = packet.readFloat();
@@ -723,7 +724,7 @@ public abstract class Train extends NameColorDataBase {
 		for (double checkZ = -halfSpacing; checkZ <= halfSpacing; checkZ++) {
 			for (int checkX = 1; checkX <= 3; checkX++) {
 				for (int checkY = 3; checkY >= -2; checkY--) {
-					final BlockPos checkPos = RailwayData.newBlockPos(trainX + offsetVec.x * checkX + traverseVec.x * checkZ, trainY + checkY, trainZ + offsetVec.z * checkX + traverseVec.z * checkZ);
+					final BlockPos checkPos = BlockUtil.newBlockPos(trainX + offsetVec.x * checkX + traverseVec.x * checkZ, trainY + checkY, trainZ + offsetVec.z * checkX + traverseVec.z * checkZ);
 					final BlockState state = world.getBlockState(checkPos);
 					if (state.getBlock() instanceof BlockPSDAPGBase) {
 						// PSD/APG glass are not considered platform since you can't exit from there

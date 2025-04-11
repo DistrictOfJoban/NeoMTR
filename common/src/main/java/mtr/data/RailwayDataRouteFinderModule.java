@@ -9,8 +9,9 @@ import net.minecraft.world.level.Level;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-public class RailwayDataRouteFinderModule extends RailwayDataModuleBase {
+public class RailwayDataRouteFinderModule extends RailwayDataModule {
 
+	public static final String NAME = "route_finder";
 	private Long2ObjectOpenHashMap<Long2IntOpenHashMap> connectionDensityOld = new Long2ObjectOpenHashMap<>();
 	private Long2ObjectOpenHashMap<Long2IntOpenHashMap> connectionDensity = new Long2ObjectOpenHashMap<>();
 	private BlockPos startPos;
@@ -34,10 +35,11 @@ public class RailwayDataRouteFinderModule extends RailwayDataModuleBase {
 	private static final boolean DEBUG_DISABLE_DENSITY = false;
 
 	public RailwayDataRouteFinderModule(RailwayData railwayData, Level world, Map<BlockPos, Map<BlockPos, Rail>> rails) {
-		super(railwayData, world, rails);
+		super(NAME, railwayData, world, rails);
 		this.railwayData = railwayData;
 	}
 
+	@Override
 	public void tick() {
 		final int platformCount = railwayData.dataCache.platformConnections.size();
 		if (platformCount < 4) {

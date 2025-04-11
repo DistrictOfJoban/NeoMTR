@@ -3,7 +3,10 @@ package mtr.data;
 import mtr.MTR;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelResource;
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessagePacker;
@@ -20,8 +23,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class RailwayDataFileSaveModule extends RailwayDataModuleBase {
+public class RailwayDataFileSaveModule extends RailwayDataModule {
 
+	public static final String NAME = "file_save";
 	private boolean canAutoSave = false;
 	private boolean dataLoaded = false;
 	private boolean useReducedHash = true;
@@ -52,8 +56,13 @@ public class RailwayDataFileSaveModule extends RailwayDataModuleBase {
 	private final Path railsPath;
 	private final Path signalBlocksPath;
 
-	public RailwayDataFileSaveModule(RailwayData railwayData, Level world, Map<BlockPos, Map<BlockPos, Rail>> rails, Path savePath, SignalBlocks signalBlocks) {
-		super(railwayData, world, rails);
+	public RailwayDataFileSaveModule(RailwayData railwayData, Level world, Map<BlockPos, Map<BlockPos, Rail>> rails, SignalBlocks signalBlocks) {
+		super(NAME, railwayData, world, rails);
+
+		final ResourceLocation dimensionLocation = world.dimension().location();
+		final Path worldRoot = ((ServerLevel) world).getServer().getWorldPath(LevelResource.ROOT);
+		final Path savePath = worldRoot.resolve("mtr").resolve(dimensionLocation.getNamespace()).resolve(dimensionLocation.getPath());
+
 		this.signalBlocks = signalBlocks;
 
 		stationsPath = savePath.resolve("stations");
@@ -90,12 +99,14 @@ public class RailwayDataFileSaveModule extends RailwayDataModuleBase {
 		readMessagePackFromFile(railsPath, RailEntry::new, railEntry -> rails.put(railEntry.pos, railEntry.connections), true);
 		readMessagePackFromFile(signalBlocksPath, SignalBlocks.SignalBlock::new, signalBlocks.signalBlocks::add, true);
 
-		MTR.LOGGER.info("Minecraft Transit Railway data successfully loaded for {}", world.dimension().location());
+		MTR.LOGGER.info("Minecraft Transit Railway data successfully loaded for {}", level.dimension().location());
 		canAutoSave = true;
 		dataLoaded = true;
 	}
 
+	@Override
 	public void fullSave() {
+		super.fullSave();
 		useReducedHash = false;
 		dirtyStationIds.clear();
 		dirtyPlatformIds.clear();
@@ -115,7 +126,9 @@ public class RailwayDataFileSaveModule extends RailwayDataModuleBase {
 		canAutoSave = false;
 	}
 
+	@Override
 	public void autoSave() {
+		super.autoSave();
 		if (!dataLoaded) {
 			dataLoaded = true;
 			canAutoSave = true;
@@ -135,6 +148,12 @@ public class RailwayDataFileSaveModule extends RailwayDataModuleBase {
 			dirtySignalBlocks.addAll(signalBlocks.signalBlocks);
 			checkFilesToDelete.addAll(existingFiles.keySet());
 		}
+	}
+
+	@Override
+	public void lateTick() {
+		super.lateTick();
+		autoSaveTick();
 	}
 
 	public boolean autoSaveTick() {
@@ -188,7 +207,7 @@ public class RailwayDataFileSaveModule extends RailwayDataModuleBase {
 				}));
 
 				if (!useReducedHash || filesWritten > 0 || filesDeleted > 0) {
-					MTR.LOGGER.info("Minecraft Transit Railway save complete for {} in {} second(s)", world.dimension().location(), (System.currentTimeMillis() - autoSaveStartMillis) / 1000);
+					MTR.LOGGER.info("Minecraft Transit Railway save complete for {} in {} second(s)", level.dimension().location(), (System.currentTimeMillis() - autoSaveStartMillis) / 1000);
 					if (filesWritten > 0) {
 						MTR.LOGGER.info("- Changed: {}", filesWritten);
 					}

@@ -9,14 +9,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class RailwayDataDriveTrainModule extends RailwayDataModuleBase {
+public class RailwayDataDriveTrainModule extends RailwayDataModule {
 
+	public static final String NAME = "train_driving";
 	private final Set<UUID> acceleratePlayers = new HashSet<>();
 	private final Set<UUID> brakePlayers = new HashSet<>();
 	private final Set<UUID> doorsPlayers = new HashSet<>();
 
 	public RailwayDataDriveTrainModule(RailwayData railwayData, Level world, Map<BlockPos, Map<BlockPos, Rail>> rails) {
-		super(railwayData, world, rails);
+		super(NAME, railwayData, world, rails);
 	}
 
 	public void tick() {

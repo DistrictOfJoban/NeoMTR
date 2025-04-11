@@ -4,7 +4,7 @@ import cn.zbx1425.mtrsteamloco.network.PacketVirtualDrive;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import mtr.client.ClientData;
-import mtr.data.RailwayDataCoolDownModule;
+import mtr.data.RailwayDataMountModule;
 import mtr.data.TrainClient;
 import mtr.mappings.Text;
 import mtr.path.PathData;
@@ -71,7 +71,7 @@ public class TrainVirtualDrive extends TrainClient {
         nextStoppingIndex = path.size() - 1;
         super.simulateTrain(world, ticksElapsed, speedCallback, announcementCallback, lightRailAnnouncementCallback);
         if (!isOnRoute
-            || ClientData.getShiftHoldingTicks() >= RailwayDataCoolDownModule.SHIFT_ACTIVATE_TICKS) {
+            || ClientData.getShiftHoldingTicks() >= RailwayDataMountModule.SHIFT_ACTIVATE_TICKS) {
             stopDriving();
             return;
         }

@@ -4,7 +4,7 @@ import mtr.block.BlockLiftTrackFloor;
 import mtr.block.BlockPSDAPGDoorBase;
 import mtr.block.IBlock;
 import mtr.mappings.Utilities;
-import mtr.registry.Networking;
+import mtr.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -276,7 +276,7 @@ public abstract class Lift extends NameColorDataBase {
 			return true;
 		}
 		for (final BlockPos checkFloor : floors) {
-			if (RailwayData.chunkLoaded(world, checkFloor) && !(world.getBlockState(checkFloor).getBlock() instanceof BlockLiftTrackFloor)) {
+			if (BlockUtil.chunkLoaded(world, checkFloor) && !(world.getBlockState(checkFloor).getBlock() instanceof BlockLiftTrackFloor)) {
 				return true;
 			}
 		}
@@ -342,7 +342,7 @@ public abstract class Lift extends NameColorDataBase {
 	}
 
 	private BlockPos getBlockPos() {
-		return RailwayData.newBlockPos(currentPositionX, currentPositionY, currentPositionZ);
+		return BlockUtil.newBlockPos(currentPositionX, currentPositionY, currentPositionZ);
 	}
 
 	private boolean checkDoor(Level world, boolean front) {
@@ -350,8 +350,8 @@ public abstract class Lift extends NameColorDataBase {
 		final int sign = front ? 1 : -1;
 		boolean hasDoor = false;
 		for (int i = -1; i <= 1; i++) {
-			final BlockPos checkPos = RailwayData.newBlockPos(currentPositionX + liftOffsetX / 2F - facing.getStepX() * sign * (liftDepth / 2F + 0.5) + directionClockwise.getStepX() * i, currentPositionY + liftOffsetY, currentPositionZ + liftOffsetZ / 2F - facing.getStepZ() * sign * (liftDepth / 2F + 0.5) + directionClockwise.getStepZ() * i);
-			if (world.getNearestPlayer(currentPositionX, currentPositionY, currentPositionZ, Train.MAX_CHECK_DISTANCE, entity -> true) != null && RailwayData.chunkLoaded(world, checkPos) && RailwayData.chunkLoaded(world, checkPos.above())) {
+			final BlockPos checkPos = BlockUtil.newBlockPos(currentPositionX + liftOffsetX / 2F - facing.getStepX() * sign * (liftDepth / 2F + 0.5) + directionClockwise.getStepX() * i, currentPositionY + liftOffsetY, currentPositionZ + liftOffsetZ / 2F - facing.getStepZ() * sign * (liftDepth / 2F + 0.5) + directionClockwise.getStepZ() * i);
+			if (world.getNearestPlayer(currentPositionX, currentPositionY, currentPositionZ, Train.MAX_CHECK_DISTANCE, entity -> true) != null && BlockUtil.chunkLoaded(world, checkPos) && BlockUtil.chunkLoaded(world, checkPos.above())) {
 				final BlockEntity entity1 = world.getBlockEntity(checkPos);
 				final BlockEntity entity2 = world.getBlockEntity(checkPos.above());
 				if (entity1 instanceof BlockPSDAPGDoorBase.TileEntityPSDAPGDoorBase && entity2 instanceof BlockPSDAPGDoorBase.TileEntityPSDAPGDoorBase && IBlock.getStatePropertySafe(world, checkPos, BlockPSDAPGDoorBase.UNLOCKED) && IBlock.getStatePropertySafe(world, checkPos.above(), BlockPSDAPGDoorBase.UNLOCKED)) {

@@ -6,6 +6,7 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import mtr.Registry;
 import mtr.data.RailwayData;
+import mtr.data.RailwayDataMountModule;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,8 +29,8 @@ public class PacketVirtualDrivingPlayers {
     }
 
     public static void sendVirtualDrivingPlayersS2C(ServerPlayer player) {
-        sendVirtualDrivingPlayersS2C(player, RailwayData.getInstance(player.level())
-                .railwayDataCoolDownModule.playerInVirtualDrive);
+        RailwayDataMountModule railwayDataMountModule = RailwayData.getInstance(player.level()).getModule(RailwayDataMountModule.NAME);
+        sendVirtualDrivingPlayersS2C(player, railwayDataMountModule.playerInVirtualDrive);
     }
 
     public static class Client {

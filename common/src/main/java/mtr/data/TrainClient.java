@@ -10,6 +10,7 @@ import mtr.registry.Networking;
 import mtr.render.RenderDrivingOverlay;
 import mtr.render.TrainRendererBase;
 import mtr.sound.TrainSoundBase;
+import mtr.util.BlockUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -93,7 +94,7 @@ public class TrainClient extends Train implements IGui {
 			return;
 		}
 
-		final BlockPos soundPos = RailwayData.newBlockPos(carX, carY, carZ);
+		final BlockPos soundPos = BlockUtil.newBlockPos(carX, carY, carZ);
 		if (ticksElapsed > 0) trainSound.playAllCars(world, soundPos, ridingCar);
 		if (doorLeftOpen || doorRightOpen) {
 			if (ticksElapsed > 0) trainSound.playAllCarsDoorOpening(world, soundPos, ridingCar);
@@ -235,7 +236,7 @@ public class TrainClient extends Train implements IGui {
 					nearestPoint = Pb;
 				}
 			}
-			final BlockPos soundPos = RailwayData.newBlockPos(nearestPoint.x, nearestPoint.y, nearestPoint.z);
+			final BlockPos soundPos = BlockUtil.newBlockPos(nearestPoint.x, nearestPoint.y, nearestPoint.z);
 			if (ticksElapsed > 0) trainSound.playNearestCar(world, soundPos, nearestCar);
 		} catch (Exception e) {
 			e.printStackTrace();

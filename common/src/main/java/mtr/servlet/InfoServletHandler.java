@@ -3,6 +3,7 @@ package mtr.servlet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import mtr.data.RailwayData;
+import mtr.data.RailwayDataMountModule;
 import mtr.data.Route;
 import mtr.data.Station;
 
@@ -34,7 +35,8 @@ public class InfoServletHandler extends HttpServlet {
 						final String destination;
 						final String circular;
 						final int color;
-						final Route route = railwayData.railwayDataCoolDownModule.getRidingRoute(player);
+						final RailwayDataMountModule railwayDataMountModule = railwayData.getModule(RailwayDataMountModule.NAME);
+						final Route route = railwayDataMountModule.getRidingRoute(player);
 						if (route == null) {
 							routeName = "";
 							routeNumber = "";

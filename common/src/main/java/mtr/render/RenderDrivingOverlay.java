@@ -4,6 +4,7 @@ import cn.zbx1425.mtrsteamloco.gui.VirtualDriveOverlay;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mtr.data.*;
+import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
@@ -64,7 +65,7 @@ public class RenderDrivingOverlay implements IGui {
 		guiGraphics.drawString(client.font, String.valueOf(Math.round(doorValue * 10) / 10F), (int) (startX + 144.5F), (int) (startY + 7.5F), doorValue > 0 && doorValue < 1 ? ARGB_WHITE : ARGB_GRAY, true);
 		guiGraphics.drawString(client.font, "DO", (int) (startX + 165.5F), (int) (startY + 7.5F), speed == 0 && doorValue == 1 ? ARGB_WHITE : ARGB_GRAY, true);
 
-		final String speedText = RailwayData.round(speed * 3.6F, 1) + " km/h";
+		final String speedText = Util.round(speed * 3.6F, 1) + " km/h";
 		guiGraphics.drawString(client.font, speedText, startX - client.font.width(speedText) - TEXT_PADDING, (int) (window.getGuiScaledHeight() - 14.5F), ARGB_WHITE, true);
 		if (thisStation != null) {
 			guiGraphics.drawString(client.font, thisStation, startX + HOT_BAR_WIDTH + TEXT_PADDING, (int) (window.getGuiScaledHeight() - 44.5F), ARGB_WHITE, true);

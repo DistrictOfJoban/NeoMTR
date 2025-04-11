@@ -1,6 +1,5 @@
 package mtr.screen;
 
-import cn.zbx1425.sowcer.math.Matrices;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import mtr.client.ClientData;
@@ -10,6 +9,8 @@ import mtr.mappings.SelectableMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.mappings.WidgetMapper;
+import mtr.util.BlockUtil;
+import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -92,7 +93,7 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 		for (int i = topLeft.getA(); i <= bottomRight.getA(); i += increment) {
 			for (int j = topLeft.getB(); j <= bottomRight.getB(); j += increment) {
 				if (world != null) {
-					final int color = divideColorRGB(world.getBlockState(RailwayData.newBlockPos(i, world.getHeight(Heightmap.Types.MOTION_BLOCKING, i, j) - 1, j)).getBlock().defaultMapColor().col, 2);
+					final int color = divideColorRGB(world.getBlockState(BlockUtil.newBlockPos(i, world.getHeight(Heightmap.Types.MOTION_BLOCKING, i, j) - 1, j)).getBlock().defaultMapColor().col, 2);
 					drawRectangleFromWorldCoords(guiGraphics.pose(), buffer, i, j, i + increment, j + increment, ARGB_BLACK | color);
 				}
 			}
@@ -175,7 +176,7 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 		}
 		immediate.endBatch();
 
-		final String mousePosText = String.format("(%s, %s)", RailwayData.round(mouseWorldPos.getA(), 1), RailwayData.round(mouseWorldPos.getB(), 1));
+		final String mousePosText = String.format("(%s, %s)", Util.round(mouseWorldPos.getA(), 1), Util.round(mouseWorldPos.getB(), 1));
 		guiGraphics.drawString(textRenderer, mousePosText, x + width - TEXT_PADDING - textRenderer.width(mousePosText), y + TEXT_PADDING, ARGB_WHITE);
 	}
 
@@ -304,7 +305,7 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 					final float right = savedRailPos.getX() + 1;
 					final float top = savedRailPos.getZ() + (float) i / savedRailCount;
 					final float bottom = savedRailPos.getZ() + (i + 1F) / savedRailCount;
-					if (RailwayData.isBetween(mouseWorldPos.getA(), left, right) && RailwayData.isBetween(mouseWorldPos.getB(), top, bottom)) {
+					if (Util.isBetween(mouseWorldPos.getA(), left, right) && Util.isBetween(mouseWorldPos.getB(), top, bottom)) {
 						mouseOnSavedRailCallback.mouseOnSavedRailCallback(savedRails.get(i), left, top, right, bottom);
 					}
 				}
@@ -329,7 +330,7 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 	private void drawFromWorldCoords(double worldX, double worldZ, BiConsumer<Double, Double> callback) {
 		final double coordsX = (worldX - centerX) * scale + width / 2D;
 		final double coordsY = (worldZ - centerY) * scale + height / 2D;
-		if (RailwayData.isBetween(coordsX, 0, width) && RailwayData.isBetween(coordsY, 0, height)) {
+		if (Util.isBetween(coordsX, 0, width) && Util.isBetween(coordsY, 0, height)) {
 			callback.accept(coordsX, coordsY);
 		}
 	}
