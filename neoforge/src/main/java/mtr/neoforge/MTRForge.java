@@ -2,6 +2,8 @@ package mtr.neoforge;
 
 import cn.zbx1425.mtrsteamloco.neoforge.ClientProxy;
 import cn.zbx1425.mtrsteamloco.neoforge.RegistriesWrapperImpl;
+import com.lx862.jcm.mod.JCM;
+import com.lx862.jcm.mod.JCMClient;
 import mtr.*;
 import mtr.client.CustomResources;
 import mtr.item.ItemBlockEnchanted;
@@ -50,6 +52,7 @@ public class MTRForge {
 	static {
 		MTR.init(MTRForge::registerItem, MTRForge::registerBlock, MTRForge::registerBlock, MTRForge::registerEnchantedBlock, MTRForge::registerBlockEntityType, MTRForge::registerEntityType, MTRForge::registerSoundEvent);
 		cn.zbx1425.mtrsteamloco.Main.init(registries);
+		JCM.init(MTRForge::registerItem, MTRForge::registerBlock, MTRForge::registerBlock, MTRForge::registerEnchantedBlock, MTRForge::registerBlockEntityType, MTRForge::registerEntityType, MTRForge::registerSoundEvent);
 	}
 
 	public MTRForge(IEventBus eventBus) {
@@ -132,6 +135,7 @@ public class MTRForge {
 		@SubscribeEvent
 		public static void onClientSetupEvent(FMLClientSetupEvent event) {
 			MTRClient.init();
+			JCMClient.initializeClient();
 			event.enqueueWork(Items::initItemModelPredicate);
 			ForgeUtilities.registerTextureStitchEvent(textureAtlas -> {
 				if (((TextureAtlas) textureAtlas).location().getPath().equals("textures/atlas/blocks.png")) {

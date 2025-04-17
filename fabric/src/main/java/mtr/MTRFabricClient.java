@@ -6,6 +6,7 @@ import cn.zbx1425.mtrsteamloco.NTEClientCommand;
 import cn.zbx1425.mtrsteamloco.gui.ScriptDebugOverlay;
 import cn.zbx1425.mtrsteamloco.render.train.SteamSmokeParticle;
 import cn.zbx1425.sowcerext.model.integration.BufferSourceProxy;
+import com.lx862.jcm.mod.JCMClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mtr.client.CustomResources;
 import mtr.client.ICustomResources;
@@ -34,6 +35,7 @@ public class MTRFabricClient implements ClientModInitializer, ICustomResources {
 		MTRClient.init();
 		Items.initItemModelPredicate();
 		MainClient.init();
+		JCMClient.initializeClient();
 
 		WorldRenderEvents.AFTER_ENTITIES.register(context -> {
 			final PoseStack matrices = context.matrixStack();

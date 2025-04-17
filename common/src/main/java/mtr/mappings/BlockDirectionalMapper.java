@@ -22,7 +22,7 @@ public abstract class BlockDirectionalMapper extends HorizontalDirectionalBlock 
 	}
 
 	@Override
-	public final void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource randomSource) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource randomSource) {
 		super.tick(state, world, pos, randomSource);
 		tick(state, world, pos);
 	}

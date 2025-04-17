@@ -1,6 +1,7 @@
 package mtr;
 
 import cn.zbx1425.mtrsteamloco.Main;
+import com.lx862.jcm.mod.JCM;
 import mtr.fabric.CompatPacketRegistry;
 import mtr.item.ItemBlockEnchanted;
 import mtr.item.ItemWithCreativeTabBase;
@@ -28,6 +29,7 @@ public class MTRFabric implements ModInitializer {
 	public void onInitialize() {
 		MTR.init(MTRFabric::registerItem, MTRFabric::registerBlock, MTRFabric::registerBlock, MTRFabric::registerEnchantedBlock, MTRFabric::registerBlockEntityType, MTRFabric::registerEntityType, MTRFabric::registerSoundEvent);
 		Main.init(REGISTRIES);
+		JCM.init(MTRFabric::registerItem, MTRFabric::registerBlock, MTRFabric::registerBlock, MTRFabric::registerEnchantedBlock, MTRFabric::registerBlockEntityType, MTRFabric::registerEntityType, MTRFabric::registerSoundEvent);
 		PACKET_REGISTRY.commitCommon();
 	}
 
