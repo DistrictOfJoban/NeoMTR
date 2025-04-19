@@ -1,16 +1,16 @@
 package com.lx862.jcm.mod.block.base;
 
+import com.lx862.jcm.mod.data.BlockProperties;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
 public abstract class DirectionalBlock extends JCMBlock {
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final DirectionProperty FACING = BlockProperties.FACING;
 
     public DirectionalBlock(BlockBehaviour.Properties settings) {
         super(settings);

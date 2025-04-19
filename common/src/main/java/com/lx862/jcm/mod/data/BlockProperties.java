@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
  * Stores all block properties JCM uses. Block classes from JCM should reference the block properties in here
  */
 public final class BlockProperties {
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty UNPOWERED = BooleanProperty.create("unpowered");
     public static final BooleanProperty HORIZONTAL_IS_LEFT = BooleanProperty.create("left");
     public static final EnumProperty<DoubleBlockHalf> VERTICAL_2 = IBlock.HALF;
