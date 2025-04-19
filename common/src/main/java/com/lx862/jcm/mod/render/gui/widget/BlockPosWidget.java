@@ -2,51 +2,53 @@ package com.lx862.jcm.mod.render.gui.widget;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
-public class BlockPosWidget extends AbstractWidget implements WidgetsWrapper {
+public class BlockPosWidget extends AbstractWidget {
     private final CoordTextField posXTextField;
     private final CoordTextField posYTextField;
     private final CoordTextField posZTextField;
     public BlockPosWidget(int x, int y, int width, int height) {
-        super(x, y, width, height);
+        super(x, y, width, height, Component.empty());
         this.posXTextField = new CoordTextField(0, 0, width / 3, height, -29999999, 29999999, 0);
         this.posYTextField = new CoordTextField(width / 3, 0, width / 3, height, -29999999, 29999999, 0);
         this.posZTextField = new CoordTextField((width / 3) * 2, 0, width / 3, height, -29999999, 29999999, 0);
 
-        this.posXTextField.setChangedListener2(this::setPosition);
-        this.posYTextField.setChangedListener2(this::setPosition);
-        this.posZTextField.setChangedListener2(this::setPosition);
+        this.posXTextField.setResponder(this::setPosition);
+        this.posYTextField.setResponder(this::setPosition);
+        this.posZTextField.setResponder(this::setPosition);
     }
 
     @Override
-    public void setAllX(int newX) {
+    public void setX(int newX) {
         super.setX(newX);
         positionWidgets();
     }
 
     @Override
-    public void setAllY(int newY) {
+    public void setY(int newY) {
         super.setY(newY);
         positionWidgets();
     }
 
-    @Override
-    public void setActiveMapped(boolean active) {
-        this.posXTextField.setEditable2(active);
-        this.posYTextField.setEditable2(active);
-        this.posZTextField.setEditable2(active);
+    public void setActive(boolean active) {
+        this.posXTextField.setEditable(active);
+        this.posYTextField.setEditable(active);
+        this.posZTextField.setEditable(active);
         this.posXTextField.active = active;
         this.posYTextField.active = active;
         this.posZTextField.active = active;
         super.active = active;
     }
 
-    @Override
-    public void setVisibleMapped(boolean visible) {
+    public void setVisible(boolean visible) {
         this.posXTextField.setVisible(visible);
         this.posYTextField.setVisible(visible);
         this.posZTextField.setVisible(visible);
@@ -66,10 +68,10 @@ public class BlockPosWidget extends AbstractWidget implements WidgetsWrapper {
         this.posZTextField.setWidth(perWidth);
     }
 
-    public void addWidget(Consumer<ClickableWidget> callback) {
-        callback.accept(new ClickableWidget(posXTextField));
-        callback.accept(new ClickableWidget(posYTextField));
-        callback.accept(new ClickableWidget(posZTextField));
+    public void addWidget(Consumer<AbstractWidget> callback) {
+        callback.accept(posXTextField);
+        callback.accept(posYTextField);
+        callback.accept(posZTextField);
     }
 
     public void setBlockPos(BlockPos newPos) {

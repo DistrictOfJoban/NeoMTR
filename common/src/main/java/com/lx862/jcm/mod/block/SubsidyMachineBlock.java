@@ -4,8 +4,8 @@ import com.lx862.jcm.mod.Constants;
 import com.lx862.jcm.mod.block.base.WallAttachedBlock;
 import com.lx862.jcm.mod.block.entity.SubsidyMachineBlockEntity;
 import com.lx862.jcm.mod.data.JCMServerStats;
-import com.lx862.jcm.mod.network.gui.SubsidyMachineGUIPacket;
-import com.lx862.jcm.mod.registry.Networking;
+import com.lx862.jcm.mod.render.gui.screen.ScreenType;
+import com.lx862.jcm.mod.util.JCMUtil;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
@@ -19,7 +19,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -39,24 +38,25 @@ public class SubsidyMachineBlock extends WallAttachedBlock implements EntityBloc
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        BlockEntity be = world.getBlockEntity(pos);
-        if(be == null) return InteractionResult.FAIL;
-
-        SubsidyMachineBlockEntity sbe = (SubsidyMachineBlockEntity)be;
-
-        return IBlock.checkHoldingBrush(world, player, () -> {
-            Networking.sendPacketToClient(player, new SubsidyMachineGUIPacket(pos, sbe.getSubsidyAmount(), sbe.getCooldown()));
-        }, () -> {
-            if(cooldownExpired(player, sbe.getCooldown())) {
-                updateCooldown(player);
-                int finalBalance = addMTRBalanceToPlayer(world, player, sbe.getSubsidyAmount());
-                player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "subsidy_machine.success", sbe.getSubsidyAmount(), finalBalance), true);
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if(level.getBlockEntity(pos) instanceof SubsidyMachineBlockEntity be) {
+            if(JCMUtil.playerHoldingBrush(player)) {
+                if(level.isClientSide()) {
+                    ScreenType.BLOCK_CONFIG_SUBSIDY_MACHINE.open(be);
+                }
             } else {
-                int remainingSec = Math.round(sbe.getCooldown() - getCooldown(player));
-                player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "subsidy_machine.fail", remainingSec).withStyle(ChatFormatting.RED), true);
+                if(cooldownExpired(player, be.getCooldown())) {
+                    updateCooldown(player);
+                    int finalBalance = addMTRBalanceToPlayer(level, player, be.getSubsidyAmount());
+                    player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "subsidy_machine.success", be.getSubsidyAmount(), finalBalance), true);
+                } else {
+                    int remainingSec = Math.round(be.getCooldown() - getCooldown(player));
+                    player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "subsidy_machine.fail", remainingSec).withStyle(ChatFormatting.RED), true);
+                }
             }
-        });
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
     }
 
     @Override

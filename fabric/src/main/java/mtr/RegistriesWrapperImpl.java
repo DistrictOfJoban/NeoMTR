@@ -37,9 +37,12 @@ public class RegistriesWrapperImpl implements RegistriesWrapper {
     }
 
     @Override
-    public void registerItem(String id, RegistryObject<ItemWithCreativeTabBase> item) {
+    public void registerItem(String id, RegistryObject<? extends Item> item) {
         Registry.register(BuiltInRegistries.ITEM, Main.id(id), item.get());
-        FabricRegistryUtilities.registerCreativeModeTab(item.get().creativeModeTab.get(), item.get());
+
+        if(item.get() instanceof ItemWithCreativeTabBase itm) {
+            FabricRegistryUtilities.registerCreativeModeTab(itm.creativeModeTab.get(), item.get());
+        }
     }
 
     @Override

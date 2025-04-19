@@ -7,7 +7,6 @@ import com.lx862.jcm.mod.render.RenderHelper;
 import com.lx862.jcm.mod.util.JCMUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mtr.data.ScheduleEntry;
 import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.Minecraft;
@@ -31,7 +30,7 @@ public class PIDSProjectorRenderer extends PIDSRenderer<PIDSProjectorBlockEntity
         UtilitiesClient.rotateYDegrees(poseStack, 90);
         float scale = (float)blockEntity.getScale();
         boolean showOutline = JCMUtil.playerHoldingBrush(Minecraft.getInstance().player);
-        poseStack.translate(-0.5 + blockEntity.getX(), -0.5 - blockEntity.getY(), 0.5 + blockEntity.getZ());
+        poseStack.translate(-0.5 + blockEntity.getOffsetX(), -0.5 - blockEntity.getOffsetY(), 0.5 + blockEntity.getOffsetZ());
 
         UtilitiesClient.rotateXDegrees(poseStack, (float)blockEntity.getRotateX());
         UtilitiesClient.rotateYDegrees(poseStack, (float)blockEntity.getRotateY());
@@ -42,15 +41,14 @@ public class PIDSProjectorRenderer extends PIDSRenderer<PIDSProjectorBlockEntity
             poseStack.pushPose();
             VertexConsumer lineConsumer = bufferSource.getBuffer(RenderType.lines());
 
-            float offsetX = (float)(0.5 - blockEntity.getX());
-            float offsetY = (float)(0.5 + blockEntity.getY());
-            float offsetZ = (float)(-0.5 - blockEntity.getZ());
+            float offsetX = (float)(0.5 - blockEntity.getOffsetX());
+            float offsetY = (float)(0.5 + blockEntity.getOffsetY());
+            float offsetZ = (float)(-0.5 - blockEntity.getOffsetZ());
 
-            graphicsHolder.drawLineInWorld(offsetX, offsetY, offsetZ, 0, 0, 0, 0xFFFF0000);
-            graphicsHolder.drawLineInWorld(offsetX, offsetY, offsetZ, 0 + (1.785f * scale), 0, 0, 0xFFFF0000);
-
-            graphicsHolder.drawLineInWorld(offsetX, offsetY, offsetZ, 0, 0 + (1 * scale), 0, 0xFFFF0000);
-            graphicsHolder.drawLineInWorld(offsetX, offsetY, offsetZ, 0 + (1.785f * scale), 0 + (1 * scale), 0, 0xFFFF0000);
+            RenderHelper.drawLine(poseStack, lineConsumer, offsetX, offsetY, offsetZ, 0, 0, 0, 0xFFFF0000);
+            RenderHelper.drawLine(poseStack, lineConsumer, offsetX, offsetY, offsetZ, 0 + (1.785f * scale), 0, 0, 0xFFFF0000);
+            RenderHelper.drawLine(poseStack, lineConsumer, offsetX, offsetY, offsetZ, 0, 0 + (1 * scale), 0, 0xFFFF0000);
+            RenderHelper.drawLine(poseStack, lineConsumer, offsetX, offsetY, offsetZ, 0 + (1.785f * scale), 0 + (1 * scale), 0, 0xFFFF0000);
             poseStack.popPose();
         }
 

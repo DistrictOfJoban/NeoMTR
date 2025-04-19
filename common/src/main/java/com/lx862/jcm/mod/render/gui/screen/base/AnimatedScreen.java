@@ -1,7 +1,7 @@
 package com.lx862.jcm.mod.render.gui.screen.base;
 
 import com.lx862.jcm.mod.Constants;
-import mtr.mapping.mapper.GraphicsHolder;
+import net.minecraft.client.gui.GuiGraphics;
 
 public abstract class AnimatedScreen extends ScreenBase {
     protected double linearAnimationProgress = 0;
@@ -15,8 +15,8 @@ public abstract class AnimatedScreen extends ScreenBase {
     }
 
     @Override
-    public void render(GraphicsHolder graphicsHolder, int mouseX, int mouseY, float tickDelta) {
-        super.render(graphicsHolder, mouseX, mouseY, tickDelta);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+        super.render(guiGraphics, mouseX, mouseY, tickDelta);
         double frameDelta = (tickDelta / Constants.MC_TICK_PER_SECOND);
         if(!shouldAnimate) {
             linearAnimationProgress = 1;
@@ -24,16 +24,16 @@ public abstract class AnimatedScreen extends ScreenBase {
             linearAnimationProgress = closing ? Math.max(0, linearAnimationProgress - frameDelta) : Math.min(1, linearAnimationProgress + frameDelta);
 
             if(linearAnimationProgress <= 0 && closing) {
-                onClose2();
+                onClose();
             }
         }
         animationProgress = getEaseAnimation();
     }
 
     @Override
-    public void onClose2() {
+    public void onClose() {
         if(closing || !shouldAnimate) {
-            super.onClose2();
+            super.onClose();
         } else {
             closing = true;
         }

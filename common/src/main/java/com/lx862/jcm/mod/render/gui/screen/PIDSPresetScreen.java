@@ -9,42 +9,35 @@ import com.lx862.jcm.mod.render.gui.screen.base.TitledScreen;
 import com.lx862.jcm.mod.render.gui.widget.ContentItem;
 import com.lx862.jcm.mod.render.gui.widget.HorizontalWidgetSet;
 import com.lx862.jcm.mod.render.gui.widget.ListViewWidget;
-import com.lx862.jcm.mod.render.gui.widget.MappedWidget;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
-import net.minecraft.client.Minecraft;
+import mtr.screen.WidgetBetterTextField;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.BlockPos;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Consumer;
 
 public class PIDSPresetScreen extends TitledScreen implements RenderHelper, GuiHelper {
     private static final ResourceLocation PIDS_PREVIEW_BASE = ResourceLocation.parse("jsblock:textures/gui/pids_preview.png");
-    private final TextFieldWidgetExtension searchBox;
+    private final WidgetBetterTextField searchBox;
     private final ListViewWidget listViewWidget;
     private final Consumer<String> callback;
     private final String selectedPreset;
     private final String pidsType;
-    public PIDSPresetScreen(BlockPos pos, String selectedPreset, Consumer<String> callback) {
+    public PIDSPresetScreen(PIDSBlockEntity be, String selectedPreset, Consumer<String> callback) {
         super(false);
-        BlockEntity be = Minecraft.getInstance().level.getBlockEntity(pos);
-        if(be != null && be instanceof PIDSBlockEntity) {
-            this.pidsType = ((PIDSBlockEntity)be).getPIDSType();
-        } else {
-            this.pidsType = "";
-        }
+        this.pidsType = be.getPIDSType();
         this.selectedPreset = selectedPreset;
         this.callback = callback;
         this.listViewWidget = new ListViewWidget();
-        this.searchBox = new TextFieldWidgetExtension(0, 0, 0, 22, 60, TextCase.DEFAULT, null, TextUtil.translatable(TextCategory.GUI, "widget.search").getString());
+        this.searchBox = new WidgetBetterTextField(TextUtil.translatable(TextCategory.GUI, "widget.search").getString());
     }
 
     @Override
-    protected void init2() {
-        super.init2();
+    protected void init() {
+        super.init();
         int contentWidth = (int)Math.min((width * 0.75), MAX_CONTENT_WIDTH);
         int listViewHeight = (int)((height - 60) * 0.76);
         int startX = (width - contentWidth) / 2;
@@ -53,14 +46,16 @@ public class PIDSPresetScreen extends TitledScreen implements RenderHelper, GuiH
 
         listViewWidget.reset();
         addConfigEntries();
-        searchBox.setX2(startX);
-        searchBox.setY2(searchStartY);
-        searchBox.setWidth2(contentWidth);
-        searchBox.setChangedListener2(listViewWidget::setSearchTerm);
+        searchBox.setX(startX);
+        searchBox.setY(searchStartY);
+        searchBox.setWidth(contentWidth);
+        searchBox.setHeight(20);
+        searchBox.setResponder(listViewWidget::setSearchTerm);
+        searchBox.setValue(searchBox.getValue());
 
         listViewWidget.setXYSize(startX, startY, contentWidth, listViewHeight);
-        addWidget(new ClickableWidget(listViewWidget));
-        addWidget(new ClickableWidget(searchBox));
+        addRenderableWidget(listViewWidget);
+        addRenderableWidget(searchBox);
     }
 
     @Override
@@ -90,22 +85,17 @@ public class PIDSPresetScreen extends TitledScreen implements RenderHelper, GuiH
     private void addPreset(PIDSPresetBase preset) {
         if(!preset.typeAllowed(pidsType)) return;
 
-        ButtonWidgetExtension selectBtn = new ButtonWidgetExtension(0, 0, 60, 20, TextUtil.translatable(TextCategory.GUI, "pids_preset.listview.widget.choose"), (btn) -> {
+        Button selectBtn = Button.builder(TextUtil.translatable(TextCategory.GUI, "pids_preset.listview.widget.choose"), (btn) -> {
             choose(preset.getId());
-        });
+        }).size(60, 20).build();
 
         if(preset.getId().equals(selectedPreset)) {
-            selectBtn.setMessage2(Text.cast(TextUtil.translatable(TextCategory.GUI, "pids_preset.listview.widget.selected")));
+            selectBtn.setMessage(TextUtil.translatable(TextCategory.GUI, "pids_preset.listview.widget.selected"));
             selectBtn.active = false;
         }
 
-        HorizontalWidgetSet widgetSet = new HorizontalWidgetSet();
-        widgetSet.addWidget(new MappedWidget(selectBtn));
-        widgetSet.setXYSize(0, 0, 100, 20);
-
-        addWidget(selectBtn);
-        addWidget(widgetSet);
-        ContentItem contentItem = new ContentItem(TextUtil.literal(preset.getName()), new MappedWidget(widgetSet), 26);
+        addRenderableWidget(selectBtn);
+        ContentItem contentItem = new ContentItem(TextUtil.literal(preset.getName()), selectBtn, 26);
 
         contentItem.setIconCallback((guiDrawing, startX, startY, width, height) -> {
             drawPIDSPreview(preset, guiDrawing, startX, startY, width, height, false);
@@ -137,11 +127,11 @@ public class PIDSPresetScreen extends TitledScreen implements RenderHelper, GuiH
 
     private void choose(String id) {
         callback.accept(id);
-        onClose2();
+        onClose();
     }
 
     @Override
-    public boolean isPauseScreen2() {
+    public boolean isPauseScreen() {
         return false;
     }
 }

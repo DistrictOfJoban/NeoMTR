@@ -19,7 +19,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-
 public class HelpLineStandingBlock extends Vertical3Block implements PowerableBlockBehavior {
     public HelpLineStandingBlock(Properties settings) {
         super(settings);

@@ -24,16 +24,16 @@ public class WeatherIconComponent extends TextureComponent {
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, Direction facing, PIDSContext context) {
         ResourceLocation textureId;
-        if(context.world.isThundering()) {
+        if(context.level.isThundering()) {
             textureId = iconThunder;
-        } else if(context.world.isRaining()) {
+        } else if(context.level.isRaining()) {
             textureId = iconRainy;
         } else {
             textureId = iconSunny;
         }
 
         if(textureId != null) {
-            drawTexture(graphicsHolder, guiDrawing, facing, textureId, 0, 0, width, height, ARGB_WHITE);
+            drawTexture(poseStack, bufferSource, facing, textureId, 0, 0, width, height, ARGB_WHITE);
         }
     }
 

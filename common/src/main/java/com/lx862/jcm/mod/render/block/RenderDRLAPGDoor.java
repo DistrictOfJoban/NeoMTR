@@ -15,8 +15,7 @@ import mtr.mappings.BlockEntityRendererMapper;
 import mtr.mappings.ModelDataWrapper;
 import mtr.mappings.ModelMapper;
 import mtr.mappings.UtilitiesClient;
-import mtr.render.RenderTrains;
-import mtr.render.StoredMatrixTransformations;
+import mtr.render.MoreRenderLayers;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -33,7 +32,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
  */
 public class RenderDRLAPGDoor<T extends APGDoorDRLBlockEntity> extends BlockEntityRendererMapper<T> implements IGui, IBlock {
     private final int type;
-    private static final ModelSingleCube MODEL_APG_TOP = new ModelSingleCube(34, 9, 0, 15, 1, 16, 8, 1);
+    private static final ModelSingleCube MODEL_APG_TOP = new ModelSingleCube(34, 9, 0, 15, 1, 16, 1, 1);
     private static final ModelAPGDoorBottom MODEL_APG_BOTTOM = new ModelAPGDoorBottom();
     private static final ModelAPGDoorLight MODEL_APG_LIGHT = new ModelAPGDoorLight();
     private static final ModelSingleCube MODEL_APG_DOOR_LOCKED = new ModelSingleCube(6, 6, 5, 17, 1, 6, 6, 0);
@@ -62,54 +61,41 @@ public class RenderDRLAPGDoor<T extends APGDoorDRLBlockEntity> extends BlockEnti
         final boolean unlocked = IBlock.getStatePropertySafe(level, blockPos, BlockPSDAPGDoorBase.UNLOCKED);
         final double open = Math.min(entity.getOpen(MTRClient.getLastFrameDuration()), type >= 3 ? 0.75F : 1);
 
-        final StoredMatrixTransformations storedMatrixTransformations = new StoredMatrixTransformations(0.5 + blockPos.getX(), blockPos.getY(), 0.5 + blockPos.getZ());
-        storedMatrixTransformations.add(matricesNew -> {
-            matricesNew.translate(0.5 + entity.getBlockPos().getX(), entity.getBlockPos().getY(), 0.5 + entity.getBlockPos().getZ());
-            UtilitiesClient.rotateYDegrees(matricesNew, -facing.toYRot());
-            UtilitiesClient.rotateXDegrees(matricesNew, 180);
-        });
-        final StoredMatrixTransformations storedMatrixTransformationsLight = storedMatrixTransformations.copy();
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0, 0.5);
+        UtilitiesClient.rotateYDegrees(poseStack, -facing.toYRot());
+        UtilitiesClient.rotateXDegrees(poseStack, 180);
 
         switch (type) {
             case 2:
                 if (half) {
                     final Block block = level.getBlockState(blockPos.relative(side ? facing.getClockWise() : facing.getCounterClockWise())).getBlock();
                     if (block instanceof BlockAPGGlass || block instanceof BlockAPGGlassEnd) {
-                        RenderTrains.scheduleRender(ResourceLocation.parse(String.format("mtr:textures/block/apg_door_light_%s.png", open > 0 ? "on" : "off")), false, open > 0 ? RenderTrains.QueuedRenderLayer.LIGHT_TRANSLUCENT : RenderTrains.QueuedRenderLayer.EXTERIOR, (poseStack1, vertexConsumer) -> {
-                            storedMatrixTransformationsLight.transform(poseStack1);
-                            poseStack1.translate(side ? -0.515625 : 0.515625, 0, 0);
-                            poseStack1.scale(0.5F, 1, 1);
-                            MODEL_APG_LIGHT.render(poseStack1, vertexConsumer, packedLight, packedOverlay, 1, 1, 1, 1);
-                            poseStack1.popPose(); // TODO: Really?
-                        });
+                        poseStack.pushPose();
+                        poseStack.translate(side ? -0.515625 : 0.515625, 0, 0);
+                        poseStack.scale(0.5F, 1, 1);
+                        final ResourceLocation lightLocation = MTR.id(String.format("textures/block/apg_door_light_%s.png", open > 0 ? "on" : "off"));
+                        final VertexConsumer vertexConsumerLight = bufferSource.getBuffer(open > 0 ? MoreRenderLayers.getLight(lightLocation, true) : MoreRenderLayers.getExterior(lightLocation));
+                        MODEL_APG_LIGHT.renderToBuffer(poseStack, vertexConsumerLight, packedLight, packedOverlay, 0xFFFFFFFF);
+                        poseStack.popPose();
                     }
                 }
                 break;
         }
 
-        storedMatrixTransformations.add(matricesNew -> matricesNew.translate(open * (side ? -1 : 1), 0, 0));
+        poseStack.translate(open * (side ? -1 : 1), 0, 0);
 
         switch (type) {
             case 2:
-                RenderTrains.scheduleRender(Constants.id(String.format("textures/block/psdapg/drlapg/apg_door_%s_%s.png", half ? "top" : "bottom", side ? "right" : "left")), false, RenderTrains.QueuedRenderLayer.EXTERIOR, (poseStack1, vertexConsumer) -> {
-                    storedMatrixTransformations.transform(poseStack1);
-                    (half ? MODEL_APG_TOP : MODEL_APG_BOTTOM).render(graphicsHolderNew, light, overlay, 1, 1, 1, 1);
-                    poseStack1.popPose(); // TODO: Needed?
-                });
+                final VertexConsumer vertexConsumerAPGDoor = bufferSource.getBuffer(MoreRenderLayers.getExterior(Constants.id(String.format("textures/block/psdapg/drlapg/apg_door_%s_%s.png", half ? "top" : "bottom", side ? "right" : "left"))));
+                (half ? MODEL_APG_TOP : MODEL_APG_BOTTOM).renderToBuffer(poseStack, vertexConsumerAPGDoor, packedLight, packedOverlay, 0xFFFFFFFF);
                 if (half && !unlocked) {
-                    RenderTrains.scheduleRender(MTR.id("textures/block/sign/door_not_in_use.png"), false, RenderTrains.QueuedRenderLayer.EXTERIOR, (poseStack1, vertexConsumer) -> {
-                        storedMatrixTransformations.transform(poseStack1);
-                        MODEL_APG_DOOR_LOCKED.render(graphicsHolderNew, light, overlay, 1, 1, 1, 1);
-                        poseStack1.popPose(); // TODO: Needed?
-                    });
+                    final VertexConsumer vertexConsumerDoorLocked = bufferSource.getBuffer(MoreRenderLayers.getExterior(MTR.id("textures/block/sign/door_not_in_use.png")));
+                    MODEL_APG_DOOR_LOCKED.renderToBuffer(poseStack, vertexConsumerDoorLocked, packedLight, packedOverlay, 0xFFFFFFFF);
                 }
                 break;
-            case 4:
-                if (IBlock.getStatePropertySafe(level, blockPos, TripleHorizontalBlock.CENTER)) {
-                    break;
-                }
-                storedMatrixTransformations.add(matricesNew -> matricesNew.translate(side ? 0.5 : -0.5, 0, 0));
         }
+        poseStack.popPose();
     }
 
     private static class ModelSingleCube extends EntityModel<Entity> {
@@ -117,9 +103,11 @@ public class RenderDRLAPGDoor<T extends APGDoorDRLBlockEntity> extends BlockEnti
         private final ModelMapper cube;
 
         private ModelSingleCube(int textureWidth, int textureHeight, int x, int y, int z, int length, int height, int depth) {
+            super();
             final ModelDataWrapper modelDataWrapper = new ModelDataWrapper(this, textureWidth, textureHeight);
             cube = new ModelMapper(modelDataWrapper);
             cube.texOffs(0, 0).addBox(x - 8, y - 16, z - 8, length, height, depth, 0, false);
+            modelDataWrapper.setModelPart(textureWidth, textureHeight);
             cube.setModelPart();
         }
 
@@ -151,7 +139,7 @@ public class RenderDRLAPGDoor<T extends APGDoorDRLBlockEntity> extends BlockEnti
             cube_r1.setPos(0, -6, -8);
             cube_r1.setRotationAngle(-0.7854F, 0, 0);
             cube_r1.texOffs(0, 24).addBox(-8, -2, 0, 16, 2, 1, 0, false);
-
+            modelDataWrapper.setModelPart(textureWidth, textureHeight);
             bone.setModelPart();
         }
 
@@ -171,16 +159,17 @@ public class RenderDRLAPGDoor<T extends APGDoorDRLBlockEntity> extends BlockEnti
         private final ModelMapper bone;
 
         private ModelAPGDoorLight() {
-            super(8, 8);
+            final ModelDataWrapper modelDataWrapper = new ModelDataWrapper(this, 8, 8);
 
-            bone = createModelPart();
-            bone.setTextureUVOffset(0, 4).addCuboid(-0.5F, -2, -7, 1, 1, 3, 0.05F, false);
+            bone = new ModelMapper(modelDataWrapper);
+            bone.texOffs(0, 4).addBox(-0.5F, -2, -7, 1, 1, 3, 0.05F, false);
 
-            final ModelPartExtension cube_r1 = bone.addWidget();
-            cube_r1.setPivot(0, -2.05F, -4.95F);
-            cube_r1.setRotation(0.3927F, 0, 0);
-            cube_r1.setTextureUVOffset(0, 0).addCuboid(-0.5F, 0.05F, -3.05F, 1, 1, 3, 0.05F, false);
+            final ModelMapper cube_r1 = new ModelMapper(modelDataWrapper);
+            cube_r1.setPos(0, -2.05F, -4.95F);
+            cube_r1.setRotationAngle(0.3927F, 0, 0);
+            cube_r1.texOffs(0, 0).addBox(-0.5F, 0.05F, -3.05F, 1, 1, 3, 0.05F, false);
 
+            modelDataWrapper.setModelPart(8, 8);
             bone.setModelPart();
         }
 

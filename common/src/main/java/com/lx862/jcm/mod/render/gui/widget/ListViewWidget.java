@@ -4,9 +4,11 @@ import com.lx862.jcm.mod.Constants;
 import com.lx862.jcm.mod.render.ClipStack;
 import com.lx862.jcm.mod.render.GuiHelper;
 import com.lx862.jcm.mod.render.RenderHelper;
-import mtr.mapping.holder.MutableComponent;
-import mtr.mapping.mapper.GraphicsHolder;
-import mtr.mapping.mapper.GuiDrawing;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +24,16 @@ public class ListViewWidget extends AbstractScrollViewWidget implements RenderHe
     }
 
     public void setXYSize(int x, int y, int width, int height) {
-        setX2(x);
-        setY2(y);
-        setWidth2(width);
-        setHeightMapped(height);
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
         setScroll(currentScroll);
         positionWidgets(currentScroll);
         refreshDisplayedList();
     }
 
-    public void add(MutableComponent text, MappedWidget widget) {
+    public void add(MutableComponent text, AbstractWidget widget) {
         add(new ContentItem(text, widget));
     }
 
@@ -72,31 +74,40 @@ public class ListViewWidget extends AbstractScrollViewWidget implements RenderHe
     }
 
     @Override
-    public void render(GraphicsHolder graphicsHolder, int mouseX, int mouseY, float tickDelta) {
-        GuiHelper.drawRectangle(new GuiDrawing(graphicsHolder), getX2(), getY2(), width, height, 0x4F4C4C4C);
-        super.render(graphicsHolder, mouseX, mouseY, tickDelta);
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+        GuiHelper.drawRectangle(guiGraphics, getX(), getY(), width, height, 0x4F4C4C4C);
+        guiGraphics.renderOutline(getX(), getY(), getWidth(), getHeight(), 0x88FFFFFF);
+        super.renderWidget(guiGraphics, mouseX, mouseY, tickDelta);
     }
 
     @Override
-    public void renderContent(GraphicsHolder graphicsHolder, int mouseX, int mouseY, float tickDelta) {
-        GuiDrawing guiDrawing = new GuiDrawing(graphicsHolder);
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        // TODO
+    }
+
+    @Override
+    public void playDownSound(SoundManager handler) {
+    }
+
+    @Override
+    public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
         elapsed += (tickDelta / Constants.MC_TICK_PER_SECOND);
 
         int incY = 0;
         for (AbstractListItem abstractListItem : displayedEntryList) {
             ClipStack.ensureStateCorrect();
-            int entryX = getX2();
-            int entryY = getY2() + incY - (int) currentScroll;
+            int entryX = getX();
+            int entryY = getY() + incY - (int) currentScroll;
             boolean widgetVisible = false;
 
             if (abstractListItem instanceof ContentItem) {
                 ContentItem contentItem = (ContentItem) abstractListItem;
-                boolean topLeftVisible = inRectangle(contentItem.widget.getX(), contentItem.widget.getY(), getX2(), getY2(), getWidth2(), getHeight2());
-                boolean bottomRightVisible = inRectangle(contentItem.widget.getX() + contentItem.widget.getWidth(), contentItem.widget.getY() + contentItem.widget.getHeight(), getX2(), getY2(), getWidth2(), getHeight2());
+                boolean topLeftVisible = inRectangle(contentItem.widget.getX(), contentItem.widget.getY(), getX(), getY(), getWidth(), getHeight());
+                boolean bottomRightVisible = inRectangle(contentItem.widget.getX() + contentItem.widget.getWidth(), contentItem.widget.getY() + contentItem.widget.getHeight(), getX(), getY(), getWidth(), getHeight());
                 widgetVisible = topLeftVisible && bottomRightVisible;
             }
 
-            abstractListItem.draw(graphicsHolder, guiDrawing, entryX, entryY, width - getScrollbarOffset(), height, mouseX, mouseY, widgetVisible, elapsed, tickDelta);
+            abstractListItem.draw(guiGraphics, entryX, entryY, width - getScrollbarOffset(), height, mouseX, mouseY, widgetVisible, elapsed, tickDelta);
             incY += abstractListItem.height;
         }
     }
@@ -121,8 +132,8 @@ public class ListViewWidget extends AbstractScrollViewWidget implements RenderHe
     }
 
     private void positionWidgets(double scroll) {
-        int startX = getX2();
-        int startY = getY2();
+        int startX = getX();
+        int startY = getY();
 
         int incY = 0;
         for (AbstractListItem listItem : displayedEntryList) {

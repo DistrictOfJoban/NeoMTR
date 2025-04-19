@@ -1,17 +1,12 @@
 package com.lx862.jcm.mod.data.pids.preset.components.base;
 
+import com.lx862.jcm.mod.data.JCMServerStats;
 import com.lx862.jcm.mod.data.KVPair;
 import com.lx862.jcm.mod.render.RenderHelper;
 import com.lx862.jcm.mod.render.text.*;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import mtr.data.IGui;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.Direction;
-import mtr.mapping.mapper.GraphicsHolder;
-import mtr.mapping.mapper.GuiDrawing;
-import mtr.mod.InitClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,7 +82,8 @@ public abstract class TextComponent extends PIDSComponent {
 
         if(split.isEmpty()) return "";
 
-        return split.get(((int)InitClient.getGameTick() / SWITCH_LANG_DURATION) % split.size());
+        // TODO: Client tick!
+        return split.get(((int) JCMServerStats.getGameTick() / SWITCH_LANG_DURATION) % split.size());
     }
 
     protected boolean isCjk(String str, boolean isTranslation) {

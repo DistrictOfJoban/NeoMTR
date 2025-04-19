@@ -7,9 +7,12 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Matrix4f;
 
 public interface RenderHelper {
     int MAX_RENDER_LIGHT = 0xF000F0;
@@ -27,6 +30,11 @@ public interface RenderHelper {
         final Font font = Minecraft.getInstance().font;
         int w = font.width(text);
         guiGraphics.drawString(font, text, x - (w / 2), y, textColor, false);
+    }
+
+    static void drawLine(PoseStack poseStack, VertexConsumer vertexConsumer, float x1, float y1, float z1, float x2, float y2, float z2, int color) {
+        vertexConsumer.addVertex(poseStack.last(), x1, y1, z1).setColor(color).setNormal(poseStack.last(), 0, 1, 0);
+        vertexConsumer.addVertex(poseStack.last(), x2, y2, z2).setColor(color).setNormal(poseStack.last(), 0, 1, 0);
     }
 
     default boolean inRectangle(double targetX, double targetY, int rectX, int rectY, int rectW, int rectH) {
@@ -69,6 +77,20 @@ public interface RenderHelper {
     }
 
     static void drawTextureRaw(PoseStack poseStack, VertexConsumer vertexConsumer, float x1, float y1, float z1, float x2, float y2, float z2, float u1, float v1, float u2, float v2, Direction facing, int color, int light) {
-        graphicsHolder.drawTextureInWorld(x1, y2, z1, x2, y2, z2, x2, y1, z2, x1, y1, z1, u1, v1, u2, v2, facing, color, light);
+        drawTextureRaw(poseStack, vertexConsumer, x1, y2, z1, x2, y2, z2, x2, y1, z2, x1, y1, z1, u1, v1, u2, v2, facing, color, light);
+    }
+
+    static void drawTextureRaw(PoseStack poseStack, VertexConsumer vertexConsumer, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float x4, float y4, float z4, float u1, float v1, float u2, float v2, Direction facing, int color, int light) {
+        final PoseStack.Pose pose = poseStack.last();
+        Matrix4f matrix4f = pose.pose();
+        Vec3i vector3i = facing.getNormal();
+        final int normalX = vector3i.getX();
+        final int normalY = vector3i.getY();
+        final int normalZ = vector3i.getZ();
+
+        vertexConsumer.addVertex(matrix4f, x1, y1, z1).setColor(color).setUv(u1, v2).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, normalX, normalY, normalZ);
+        vertexConsumer.addVertex(matrix4f, x2, y2, z2).setColor(color).setUv(u2, v2).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, normalX, normalY, normalZ);
+        vertexConsumer.addVertex(matrix4f, x3, y3, z3).setColor(color).setUv(u2, v1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, normalX, normalY, normalZ);
+        vertexConsumer.addVertex(matrix4f, x4, y4, z4).setColor(color).setUv(u1, v1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, normalX, normalY, normalZ);
     }
 }

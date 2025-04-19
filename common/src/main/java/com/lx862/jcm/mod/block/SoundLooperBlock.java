@@ -2,11 +2,10 @@ package com.lx862.jcm.mod.block;
 
 import com.lx862.jcm.mod.block.base.JCMBlock;
 import com.lx862.jcm.mod.block.entity.SoundLooperBlockEntity;
-import com.lx862.jcm.mod.network.gui.SoundLooperGUIPacket;
-import com.lx862.jcm.mod.registry.Networking;
-import mtr.block.IBlock;
+import com.lx862.jcm.mod.render.gui.screen.ScreenType;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.EntityBlockMapper;
+import mtr.registry.Items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -25,10 +24,12 @@ public class SoundLooperBlock extends JCMBlock implements EntityBlockMapper {
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        return IBlock.checkHoldingBrush(world, player, () -> {
-            SoundLooperBlockEntity be = (SoundLooperBlockEntity) world.getBlockEntity(pos);
-            Networking.sendPacketToClient(player, new SoundLooperGUIPacket(pos, be.getCorner1(), be.getCorner2(), be.getSoundId(), be.getSoundCategory(), be.getLoopInterval(), be.getSoundVolume(), be.needRedstone(), be.rangeLimited()));
-        });
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        InteractionResult result = player.isHolding(Items.BRUSH.get()) ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        if(level.isClientSide() && level.getBlockEntity(pos) instanceof SoundLooperBlockEntity be) {
+            ScreenType.BLOCK_CONFIG_SOUND_LOOPER.open(be);
+        }
+
+        return result;
     }
 }

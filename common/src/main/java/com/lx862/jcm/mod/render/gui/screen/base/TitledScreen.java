@@ -21,16 +21,15 @@ public abstract class TitledScreen extends AnimatedScreen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
         drawBackground(guiGraphics, mouseX, mouseY, tickDelta);
         drawTitle(guiGraphics);
         drawSubtitle(guiGraphics);
 
         // TODO: Remove this on release
         guiGraphics.drawString(font, TextUtil.literal("JCM Beta Release").setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)), width - font.width("JCM Beta release") - 6, 6, 0xFFFFFFFF, true);
-        guiGraphics.drawString(font, TextUtil.literal("Report issues here!").setStyle(Style.EMPTY.withColor(ChatFormatting.UNDERLINE)), width - font.width("Report issues here!") - 6, 18, 0xFFFFFFFF, true);
+        guiGraphics.drawString(font, TextUtil.literal("Report issues here!").setStyle(Style.EMPTY.withUnderlined(true)), width - font.width("Report issues here!") - 6, 18, 0xFFFFFFFF, true);
         elapsed += tickDelta / Constants.MC_TICK_PER_SECOND;
-        super.render(guiGraphics, mouseX, mouseY, tickDelta);
     }
 
     @Override

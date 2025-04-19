@@ -25,7 +25,7 @@ public class ClockComponent extends TextComponent {
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, Direction facing, PIDSContext context) {
-        long timeNow = WorldHelper.getTimeOfDay(context.world) + 6000;
+        long timeNow = context.level.getDayTime() + 6000;
         long hours = timeNow / 1000;
         long minutes = (long)Math.floor((timeNow - (hours * 1000)) / 16.8);
         String str = "";
@@ -37,7 +37,7 @@ public class ClockComponent extends TextComponent {
         if(showMin) str += String.format("%02d", minutes % 60);
         if(showMin && showAMPM) str += (" ");
         if(showAMPM) str += ((hours % 24 >= 12) ? "PM" : "AM");
-        drawText(graphicsHolder, guiDrawing, facing, str);
+        drawText(poseStack, bufferSource, str);
     }
 
     public static PIDSComponent parseComponent(double x, double y, double width, double height, JsonObject jsonObject) {

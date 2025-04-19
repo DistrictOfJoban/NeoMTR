@@ -4,25 +4,27 @@ import com.lx862.jcm.mod.render.RenderHelper;
 import com.lx862.jcm.mod.util.JCMLogger;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
-import mtr.mapping.holder.MutableComponent;
-import mtr.mapping.mapper.GraphicsHolder;
-import mtr.mapping.mapper.TextFieldWidgetExtension;
-import mtr.mapping.tool.TextCase;
+import mtr.screen.WidgetBetterTextField;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.MutableComponent;
 
-import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 
 /**
  * Text Field Widget that is specifically designed for entering number only
  */
-public class DoubleTextField extends TextFieldWidgetExtension implements RenderHelper {
+public class DoubleTextField extends WidgetBetterTextField implements RenderHelper {
     private final double min;
     private final double max;
     private final String prefix;
     private final double defaultValue;
 
-    public DoubleTextField(int x, int y, int width, int height, double min, double max, double defaultValue, @Nonnull String prefix) {
-        super(x, y, width, height, 16, TextCase.LOWER, null, String.valueOf(defaultValue));
+    public DoubleTextField(int x, int y, int width, int height, double min, double max, double defaultValue, String prefix) {
+        super(String.valueOf(defaultValue), 16);
+        setPosition(x, y);
+        setSize(width, height);
         this.min = min;
         this.max = max;
         this.prefix = prefix;
@@ -38,20 +40,20 @@ public class DoubleTextField extends TextFieldWidgetExtension implements RenderH
     }
 
     @Override
-    public boolean charTyped2(char chr, int modifiers) {
-        String prevValue = getText2();
-        boolean bl = super.charTyped2(chr, modifiers);
+    public boolean charTyped(char chr, int modifiers) {
+        String prevValue = getValue();
+        boolean bl = super.charTyped(chr, modifiers);
 
         try {
-            String newString = getText2();
+            String newString = getValue();
             double val = Double.parseDouble(newString);
             if(val < min || val > max) {
                 JCMLogger.debug("DoubleTextField: Value too large or small");
-                setText2(prevValue);
+                setValue(prevValue);
                 return false;
             }
         } catch (Exception e) {
-            setText2(prevValue);
+            setValue(prevValue);
             return false;
         }
 
@@ -59,70 +61,71 @@ public class DoubleTextField extends TextFieldWidgetExtension implements RenderH
     }
 
     @Override
-    public void render(GraphicsHolder graphicsHolder, int mouseX, int mouseY, float tickDelta) {
-        super.render(graphicsHolder, mouseX, mouseY, tickDelta);
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+        super.renderWidget(guiGraphics, mouseX, mouseY, tickDelta);
+        final Font font = Minecraft.getInstance().font;
 
         if(prefix != null) {
-            drawPrefix(graphicsHolder);
+            drawPrefix(guiGraphics, font);
         }
 
-        drawUpDownButton(graphicsHolder);
+        drawUpDownButton(guiGraphics, font);
     }
 
-    protected void drawPrefix(GraphicsHolder graphicsHolder) {
-        int prefixWidth = GraphicsHolder.getTextWidth(prefix);
-        int prefixX = getX2() - prefixWidth;
-        int prefixY = getY2() + (getHeight2() / 2) - (9 / 2);
+    protected void drawPrefix(GuiGraphics guiGraphics, Font font) {
+        int prefixWidth = font.width(prefix);
+        int prefixX = getX() - prefixWidth;
+        int prefixY = getY() + (getHeight() / 2) - (9 / 2);
 
-        graphicsHolder.drawText(prefix, prefixX, prefixY, 0xFFFFFFFF, true, MAX_RENDER_LIGHT);
+        guiGraphics.drawString(font, prefix, prefixX, prefixY, 0xFFFFFFFF, true);
     }
 
-    protected void drawUpDownButton(GraphicsHolder graphicsHolder) {
+    protected void drawUpDownButton(GuiGraphics graphicsHolder, Font font) {
         MutableComponent upArrow = TextUtil.translatable(TextCategory.GUI, "widget.numeric_text_field.increment");
         MutableComponent dnArrow = TextUtil.translatable(TextCategory.GUI, "widget.numeric_text_field.decrement");
         int fontHeight = 9;
         int startY = (height - (fontHeight * 2));
-        int upWidth = GraphicsHolder.getTextWidth(upArrow);
-        int dnWidth = GraphicsHolder.getTextWidth(dnArrow);
-        graphicsHolder.drawText(upArrow, getX2() + width - upWidth - 2, getY2() + startY, 0xFFFFFFFF, false, MAX_RENDER_LIGHT);
-        graphicsHolder.drawText(dnArrow, getX2() + width - dnWidth - 2, getY2() + startY + fontHeight, 0xFFFFFFFF, false, MAX_RENDER_LIGHT);
+        int upWidth = font.width(upArrow);
+        int dnWidth = font.width(dnArrow);
+        graphicsHolder.drawString(font, upArrow, getX() + width - upWidth - 2, getY() + startY, 0xFFFFFFFF, false);
+        graphicsHolder.drawString(font, dnArrow, getX() + width - dnWidth - 2, getY() + startY + fontHeight, 0xFFFFFFFF, false);
     }
 
     @Override
-    public boolean mouseScrolled2(double mouseX, double mouseY, double amount) {
-        if(visible && active && isFocused2()) {
-            if(amount > 0) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if(visible && active && isFocused()) {
+            if(scrollY > 0) {
                 increment();
             } else {
                 decrement();
             }
         }
-        return super.mouseScrolled2(mouseX, mouseY, amount);
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
     @Override
-    public boolean mouseClicked2(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         MutableComponent upArrow = TextUtil.translatable(TextCategory.GUI, "widget.numeric_text_field.increment");
         MutableComponent dnArrow = TextUtil.translatable(TextCategory.GUI, "widget.numeric_text_field.decrement");
         int fontHeight = 9;
-        int startY = getY2() + (height - (fontHeight * 2)) / 2;
-        int upWidth = GraphicsHolder.getTextWidth(upArrow.getString());
-        int dnWidth = GraphicsHolder.getTextWidth(dnArrow.getString());
+        int startY = getY() + (height - (fontHeight * 2)) / 2;
+        int upWidth = Minecraft.getInstance().font.width(upArrow.getString());
+        int dnWidth = Minecraft.getInstance().font.width(dnArrow.getString());
 
-        if(inRectangle(mouseX, mouseY, getX2() + width - upWidth - 2, startY, upWidth, fontHeight)) {
+        if(inRectangle(mouseX, mouseY, getX() + width - upWidth - 2, startY, upWidth, fontHeight)) {
             increment();
         }
 
-        if(inRectangle(mouseX, mouseY, getX2() + width - dnWidth - 2, startY + fontHeight, dnWidth, fontHeight)) {
+        if(inRectangle(mouseX, mouseY, getX() + width - dnWidth - 2, startY + fontHeight, dnWidth, fontHeight)) {
             decrement();
         }
 
-        return super.mouseClicked2(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     public double getNumber() {
         try {
-            return Double.parseDouble(getText2());
+            return Double.parseDouble(getValue());
         } catch (Exception e) {
             return defaultValue;
         }
@@ -130,12 +133,12 @@ public class DoubleTextField extends TextFieldWidgetExtension implements RenderH
 
     public void setValue(double value) {
         if(value < min || value > max) return;
-        setText2(String.valueOf(value));
+        setValue(String.valueOf(value));
     }
 
     private void increment() {
         try {
-            BigDecimal result = new BigDecimal(getText2()).add(new BigDecimal("0.1"));
+            BigDecimal result = new BigDecimal(getValue()).add(new BigDecimal("0.1"));
             setValue(result.doubleValue());
         } catch (Exception e) {
             setValue(defaultValue);
@@ -144,7 +147,7 @@ public class DoubleTextField extends TextFieldWidgetExtension implements RenderH
 
     private void decrement() {
         try {
-            BigDecimal result = new BigDecimal(getText2()).subtract(new BigDecimal("0.1"));
+            BigDecimal result = new BigDecimal(getValue()).subtract(new BigDecimal("0.1"));
             setValue(result.doubleValue());
         } catch (Exception e) {
             setValue(defaultValue);

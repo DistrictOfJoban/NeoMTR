@@ -2,8 +2,8 @@ package com.lx862.jcm.mod.block;
 
 import com.lx862.jcm.mod.block.base.DirectionalBlock;
 import com.lx862.jcm.mod.block.entity.ButterflyLightBlockEntity;
-import com.lx862.jcm.mod.network.gui.ButterflyLightGUIPacket;
-import com.lx862.jcm.mod.registry.Networking;
+import com.lx862.jcm.mod.render.gui.screen.ScreenType;
+import com.lx862.jcm.mod.util.JCMUtil;
 import mtr.block.IBlock;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.EntityBlockMapper;
@@ -30,13 +30,18 @@ public class ButterflyLightBlock extends DirectionalBlock implements EntityBlock
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        return IBlock.checkHoldingBrush(world, player, () -> {
-            BlockEntity be = world.getBlockEntity(pos);
-
-            ButterflyLightBlockEntity thisEntity = (ButterflyLightBlockEntity)be;
-            Networking.sendPacketToClient(player, new ButterflyLightGUIPacket(pos, thisEntity.getStartBlinkingSeconds()));
-        });
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if(JCMUtil.playerHoldingBrush(player)) {
+            if(level.isClientSide()) {
+                BlockEntity blockEntity = level.getBlockEntity(pos);
+                if(blockEntity instanceof ButterflyLightBlockEntity be) {
+                    ScreenType.BLOCK_CONFIG_BUTTERFLY.open(be);
+                }
+            }
+            return InteractionResult.SUCCESS;
+        } else {
+            return InteractionResult.PASS;
+        }
     }
 
     @Override

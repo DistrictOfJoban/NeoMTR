@@ -2,10 +2,10 @@ package com.lx862.jcm.mod.block;
 
 import com.lx862.jcm.mod.block.base.Horizontal2MirroredBlock;
 import com.lx862.jcm.mod.block.entity.PIDSBlockEntity;
-import com.lx862.jcm.mod.network.gui.PIDSGUIPacket;
-import com.lx862.jcm.mod.registry.Networking;
+import com.lx862.jcm.mod.render.gui.screen.ScreenType;
 import mtr.block.IBlock;
 import mtr.mappings.EntityBlockMapper;
+import mtr.registry.Items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -19,10 +19,13 @@ public abstract class JCMPIDSBlock extends Horizontal2MirroredBlock implements E
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        return IBlock.checkHoldingBrush(world, player, () -> {
-            PIDSBlockEntity be = (PIDSBlockEntity) world.getBlockEntity(pos);
-            Networking.sendPacketToClient(player, new PIDSGUIPacket(pos, be.getCustomMessages(), be.getRowHidden(), be.platformNumberHidden(), be.getPresetId()));
-        });
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        InteractionResult interactionResult = player.isHolding(Items.BRUSH.get()) ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        if(player.isHolding(Items.BRUSH.get())) {
+            if(level.isClientSide() && level.getBlockEntity(pos) instanceof PIDSBlockEntity be) {
+                ScreenType.BLOCK_CONFIG_PIDS.open(be);
+            }
+        }
+        return interactionResult;
     }
 }

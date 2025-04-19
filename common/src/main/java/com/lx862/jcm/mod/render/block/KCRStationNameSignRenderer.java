@@ -12,6 +12,7 @@ import mtr.data.RailwayData;
 import mtr.data.Station;
 import mtr.mappings.UtilitiesClient;
 import mtr.block.IBlock;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
@@ -44,7 +45,7 @@ public class KCRStationNameSignRenderer extends JCMBlockEntityRenderer<KCRStatio
             if(i == 1) UtilitiesClient.rotateYDegrees(poseStack, 180); // Other side
             poseStack.translate(0, -0.05, -0.175);
             poseStack.scale(0.021F, 0.021F, 0.021F);
-            IDrawingJoban.drawStringWithFont(poseStack, bufferSource, stationName, KCR_FONT, IGui.HorizontalAlignment.CENTER, IGui.VerticalAlignment.CENTER, 0, 0, 60, 32, 1, 0xEEEEEE, false, RenderHelper.MAX_RENDER_LIGHT, null);
+            IDrawingJoban.drawStringWithFont(poseStack, Minecraft.getInstance().font, Minecraft.getInstance().renderBuffers().bufferSource(), stationName, KCR_FONT, IGui.HorizontalAlignment.CENTER, IGui.VerticalAlignment.CENTER, 0, 0, 60, 32, 1, 0xEEEEEE, false, RenderHelper.MAX_RENDER_LIGHT, null);
             poseStack.popPose();
         }
     }

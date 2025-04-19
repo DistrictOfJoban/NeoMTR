@@ -2,13 +2,17 @@ package com.lx862.jcm.mod.render;
 
 import com.lx862.jcm.mod.JCMClient;
 import com.lx862.jcm.mod.data.Pair;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Matrix4f;
 
 public interface GuiHelper {
     int MAX_CONTENT_WIDTH = 400;
@@ -20,16 +24,25 @@ public interface GuiHelper {
         drawTexture(guiDrawing, identifier, x, y, width, height, 0, uv.getLeft(), 1, uv.getRight());
     }
 
-    static void drawTexture(GuiGraphics guiDrawing, ResourceLocation identifier, double x, double y, double width, double height, float u1, float v1, float u2, float v2) {
-        UtilitiesClient.beginDrawingTexture(identifier);
-        guiDrawing.drawTexture(x, y, x + width, y + height, u1, v1, u2, v2);
-        guiDrawing.finishDrawingTexture();
+    static void drawTexture(GuiGraphics guiDrawing, ResourceLocation location, double x, double y, double width, double height, float u1, float v1, float u2, float v2) {
+        float x1 = (float)x;
+        float x2 = (float)x + (float)width;
+        float y1 = (float)y;
+        float y2 = (float)y + (float)height;
+
+        RenderSystem.setShaderTexture(0, location);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        Matrix4f matrix4f = guiDrawing.pose().last().pose();
+        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder.addVertex(matrix4f, x1, y1, 0).setUv(u1, v1);
+        bufferBuilder.addVertex(matrix4f, x1, y2, 0).setUv(u1, v2);
+        bufferBuilder.addVertex(matrix4f, x2, y2, 0).setUv(u2, v2);
+        bufferBuilder.addVertex(matrix4f, x2, y1, 0).setUv(u2, v1);
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
     }
 
     static void drawRectangle(GuiGraphics guiGraphics, double x, double y, double width, double height, int color) {
-        guiGraphics.beginDrawingRectangle();
-        guiGraphics.drawRectangle(x, y, x + width, y + height, color);
-        guiGraphics.finishDrawingRectangle();
+        guiGraphics.fill((int)x, (int)y, (int)(x + width), (int)(y + height), color);
     }
 
     /**

@@ -15,10 +15,14 @@ import com.lx862.jcm.mod.render.text.TextOverflowMode;
 import com.lx862.jcm.mod.render.text.TextTranslationMode;
 import com.lx862.jcm.mod.util.TextUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import mtr.client.ClientData;
 import mtr.data.IGui;
+import mtr.data.MultipartName;
+import mtr.data.Route;
 import mtr.data.ScheduleEntry;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -153,9 +157,12 @@ public class JsonPIDSPreset extends PIDSPresetBase {
                     }
 
                     // ETA text cycle should follow destination
-                    ArrivalResponse thisArrival = arrivals.get(arrivalIndex);
-                    boolean haveCjk = IGui.isCjk(thisArrival.getDestination());
-                    boolean haveEn = TextUtil.haveNonCjk(thisArrival.getDestination());
+                    ScheduleEntry thisArrival = arrivals.get(arrivalIndex);
+                    final Route route = ClientData.DATA_CACHE.routeIdMap.get(thisArrival.routeId);
+
+                    final String[] destinationSplit = ClientData.DATA_CACHE.getFormattedRouteDestination(route, thisArrival.currentStationIndex, "", MultipartName.Usage.PIDS_DEST).split("\\|");
+                    boolean haveCjk = IGui.isCjk(String.join("|", destinationSplit));
+                    boolean haveEn = TextUtil.haveNonCjk(String.join("|", destinationSplit));
                     TextTranslationMode mode = haveCjk && haveEn ? TextTranslationMode.CYCLE : haveCjk ? TextTranslationMode.CJK : TextTranslationMode.NON_CJK;
                     ArrivalETAComponent eta = new ArrivalETAComponent(screenWidth, rowY, 22 * ARRIVAL_TEXT_SCALE, 20, TextComponent.of(TextAlignment.RIGHT, TextOverflowMode.STRETCH, fontId, textColor, ARRIVAL_TEXT_SCALE)
                             .with("arrivalIndex", arrivalIndex)
@@ -192,35 +199,29 @@ public class JsonPIDSPreset extends PIDSPresetBase {
     }
 
     @Override
-    public void render(PIDSBlockEntity be, PoseStack poseStack, MultiBufferSource bufferSource, Level world, BlockPos pos, Direction facing, ObjectArrayList<ArrivalResponse> arrivals, boolean[] rowHidden, float tickDelta, int x, int y, int width, int height) {
+    public void render(PIDSBlockEntity be, PoseStack poseStack, MultiBufferSource bufferSource, Level world, BlockPos pos, Direction facing, List<ScheduleEntry> arrivals, boolean[] rowHidden, float tickDelta, int x, int y, int width, int height) {
         int headerHeight = topPadding ? HEADER_HEIGHT : 0;
         int startX = PIDS_MARGIN;
         int contentWidth = width - (PIDS_MARGIN * 2);
         int contentHeight = height - headerHeight - 3;
 
         // Draw Background
-        graphicsHolder.createVertexConsumer(RenderLayer.getText(background));
-        RenderHelper.drawTexture(graphicsHolder, background, x, y, 0, width, height, facing, ARGB_WHITE, MAX_RENDER_LIGHT);
+        VertexConsumer backgroundConsumer = bufferSource.getBuffer(RenderType.text(background));
+        RenderHelper.drawTexture(poseStack, backgroundConsumer, background, x, y, 0, width, height, facing, ARGB_WHITE, MAX_RENDER_LIGHT);
 
-        // Debug View Texture
-        if(JCMClient.getConfig().debug) {
-            //TextureTextRenderer.stressTest(5);
-            drawAtlasBackground(graphicsHolder, width, height, facing);
-        }
-
-        graphicsHolder.translate(startX, 0, -0.05);
+        poseStack.translate(startX, 0, -0.05);
 
         List<PIDSComponent> components = getComponents(arrivals, be.getCustomMessages(), rowHidden, x, y, contentWidth, contentHeight, be.getRowAmount(), be.platformNumberHidden());
         PIDSContext pidsContext = new PIDSContext(world, pos, be.getCustomMessages(), arrivals, tickDelta);
 
         // Texture
-        graphicsHolder.push();
+        poseStack.pushPose();
         for(PIDSComponent component : components) {
-            graphicsHolder.translate(0, 0, -0.02);
-            graphicsHolder.push();
-            component.render(graphicsHolder, null, facing, pidsContext);
-            graphicsHolder.pop();
+            poseStack.translate(0, 0, -0.02);
+            poseStack.pushPose();
+            component.render(poseStack, bufferSource, facing, pidsContext);
+            poseStack.popPose();
         }
-        graphicsHolder.pop();
+        poseStack.popPose();
     }
 }

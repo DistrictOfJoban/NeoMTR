@@ -46,11 +46,11 @@ public class ClipStack {
         }
 
         if(stacks.size() > 1) {
-            stacks.remove(stacks.size() - 1);
-            Rectangle remainingLast = stacks.get(stacks.size() - 1);
+            stacks.removeLast();
+            Rectangle remainingLast = stacks.getLast();
             enableClip(remainingLast.x, remainingLast.y, remainingLast.width, remainingLast.height);
         } else {
-            stacks.remove(0);
+            stacks.removeFirst();
             disableClip();
         }
     }

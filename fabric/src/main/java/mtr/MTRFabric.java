@@ -24,12 +24,13 @@ public class MTRFabric implements ModInitializer {
 
 	public static CompatPacketRegistry PACKET_REGISTRY = new CompatPacketRegistry();
 	private final RegistriesWrapperImpl REGISTRIES = new RegistriesWrapperImpl();
+	private final JCMRegistriesWrapperImpl REGISTRIES_JCM = new JCMRegistriesWrapperImpl();
 
 	@Override
 	public void onInitialize() {
 		MTR.init(MTRFabric::registerItem, MTRFabric::registerBlock, MTRFabric::registerBlock, MTRFabric::registerEnchantedBlock, MTRFabric::registerBlockEntityType, MTRFabric::registerEntityType, MTRFabric::registerSoundEvent);
 		Main.init(REGISTRIES);
-		JCM.init(MTRFabric::registerItem, MTRFabric::registerBlock, MTRFabric::registerBlock, MTRFabric::registerEnchantedBlock, MTRFabric::registerBlockEntityType, MTRFabric::registerEntityType, MTRFabric::registerSoundEvent);
+		JCM.init(REGISTRIES_JCM);
 		PACKET_REGISTRY.commitCommon();
 	}
 

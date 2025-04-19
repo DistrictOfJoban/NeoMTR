@@ -2,6 +2,7 @@ package com.lx862.jcm.mod.data.pids.preset.components;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.lx862.jcm.mod.data.JCMServerStats;
 import com.lx862.jcm.mod.data.KVPair;
 import com.lx862.jcm.mod.data.pids.preset.PIDSContext;
 import com.lx862.jcm.mod.data.pids.preset.components.base.PIDSComponent;
@@ -35,12 +36,13 @@ public class CycleComponent extends PIDSComponent {
         List<PIDSComponent> filteredComponents = components.stream().filter(e -> e.canRender(context)).collect(Collectors.toList());
 
         if(cycleTime == -1 && !filteredComponents.isEmpty()) {
-            filteredComponents.get(0).render(graphicsHolder, guiDrawing, facing, context); // Render first available component
+            filteredComponents.getFirst().render(poseStack, bufferSource, facing, context); // Render first available component
         } else {
-            int currentComponentIndex = (int) ((int)(InitClient.getGameTick() % (cycleTime * filteredComponents.size())) / cycleTime);
+            // TODO: Client tick!
+            int currentComponentIndex = (int) ((int)(JCMServerStats.getGameTick() % (cycleTime * filteredComponents.size())) / cycleTime);
 
             PIDSComponent component = filteredComponents.get(currentComponentIndex);
-            component.render(graphicsHolder, guiDrawing, facing, context);
+            component.render(poseStack, bufferSource, facing, context);
         }
     }
 

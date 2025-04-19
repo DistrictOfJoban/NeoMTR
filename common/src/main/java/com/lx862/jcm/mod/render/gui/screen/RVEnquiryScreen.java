@@ -6,22 +6,22 @@ import com.lx862.jcm.mod.render.GuiHelper;
 import com.lx862.jcm.mod.render.gui.screen.base.AnimatedScreen;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
-import mtr.mapping.holder.BlockPos;
-import mtr.mapping.holder.Identifier;
-import mtr.mapping.holder.MinecraftClient;
-import mtr.mapping.holder.MutableComponent;
-import mtr.mapping.mapper.GraphicsHolder;
-import mtr.mapping.mapper.GuiDrawing;
-import mtr.mod.data.IGui;
+import mtr.MTR;
+import mtr.data.IGui;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class RVEnquiryScreen extends AnimatedScreen {
-    private static final Identifier cardScreenTexture = Constants.id("textures/enquiry/card.png");
-    private static final Identifier balanceTexture = Constants.id("textures/enquiry/transactions.png");
-    private static final Identifier octopusCardTexture = Constants.id("textures/enquiry/octopus_card.png");
-    private static final Identifier font = new Identifier("mtr", "mtr");
+    private static final ResourceLocation cardScreenTexture = Constants.id("textures/enquiry/card.png");
+    private static final ResourceLocation balanceTexture = Constants.id("textures/enquiry/transactions.png");
+    private static final ResourceLocation octopusCardTexture = Constants.id("textures/enquiry/octopus_card.png");
+    private static final ResourceLocation fontId = MTR.id("mtr");
     private final List<TransactionEntry> entries;
     private final BlockPos pos;
     private final long remainingBalance;
@@ -36,18 +36,15 @@ public class RVEnquiryScreen extends AnimatedScreen {
     }
 
     @Override
-    public void render(GraphicsHolder graphicsHolder, int mouseX, int mouseY, float tickDelta) {
-        super.renderBackground(graphicsHolder);
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, tickDelta);
 
-        int screenWidth = MinecraftClient.getInstance().getWindow().getScaledWidth();
-        int screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
+        int screenWidth = Minecraft.getInstance().getWindow().getScreenWidth();
+        int screenHeight = Minecraft.getInstance().getWindow().getScreenHeight();
 
-        GuiDrawing guiDrawing = new GuiDrawing(graphicsHolder);
-
-        super.render(graphicsHolder, mouseX, mouseY, tickDelta);
         int baseWidth = 427;
-        double scaledWidth = getWidthMapped();
-        double scaledHeight = getHeightMapped();
+        double scaledWidth = width;
+        double scaledHeight = height;
         int startX = 20;
         int startY = 70;
 
@@ -62,36 +59,36 @@ public class RVEnquiryScreen extends AnimatedScreen {
         }
 
         if (!showBalance) {
-            GuiHelper.drawTexture(guiDrawing, cardScreenTexture, (screenWidth - (int) scaledWidth) / 2.0, (screenHeight - (int) scaledHeight) / 2.0, (int) scaledWidth, (int) scaledHeight);
-            GuiHelper.drawTexture(guiDrawing, octopusCardTexture, mouseX, mouseY, 140, 86);
+            GuiHelper.drawTexture(guiGraphics, cardScreenTexture, (screenWidth - (int) scaledWidth) / 2.0, (screenHeight - (int) scaledHeight) / 2.0, (int) scaledWidth, (int) scaledHeight);
+            GuiHelper.drawTexture(guiGraphics, octopusCardTexture, mouseX, mouseY, 140, 86);
         } else {
-            GuiHelper.drawTexture(guiDrawing, balanceTexture, (screenWidth - (int) scaledWidth) / 2.0, (screenHeight - (int) scaledHeight) / 2.0, (int) scaledWidth, (int) scaledHeight);
+            GuiHelper.drawTexture(guiGraphics, balanceTexture, (screenWidth - (int) scaledWidth) / 2.0, (screenHeight - (int) scaledHeight) / 2.0, (int) scaledWidth, (int) scaledHeight);
 
             int renderY = startY;
 
-            graphicsHolder.push();
-            graphicsHolder.scale((float)(double)getWidthMapped() / baseWidth, (float)(double)getWidthMapped() / baseWidth, (float)(double)getWidthMapped() / baseWidth);
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().scale((float)(double)width / baseWidth, (float)(double)width / baseWidth, (float)(double)width / baseWidth);
 
-            graphicsHolder.drawText(TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.balance"), font), startX, 20, 0, false, GraphicsHolder.getDefaultLight());
-            graphicsHolder.drawText(TextUtil.withFont(TextUtil.literal("Octopus"), font), startX + 305, 75, 0, false, GraphicsHolder.getDefaultLight());
-            graphicsHolder.drawText(TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.processor"), font), startX + 305, 85, 0, false, GraphicsHolder.getDefaultLight());
+            guiGraphics.drawString(font, TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.balance"), fontId), startX, 20, 0, false);
+            guiGraphics.drawString(font, TextUtil.withFont(TextUtil.literal("Octopus"), fontId), startX + 305, 75, 0, false);
+            guiGraphics.drawString(font, TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.processor"), fontId), startX + 305, 85, 0, false);
 
             String processorId = String.format("%06d", pos.asLong() % 1000000);
-            graphicsHolder.drawText(TextUtil.withFont(TextUtil.literal(processorId), font), startX + 305, 95, 0, false, GraphicsHolder.getDefaultLight());
+            guiGraphics.drawString(font, TextUtil.withFont(TextUtil.literal(processorId), fontId), startX + 305, 95, 0, false);
 
             for (int i = 0; i < 10; i++) {
                 MutableComponent renderText = getEntryText(i);
                 if(renderText == null) continue;
 
-                graphicsHolder.drawText(TextUtil.withFont(renderText, font), startX, renderY, 0, false, GraphicsHolder.getDefaultLight());
+                guiGraphics.drawString(font, TextUtil.withFont(renderText, fontId), startX, renderY, 0, false);
                 renderY += 10;
             }
 
             if (!entries.isEmpty()) {
                 if (remainingBalance >= 0) {
-                    graphicsHolder.drawText(TextUtil.withFont(TextUtil.literal("$" + remainingBalance), font), startX + 270, 20, 0x000000, false, GraphicsHolder.getDefaultLight());
+                    guiGraphics.drawString(font, TextUtil.withFont(TextUtil.literal("$" + remainingBalance), fontId), startX + 270, 20, 0x000000, false);
                 } else {
-                    graphicsHolder.drawText(TextUtil.withFont(TextUtil.literal("-$" + Math.abs(remainingBalance)), font), startX + 270, 20, 0x000000, false, GraphicsHolder.getDefaultLight());
+                    guiGraphics.drawString(font, TextUtil.withFont(TextUtil.literal("-$" + Math.abs(remainingBalance)), fontId), startX + 270, 20, 0x000000, false);
                 }
             }
 
@@ -107,13 +104,13 @@ public class RVEnquiryScreen extends AnimatedScreen {
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 String formattedDate = formatter.format(lastDate);
 
-                graphicsHolder.drawText(TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.last.a"), font), startX + 305, 115, 0, false, GraphicsHolder.getDefaultLight());
-                graphicsHolder.drawText(TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.last.b"), font), startX + 305, 125, 0, false, GraphicsHolder.getDefaultLight());
-                graphicsHolder.drawText(TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.last.c"), font), startX + 305, 135, 0, false, GraphicsHolder.getDefaultLight());
-                graphicsHolder.drawText(TextUtil.withFont(TextUtil.literal(formattedDate), font), startX + 305, 145, 0x000000, false, GraphicsHolder.getDefaultLight());
+                guiGraphics.drawString(font, TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.last.a"), fontId), startX + 305, 115, 0, false);
+                guiGraphics.drawString(font, TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.last.b"), fontId), startX + 305, 125, 0, false);
+                guiGraphics.drawString(font, TextUtil.withFont(TextUtil.translatable(TextCategory.GUI, "rvenquiry_screen.last.c"), fontId), startX + 305, 135, 0, false);
+                guiGraphics.drawString(font, TextUtil.withFont(TextUtil.literal(formattedDate), fontId), startX + 305, 145, 0x000000, false);
             }
 
-            graphicsHolder.pop();
+            guiGraphics.pose().popPose();
         }
     }
 
@@ -132,7 +129,7 @@ public class RVEnquiryScreen extends AnimatedScreen {
     }
 
     @Override
-    public boolean isPauseScreen2() {
+    public boolean isPauseScreen() {
         return false;
     }
 }

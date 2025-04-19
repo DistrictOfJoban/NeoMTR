@@ -2,8 +2,7 @@ package com.lx862.jcm.mod.block;
 
 import com.lx862.jcm.mod.block.base.Vertical3Block;
 import com.lx862.jcm.mod.block.entity.FareSaverBlockEntity;
-import com.lx862.jcm.mod.network.gui.FareSaverGUIPacket;
-import com.lx862.jcm.mod.registry.Networking;
+import com.lx862.jcm.mod.render.gui.screen.ScreenType;
 import com.lx862.jcm.mod.util.JCMUtil;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
@@ -11,7 +10,6 @@ import mtr.block.IBlock;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.EntityBlockMapper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -37,31 +35,32 @@ public class FareSaverBlock extends Vertical3Block implements EntityBlockMapper 
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        if(world.isClientSide()) return InteractionResult.SUCCESS;
-
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         UUID playerUuid = player.getUUID();
-        FareSaverBlockEntity be = (FareSaverBlockEntity)world.getBlockEntity(pos);
-        int discount = be.getDiscount();
 
-        if (JCMUtil.playerHoldingBrush(player)) {
-            Networking.sendPacketToClient(player, new FareSaverGUIPacket(pos, be.getPrefix(), discount));
+        if(level.getBlockEntity(pos) instanceof FareSaverBlockEntity be) {
+            if (JCMUtil.playerHoldingBrush(player)) {
+                if(level.isClientSide()) ScreenType.BLOCK_CONFIG_FARESAVER.open(be);
+                return InteractionResult.SUCCESS;
+            }
+
+            int discount = be.getDiscount();
+            if(discountList.containsKey(playerUuid)) {
+                player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.fail", discountList.get(playerUuid)), true);
+            } else {
+                discountList.put(playerUuid, discount);
+
+                if(discount > 0) {
+                    player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.success", discount), true);
+                } else {
+                    player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.success.sarcasm", discount), true);
+                }
+            }
+
             return InteractionResult.SUCCESS;
         }
 
-        if(discountList.containsKey(playerUuid)) {
-            player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.fail", discountList.get(playerUuid)), true);
-        } else {
-            discountList.put(playerUuid, discount);
-
-            if(discount > 0) {
-                player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.success", discount), true);
-            } else {
-                player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.success.sarcasm", discount), true);
-            }
-        }
-
-        return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
     }
 
     @Override

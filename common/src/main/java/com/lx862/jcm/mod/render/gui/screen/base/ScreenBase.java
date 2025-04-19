@@ -12,6 +12,7 @@ public abstract class ScreenBase extends Screen {
     public ScreenBase() {
         super(Text.literal(""));
     }
+    
     public ScreenBase withPreviousScreen(Screen screen) {
         this.previousScreen = screen;
         return this;

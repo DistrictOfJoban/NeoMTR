@@ -5,8 +5,11 @@ import com.lx862.jcm.mod.render.gui.widget.ListViewWidget;
 import com.lx862.jcm.mod.render.gui.widget.WidgetSet;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
+import mtr.client.ClientData;
 import mtr.data.IGui;
+import mtr.data.RailwayData;
 import mtr.data.Station;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -17,21 +20,21 @@ public abstract class BlockConfigScreen extends TitledScreen implements GuiHelpe
     protected final BlockPos blockPos;
     protected final ListViewWidget listViewWidget;
     protected final WidgetSet bottomEntryWidget;
-    private final ButtonWidgetExtension saveButton;
-    private final ButtonWidgetExtension discardButton;
+    private final Button saveButton;
+    private final Button discardButton;
     private boolean discardConfig = false;
     public BlockConfigScreen(BlockPos blockPos) {
         super(false);
         this.blockPos = blockPos;
 
-        this.saveButton = new ButtonWidgetExtension(0, 0, 0, 20, TextUtil.translatable(TextCategory.GUI, "block_config.save"), (btn) -> {
-            onClose2();
-        });
+        this.saveButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "block_config.save"), (btn) -> {
+            onClose();
+        }).size(0, 20).build();
 
-        this.discardButton = new ButtonWidgetExtension(0, 0, 0, 20, TextUtil.translatable(TextCategory.GUI, "block_config.discard"), (btn) -> {
+        this.discardButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "block_config.discard"), (btn) -> {
             discardConfig = true;
-            onClose2();
-        });
+            onClose();
+        }).size(0, 20).build();
 
         this.listViewWidget = new ListViewWidget();
         this.bottomEntryWidget = new WidgetSet(20);
@@ -52,8 +55,8 @@ public abstract class BlockConfigScreen extends TitledScreen implements GuiHelpe
         listViewWidget.setXYSize(startX, startY, contentWidth, listViewHeight);
         addConfigEntries();
         addBottomRowButtons();
-        addWidget(new ClickableWidget(listViewWidget));
-        addWidget(new ClickableWidget(bottomEntryWidget));
+        addRenderableWidget(listViewWidget);
+        addRenderableWidget(bottomEntryWidget);
         listViewWidget.positionWidgets();
         bottomEntryWidget.setXYSize(startX, startY + listViewHeight + BOTTOM_ROW_MARGIN, contentWidth, bottomEntryHeight);
     }
@@ -62,8 +65,8 @@ public abstract class BlockConfigScreen extends TitledScreen implements GuiHelpe
     public abstract void onSave();
 
     protected void addBottomRowButtons() {
-        addWidget(saveButton);
-        addWidget(discardButton);
+        addRenderableWidget(saveButton);
+        addRenderableWidget(discardButton);
 
         bottomEntryWidget.addWidget(saveButton);
         bottomEntryWidget.addWidget(discardButton);
@@ -71,7 +74,7 @@ public abstract class BlockConfigScreen extends TitledScreen implements GuiHelpe
 
     @Override
     public MutableComponent getScreenSubtitle() {
-        Station atStation = InitClient.findStation(blockPos);
+        Station atStation = RailwayData.getStation(ClientData.STATIONS, ClientData.DATA_CACHE, blockPos);
 
         if(atStation != null) {
             return TextUtil.translatable(TextCategory.GUI,
@@ -88,12 +91,12 @@ public abstract class BlockConfigScreen extends TitledScreen implements GuiHelpe
     }
 
     @Override
-    public void onClose2() {
+    public void onClose() {
         // Save config by default, unless explicitly requested not to
         if(!discardConfig) {
             onSave();
         }
-        super.onClose2();
+        super.onClose();
     }
 
     @Override

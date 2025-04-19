@@ -6,10 +6,10 @@ import com.lx862.jcm.mod.data.BlockProperties;
 import com.lx862.jcm.mod.render.RenderHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import it.unimi.dsi.fastutil.longs.LongImmutableList;
 import mtr.MTRClient;
 import mtr.block.IBlock;
 import mtr.client.ClientData;
+import mtr.data.Platform;
 import mtr.data.RailwayData;
 import mtr.data.ScheduleEntry;
 import mtr.mappings.UtilitiesClient;
@@ -22,7 +22,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class ButterflyLightRenderer extends JCMBlockEntityRenderer<ButterflyLightBlockEntity> {
     private static final ResourceLocation BUTTERFLY_LIGHT_TEXTURE = Constants.id("textures/block/butterfly_light_dotmatrix.png");
@@ -41,13 +44,21 @@ public class ButterflyLightRenderer extends JCMBlockEntityRenderer<ButterflyLigh
             return;
         }
 
-        List<ScheduleEntry> arrivals = ArrivalsCacheClient.INSTANCE.requestArrivals(LongImmutableList.of(platformId));
-        ScheduleEntry firstArrival = Utilities.getElement(arrivals, 0);
-        if (firstArrival == null) return;
+        final Set<ScheduleEntry> schedules = ClientData.SCHEDULES_FOR_PLATFORM.get(platformId);
+        if (schedules == null || schedules.isEmpty()) {
+            return;
+        }
+        final List<ScheduleEntry> scheduleList = new ArrayList<>(schedules);
+        Collections.sort(scheduleList);
 
-        boolean arrived = firstArrival.getArrival() <= System.currentTimeMillis();
-        long dwellLeft = firstArrival.getDeparture() - System.currentTimeMillis();
+        ScheduleEntry firstArrival = scheduleList.getFirst();
+
+        boolean arrived = firstArrival.arrivalMillis <= System.currentTimeMillis();
         if (!arrived) return;
+
+        int remainingSecond = (int) (firstArrival.arrivalMillis - System.currentTimeMillis()) / 1000;
+        final Platform platform = ClientData.DATA_CACHE.platformIdMap.get(platformId);
+        long dwellLeft = (platform == null ? 0 : Math.abs((platform.getDwellTime() / 2) - Math.abs(remainingSecond))) * 1000L;
 
         long secondsLeft = dwellLeft / 1000;
 

@@ -2,8 +2,8 @@ package com.lx862.jcm.mod.block;
 
 import com.lx862.jcm.mod.block.base.DirectionalBlock;
 import com.lx862.jcm.mod.block.entity.PIDSProjectorBlockEntity;
-import com.lx862.jcm.mod.network.gui.PIDSProjectorGUIPacket;
-import com.lx862.jcm.mod.registry.Networking;
+import com.lx862.jcm.mod.render.gui.screen.ScreenType;
+import com.lx862.jcm.mod.util.JCMUtil;
 import mtr.block.IBlock;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.EntityBlockMapper;
@@ -41,10 +41,14 @@ public class PIDSProjectorBlock extends DirectionalBlock implements EntityBlockM
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        return IBlock.checkHoldingBrush(world, player, () -> {
-            PIDSProjectorBlockEntity be = (PIDSProjectorBlockEntity) world.getBlockEntity(pos);
-            Networking.sendPacketToClient(player, new PIDSProjectorGUIPacket(pos, be.getCustomMessages(), be.getRowHidden(), be.platformNumberHidden(), be.getPresetId(), be.getX(), be.getY(), be.getZ(), be.getRotateX(), be.getRotateY(), be.getRotateZ(), be.getScale()));
-        });
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if(JCMUtil.playerHoldingBrush(player)) {
+            if(level.isClientSide() && level.getBlockEntity(pos) instanceof PIDSProjectorBlockEntity be) {
+                ScreenType.BLOCK_CONFIG_PIDS_PROJECTOR.open(be);
+            }
+            return InteractionResult.SUCCESS;
+        } else {
+            return InteractionResult.PASS;
+        }
     }
 }

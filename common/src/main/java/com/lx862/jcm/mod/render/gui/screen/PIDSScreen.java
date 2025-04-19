@@ -2,92 +2,84 @@ package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.block.entity.PIDSBlockEntity;
 import com.lx862.jcm.mod.data.pids.PIDSManager;
-import com.lx862.jcm.mod.network.block.PIDSUpdatePacket;
-import com.lx862.jcm.mod.registry.Networking;
 import com.lx862.jcm.mod.render.gui.screen.base.BlockConfigScreen;
 import com.lx862.jcm.mod.render.gui.widget.ContentItem;
 import com.lx862.jcm.mod.render.gui.widget.HorizontalWidgetSet;
-import com.lx862.jcm.mod.render.gui.widget.MappedWidget;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
-import mtr.core.data.Platform;
-import mtr.core.data.Station;
-import mtr.libraries.it.unimi.dsi.fastutil.longs.LongAVLTreeSet;
-import mtr.libraries.it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mtr.libraries.it.unimi.dsi.fastutil.objects.ObjectImmutableList;
-import mtr.libraries.it.unimi.dsi.fastutil.objects.ObjectList;
-import mtr.mapping.holder.*;
-import mtr.mapping.mapper.ButtonWidgetExtension;
-import mtr.mapping.mapper.CheckboxWidgetExtension;
-import mtr.mapping.mapper.TextFieldWidgetExtension;
-import mtr.mapping.tool.TextCase;
-import mtr.mod.InitClient;
-import mtr.mod.client.MinecraftClientData;
-import mtr.mod.screen.DashboardListItem;
-import mtr.mod.screen.DashboardListSelectorScreen;
+import it.unimi.dsi.fastutil.longs.LongAVLTreeSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+import mtr.client.ClientData;
+import mtr.data.*;
+import mtr.screen.DashboardListSelectorScreen;
+import mtr.screen.WidgetBetterTextField;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
-import static org.mtr.mod.screen.PIDSConfigScreen.getPlatformsForList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PIDSScreen extends BlockConfigScreen {
-    protected final TextFieldWidgetExtension[] customMessagesWidgets;
-    protected final CheckboxWidgetExtension[] rowHiddenWidgets;
-    protected final CheckboxWidgetExtension hidePlatformNumber;
-    protected final ButtonWidgetExtension choosePresetButton;
-    protected final ButtonWidgetExtension choosePlatformButton;
+    protected final WidgetBetterTextField[] customMessagesWidgets;
+    protected final Checkbox[] rowHiddenWidgets;
+    protected final Checkbox hidePlatformNumber;
+    protected final Button choosePresetButton;
+    protected final Button choosePlatformButton;
 
     protected LongAVLTreeSet filteredPlatforms;
     protected String presetId;
-    public PIDSScreen(BlockPos blockPos, String[] customMessages, boolean[] rowHidden, boolean hidePlatformNumber, String presetId) {
-        super(blockPos);
+    public PIDSScreen(PIDSBlockEntity blockEntity) {
+        super(blockEntity.getBlockPos());
         this.filteredPlatforms = new LongAVLTreeSet();
-        this.customMessagesWidgets = new TextFieldWidgetExtension[customMessages.length];
-        this.rowHiddenWidgets = new CheckboxWidgetExtension[rowHidden.length];
+        this.customMessagesWidgets = new WidgetBetterTextField[blockEntity.getCustomMessages().length];
+        this.rowHiddenWidgets = new Checkbox[blockEntity.getRowHidden().length];
 
-        for(int i = 0; i < customMessages.length; i++) {
-            String customMessage = customMessages[i];
-            this.customMessagesWidgets[i] = new TextFieldWidgetExtension(0, 0, 120, 20, "", 100, TextCase.DEFAULT, null, TextUtil.translatable(TextCategory.GUI, "pids.listview.widget.custom_message").getString());
-            this.customMessagesWidgets[i].setText2(customMessage);
+        for(int i = 0; i < blockEntity.getCustomMessages().length; i++) {
+            String customMessage = blockEntity.getCustomMessages()[i];
+            this.customMessagesWidgets[i] = new WidgetBetterTextField(TextUtil.translatable(TextCategory.GUI, "pids.listview.widget.custom_message").getString());
+            this.customMessagesWidgets[i].setSize(120, 20);
+            this.customMessagesWidgets[i].setValue(customMessage);
         }
 
-        for(int i = 0; i < rowHidden.length; i++) {
-            boolean rowIsHidden = rowHidden[i];
-            this.rowHiddenWidgets[i] = new CheckboxWidgetExtension(0, 0, 120, 20, true, (cb) -> {});
-            this.rowHiddenWidgets[i].setChecked(rowIsHidden);
-            this.rowHiddenWidgets[i].setMessage2(Text.cast(TextUtil.translatable(TextCategory.GUI, "pids.listview.widget.row_hidden")));
+        for(int i = 0; i < blockEntity.getRowHidden().length; i++) {
+            boolean rowIsHidden = blockEntity.getRowHidden()[i];
+            this.rowHiddenWidgets[i] = Checkbox.builder(TextUtil.translatable(TextCategory.GUI, "pids.listview.widget.row_hidden"), Minecraft.getInstance().font).selected(rowIsHidden).build();
         }
 
-        this.hidePlatformNumber = new CheckboxWidgetExtension(0, 0, 20, 20, true, (cb) -> {});
-        this.hidePlatformNumber.setChecked(hidePlatformNumber);
+        this.hidePlatformNumber = Checkbox.builder(Component.empty(), Minecraft.getInstance().font).selected(blockEntity.platformNumberHidden()).build();
 
-        this.choosePresetButton = new ButtonWidgetExtension(0, 0, 60, 20, TextUtil.translatable(TextCategory.GUI, "pids.listview.widget.choose_preset"), (btn) -> {
-            MinecraftClient.getInstance().openScreen(
-                new Screen(new PIDSPresetScreen(blockPos, presetId, (str) -> {
+        this.choosePresetButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "pids.listview.widget.choose_preset"), (btn) -> {
+            Minecraft.getInstance().setScreen(
+                new PIDSPresetScreen(blockEntity, this.presetId, (str) -> {
                     this.presetId = str;
-                }).withPreviousScreen(new Screen(this)))
+                }).withPreviousScreen(this)
             );
-        });
+        }).size(60, 20).build();
 
-        this.choosePlatformButton = new ButtonWidgetExtension(0, 0, 60, 20, TextUtil.translatable(TextCategory.GUI, "pids.listview.widget.change_platform"), (btn) -> {
-            final Station station = InitClient.findStation(blockPos);
-            final ObjectImmutableList<DashboardListItem> platformsForList;
+        this.choosePlatformButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "pids.listview.widget.change_platform"), (btn) -> {
+            final Station station = RailwayData.getStation(ClientData.STATIONS, ClientData.DATA_CACHE, blockPos);
             if(station != null) {
-                platformsForList = getPlatformsForList(new ObjectArrayList<>(station.savedRails));
+                //platformsForList = getPlatformsForList(new ObjectArrayList<>(station.savedRails));
             } else {
-                ObjectArrayList<Platform> nearbyPlatforms = new ObjectArrayList<>();
-                InitClient.findClosePlatform(blockPos.below(4), 5, nearbyPlatforms::add);
-                platformsForList = getPlatformsForList(nearbyPlatforms);
+                final List<NameColorDataBase> platformsForList = new ArrayList<>();
+                final List<Platform> platforms = new ArrayList<>(ClientData.DATA_CACHE.requestStationIdToPlatforms(station.id).values());
+                Collections.sort(platforms);
+                platforms.stream().map(platform -> new DataConverter(platform.id, platform.name + " " + IGui.mergeStations(ClientData.DATA_CACHE.requestPlatformIdToRoutes(platform.id).stream().map(route -> route.stationDetails.get(route.stationDetails.size() - 1).stationName).collect(Collectors.toList())), 0)).forEach(platformsForList::add);
+                final Minecraft minecraft = Minecraft.getInstance();
+                minecraft.setScreen(new DashboardListSelectorScreen(() -> {
+                    minecraft.setScreen(this);
+                }, platformsForList, blockEntity.getPlatformIds(), false, false));
             }
-            MinecraftClient.getInstance().openScreen(new Screen(new DashboardListSelectorScreen(new ObjectImmutableList<>(platformsForList), filteredPlatforms, false, false, this)));
-        });
+        }).size(60, 20).build();
 
-        this.presetId = presetId;
-
-        if(MinecraftClient.getInstance().getWorldMapped() != null) {
-            BlockEntity be = MinecraftClient.getInstance().getWorldMapped().getBlockEntity(blockPos);
-            if(be != null && be.data instanceof PIDSBlockEntity) {
-                filteredPlatforms = ((PIDSBlockEntity)be).getPlatformIds();
-            }
-        }
+        this.presetId = blockEntity.getPresetId();
+        this.filteredPlatforms = blockEntity.getPlatformIds();
     }
 
     @Override
@@ -98,8 +90,8 @@ public class PIDSScreen extends BlockConfigScreen {
     @Override
     public void addConfigEntries() {
         // Preset button
-        addWidget(new ClickableWidget(choosePresetButton));
-        ContentItem presetEntry = new ContentItem(TextUtil.translatable(TextCategory.GUI, "pids.listview.title.pids_preset"), new MappedWidget(choosePresetButton), 26);
+        addRenderableWidget(choosePresetButton);
+        ContentItem presetEntry = new ContentItem(TextUtil.translatable(TextCategory.GUI, "pids.listview.title.pids_preset"), choosePresetButton, 26);
         presetEntry.setIconCallback((guiDrawing, startX, startY, width, height) -> {
             PIDSPresetScreen.drawPIDSPreview(PIDSManager.getPreset(presetId), guiDrawing, startX, startY, width, height, true);
         });
@@ -108,34 +100,34 @@ public class PIDSScreen extends BlockConfigScreen {
         // Filter Platform button
         ObjectList<String> platformList = new ObjectArrayList<>();
         for(long filteredPlatform : filteredPlatforms) {
-            Platform platform = MinecraftClientData.getInstance().platforms.stream().filter(p -> p.getId() == filteredPlatform).findFirst().orElse(null);
+            Platform platform = ClientData.PLATFORMS.stream().filter(p -> p.id == filteredPlatform).findFirst().orElse(null);
             if(platform == null) {
                 platformList.add("?");
             } else {
-                platformList.add(platform.getName());
+                platformList.add(platform.name);
             }
         }
         String platforms = String.join(",", platformList);
-        listViewWidget.add(filteredPlatforms.isEmpty() ? TextUtil.translatable(TextCategory.GUI, "pids.listview.title.filtered_platform.nearby") : TextUtil.translatable(TextCategory.GUI, "pids.listview.title.filtered_platform", platforms), new MappedWidget(choosePlatformButton));
-        addWidget(new ClickableWidget(choosePlatformButton));
+        listViewWidget.add(filteredPlatforms.isEmpty() ? TextUtil.translatable(TextCategory.GUI, "pids.listview.title.filtered_platform.nearby") : TextUtil.translatable(TextCategory.GUI, "pids.listview.title.filtered_platform", platforms), choosePlatformButton);
+        addRenderableWidget(choosePlatformButton);
 
         for(int i = 0; i < this.customMessagesWidgets.length; i++) {
-            addWidget(new ClickableWidget(this.customMessagesWidgets[i]));
-            addWidget(new ClickableWidget(this.rowHiddenWidgets[i]));
+            addRenderableWidget(this.customMessagesWidgets[i]);
+            addRenderableWidget(this.rowHiddenWidgets[i]);
 
-            int w = listViewWidget.getWidth2();
-            this.rowHiddenWidgets[i].setWidth2(95);
-            this.customMessagesWidgets[i].setWidth2(w - this.rowHiddenWidgets[i].getWidth2() - 18);
+            int w = listViewWidget.getWidth();
+            this.rowHiddenWidgets[i].setWidth(95);
+            this.customMessagesWidgets[i].setWidth(w - this.rowHiddenWidgets[i].getWidth() - 18);
 
             HorizontalWidgetSet widgetSet = new HorizontalWidgetSet();
-            widgetSet.addWidget(new MappedWidget(this.customMessagesWidgets[i]));
-            widgetSet.addWidget(new MappedWidget(this.rowHiddenWidgets[i]));
-            widgetSet.setXYSize(listViewWidget.getX2(), 20, listViewWidget.getWidth2(), 20);
-            listViewWidget.add(null, new MappedWidget(widgetSet));
+            widgetSet.addWidget(this.customMessagesWidgets[i]);
+            widgetSet.addWidget(this.rowHiddenWidgets[i]);
+            widgetSet.setXYSize(listViewWidget.getX(), 20, listViewWidget.getWidth(), 20);
+            listViewWidget.add(null, widgetSet);
         }
 
-        addWidget(new ClickableWidget(hidePlatformNumber));
-        listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "pids.listview.title.hide_platform_number"), new MappedWidget(hidePlatformNumber));
+        addRenderableWidget(hidePlatformNumber);
+        listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "pids.listview.title.hide_platform_number"), hidePlatformNumber);
     }
 
     @Override
@@ -144,13 +136,13 @@ public class PIDSScreen extends BlockConfigScreen {
         boolean[] rowHidden = new boolean[rowHiddenWidgets.length];
 
         for(int i = 0; i < customMessagesWidgets.length; i++) {
-            customMessages[i] = this.customMessagesWidgets[i].getText2();
+            customMessages[i] = this.customMessagesWidgets[i].getValue();
         }
 
         for(int i = 0; i < rowHiddenWidgets.length; i++) {
-            rowHidden[i] = this.rowHiddenWidgets[i].isChecked2();
+            rowHidden[i] = this.rowHiddenWidgets[i].selected();
         }
 
-        Networking.sendPacketToServer(new PIDSUpdatePacket(blockPos, filteredPlatforms, customMessages, rowHidden, hidePlatformNumber.isChecked2(), presetId));
+//        Networking.sendPacketToServer(new PIDSUpdatePacket(blockPos, filteredPlatforms, customMessages, rowHidden, hidePlatformNumber.isChecked2(), presetId));
     }
 }

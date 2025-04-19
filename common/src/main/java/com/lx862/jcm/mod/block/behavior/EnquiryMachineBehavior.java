@@ -3,8 +3,6 @@ package com.lx862.jcm.mod.block.behavior;
 import com.lx862.jcm.mod.data.EnquiryScreenType;
 import com.lx862.jcm.mod.data.TransactionEntry;
 import com.lx862.jcm.mod.data.TransactionLog;
-import com.lx862.jcm.mod.network.gui.EnquiryUpdateGUIPacket;
-import com.lx862.jcm.mod.registry.Networking;
 import com.lx862.jcm.mod.util.TextUtil;
 import mtr.data.TicketSystem;
 import mtr.registry.SoundEvents;
@@ -26,7 +24,8 @@ public interface EnquiryMachineBehavior {
             player.displayClientMessage(TextUtil.translatable("gui.mtr.balance", String.valueOf(score)), true);
         } else {
             List<TransactionEntry> entries = TransactionLog.readLog(player, player.getStringUUID());
-            Networking.sendPacketToClient(player, new EnquiryUpdateGUIPacket(type, pos, entries, TicketSystem.getPlayerScore(world, player, BALANCE_OBJECTIVE).get()));
+            // TODO
+//            Networking.sendPacketToClient(player, new EnquiryUpdateGUIPacket(type, pos, entries, TicketSystem.getPlayerScore(world, player, BALANCE_OBJECTIVE).get()));
         }
     }
 }

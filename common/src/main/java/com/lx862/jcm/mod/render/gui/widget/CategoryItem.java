@@ -1,9 +1,9 @@
 package com.lx862.jcm.mod.render.gui.widget;
 
 import com.lx862.jcm.mod.render.GuiHelper;
-import mtr.mapping.holder.MutableComponent;
-import mtr.mapping.mapper.GraphicsHolder;
-import mtr.mapping.mapper.GuiDrawing;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.Objects;
 
@@ -25,9 +25,9 @@ public class CategoryItem extends AbstractListItem {
 
     /* */
     @Override
-    public void draw(GraphicsHolder graphicsHolder, GuiDrawing guiDrawing, int entryX, int entryY, int width, int height, int mouseX, int mouseY, boolean widgetVisible, double elapsed, float tickDelta) {
-        GuiHelper.drawRectangle(guiDrawing, entryX, entryY, width, this.height, 0x99999999);
-        graphicsHolder.drawCenteredText(title, (entryX + width / 2), entryY - (8/2) + (this.height / 2), ARGB_WHITE);
+    public void draw(GuiGraphics guiGraphics, int entryX, int entryY, int width, int height, int mouseX, int mouseY, boolean widgetVisible, double elapsed, float tickDelta) {
+        GuiHelper.drawRectangle(guiGraphics, entryX, entryY, width, this.height, 0x99999999);
+        guiGraphics.drawCenteredString(Minecraft.getInstance().font, title, (entryX + width / 2), entryY - (8/2) + (this.height / 2), ARGB_WHITE);
     }
 
     @Override

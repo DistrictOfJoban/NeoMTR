@@ -1,8 +1,10 @@
 package com.lx862.jcm.mod.render.gui.widget;
 
 import com.lx862.jcm.mod.render.RenderHelper;
-import mtr.mapping.mapper.ClickableWidgetExtension;
-import mtr.mapping.mapper.GraphicsHolder;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +14,12 @@ import java.util.List;
  * Able to tile the widgets horizontally.<br>
  * Unlike {@link WidgetSet}, this widget does not automatically distribute the widget evenly and you can control the width of each element.
  */
-public class HorizontalWidgetSet extends ClickableWidgetExtension implements WidgetsWrapper, RenderHelper {
+public class HorizontalWidgetSet extends AbstractWidget implements RenderHelper {
     public final int widgetXMargin;
-    private final List<MappedWidget> widgets = new ArrayList<>();
+    private final List<AbstractWidget> widgets = new ArrayList<>();
 
     public HorizontalWidgetSet(int widgetXMargin) {
-        super(0, 0, 0, 20);
+        super(0, 0, 0, 20, Component.empty());
         this.widgetXMargin = widgetXMargin;
     }
     public HorizontalWidgetSet() {
@@ -28,22 +30,20 @@ public class HorizontalWidgetSet extends ClickableWidgetExtension implements Wid
      * Set the X, Y, Width and Height of the widget. This is required to be called as the default width is 0
      */
     public void setXYSize(int x, int y, int width, int height) {
-        setX2(x);
-        setY2(y);
-        setWidth2(width);
-        setHeightMapped(height);
+        setPosition(x, y);
+        setSize(width, height);
         positionWidgets();
     }
 
-    public void addWidget(MappedWidget widget) {
+    public void addWidget(AbstractWidget widget) {
         widgets.add(widget);
     }
 
     @Override
-    public int getWidth2() {
+    public int getWidth() {
         int total = 0;
-        for(MappedWidget mappedWidget : widgets) {
-            total += mappedWidget.getWidth();
+        for(AbstractWidget widget : widgets) {
+            total += widget.getWidth();
             total += widgetXMargin;
         }
         if(total > 1) {
@@ -53,39 +53,49 @@ public class HorizontalWidgetSet extends ClickableWidgetExtension implements Wid
     }
 
     @Override
-    public void render(GraphicsHolder graphicsHolder, int mouseX, int mouseY, float delta) {
-        for(MappedWidget mappedWidget : widgets) {
-            mappedWidget.render(graphicsHolder, mouseX, mouseY, delta);
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        for(AbstractWidget widget : widgets) {
+            widget.updateNarration(narrationElementOutput);
         }
     }
 
     @Override
-    public void setVisibleMapped(boolean visible) {
-        for(MappedWidget widget : widgets) {
-            widget.setVisible(visible);
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+        for(AbstractWidget mappedWidget : widgets) {
+            mappedWidget.render(guiGraphics, mouseX, mouseY, delta);
         }
-        super.setVisibleMapped(visible);
     }
 
-    public void setAllX(int newX) {
-        super.setX2(newX);
+    public void setVisible(boolean visible) {
+        for(AbstractWidget widget : widgets) {
+            widget.visible = visible;
+        }
+        this.visible = visible;
+    }
+
+    @Override
+    public void setX(int newX) {
+        super.setX(newX);
         positionWidgets();
     }
 
-    public void setAllY(int newY) {
-        super.setY2(newY);
+    @Override
+    public void setY(int newY) {
+        super.setY(newY);
         positionWidgets();
     }
 
     private void positionWidgets() {
         int accX = 0;
 
-        for (MappedWidget widget : widgets) {
-            widget.setX(getX2() + accX);
-            widget.setY(getY2());
-            int clampedWidth = Math.min(width - accX, widget.getWidth());
-            widget.setWidth(clampedWidth);
-            accX += clampedWidth + widgetXMargin;
+        for (AbstractWidget widget : widgets) {
+            widget.setX(getX() + accX);
+            widget.setY(getY());
+            accX += widget.getWidth();
+            accX += widgetXMargin;
+//            int clampedWidth = Math.min(width - accX, widget.getWidth());
+//            widget.setWidth(clampedWidth);
+//            accX += clampedWidth + widgetXMargin;
         }
     }
 }

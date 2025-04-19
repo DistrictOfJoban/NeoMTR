@@ -3,7 +3,7 @@ package com.lx862.jcm.mod;
 import net.minecraft.resources.ResourceLocation;
 
 public class Constants {
-    public static final String MOD_NAME = "Joban Client Mod";
+    public static final String MOD_NAME = "NeoJCM";
     public static final String MOD_ID = "jsblock";
     public static final String LOGGING_PREFIX = "[NeoJCM] ";
     public static final String MOD_VERSION = "2.0.0-beta.11";

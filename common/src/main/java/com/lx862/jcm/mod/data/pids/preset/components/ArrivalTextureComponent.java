@@ -3,8 +3,13 @@ package com.lx862.jcm.mod.data.pids.preset.components;
 import com.lx862.jcm.mod.data.KVPair;
 import com.lx862.jcm.mod.data.pids.preset.PIDSContext;
 import com.mojang.blaze3d.vertex.PoseStack;
+import mtr.client.ClientData;
+import mtr.data.Route;
+import mtr.data.ScheduleEntry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
+
+import java.util.List;
 
 /**
  * A CustomTextureComponent that automatically tints the color to the route's color of the arriving entry.
@@ -19,10 +24,18 @@ public class ArrivalTextureComponent extends CustomTextureComponent {
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, Direction facing, PIDSContext context) {
-        ObjectArrayList<ArrivalResponse> arrivals = context.arrivals;
+        final List<ScheduleEntry> arrivals = context.arrivals;
         if(arrivalIndex >= arrivals.size()) return;
 
-        ArrivalResponse arrival = arrivals.get(arrivalIndex);
-        drawTexture(graphicsHolder, guiDrawing, facing, texture, 0, 0, width, height, arrival.getRouteColor() + ARGB_BLACK);
+        final ScheduleEntry arrival = arrivals.get(arrivalIndex);
+        final Route route = ClientData.DATA_CACHE.routeIdMap.get(arrival.routeId);
+        final int routeColor;
+
+        if(route == null) {
+            routeColor = 0;
+        } else {
+            routeColor = route.color;
+        }
+        drawTexture(poseStack, bufferSource, facing, texture, 0, 0, width, height, routeColor + ARGB_BLACK);
     }
 }

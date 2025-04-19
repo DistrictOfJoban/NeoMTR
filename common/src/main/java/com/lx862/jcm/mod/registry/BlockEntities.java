@@ -1,5 +1,7 @@
 package com.lx862.jcm.mod.registry;
 
+import cn.zbx1425.mtrsteamloco.RegistriesWrapper;
+import com.lx862.jcm.mod.Constants;
 import com.lx862.jcm.mod.block.entity.*;
 import com.lx862.jcm.mod.util.JCMLogger;
 import mtr.MTR;
@@ -33,32 +35,32 @@ public final class BlockEntities {
     public static final RegistryObject<BlockEntityType<RVPIDSSIL2BlockEntity>> RV_PIDS_SIL_2 = new RegistryObject<>(() -> Registry.getBlockEntityType(RVPIDSSIL2BlockEntity::new, Blocks.RV_PIDS_SIL_2.get()));
     public static final RegistryObject<BlockEntityType<StationNameStandingBlockEntity>> STATION_NAME_STANDING = new RegistryObject<>(() -> Registry.getBlockEntityType(StationNameStandingBlockEntity::new, Blocks.STATION_NAME_STANDING.get()));
 
-    public static void register(MTR.RegisterCallback<RegistryObject<? extends BlockEntityType<? extends BlockEntityMapper>>> registerBlockEntityType) {
-        registerBlockEntityType.register("apg_door_1", APG_DOOR_DRL);
+    public static void register(RegistriesWrapper registriesWrapper) {
+        registriesWrapper.registerBlockEntityType("apg_door_1", APG_DOOR_DRL);
         // We just load the class and it will be registered, nothing else
         JCMLogger.debug("Registering block entity...");
 
-         registerBlockEntityType.register("auto_iron_door", AUTO_IRON_DOOR);
-         registerBlockEntityType.register("apg_glass_1", APG_GLASS_DRL);
-         registerBlockEntityType.register("faresaver_1", FARE_SAVER);
-         registerBlockEntityType.register("signal_light_inverted_1", SIGNAL_LIGHT_INVERTED_RED_ABOVE);
-         registerBlockEntityType.register("signal_light_inverted_2", SIGNAL_LIGHT_INVERTED_RED_BELOW);
-         registerBlockEntityType.register("signal_light_red_1", SIGNAL_LIGHT_RED_BELOW);
-         registerBlockEntityType.register("signal_light_red_2", SIGNAL_LIGHT_RED_TOP);
-         registerBlockEntityType.register("signal_light_blue", SIGNAL_LIGHT_BLUE);
-         registerBlockEntityType.register("signal_light_green", SIGNAL_LIGHT_GREEN);
-         registerBlockEntityType.register("subsidy_machine", SUBSIDY_MACHINE);
-         registerBlockEntityType.register("sound_looper", SOUND_LOOPER);
-         registerBlockEntityType.register("butterfly_light", BUTTERFLY_LIGHT);
-         registerBlockEntityType.register("departure_timer", DEPARTURE_TIMER);
-         registerBlockEntityType.register("kcr_name_sign", KCR_STATION_NAME_SIGN);
-         registerBlockEntityType.register("kcr_name_sign_station_color", KCR_STATION_NAME_SIGN_STATION_COLOR);
-         registerBlockEntityType.register("pids_projector", PIDS_PROJECTOR);
-         registerBlockEntityType.register("pids_4", PIDS_1A);
-         registerBlockEntityType.register("pids_4a", LCD_PIDS);
-         registerBlockEntityType.register("pids_5", RV_PIDS);
-         registerBlockEntityType.register("pids_rv_sil", RV_PIDS_SIL_1);
-         registerBlockEntityType.register("pids_rv_sil_2", RV_PIDS_SIL_2);
-         registerBlockEntityType.register("station_name_tall_stand", STATION_NAME_STANDING);
+         registriesWrapper.registerBlockEntityType("auto_iron_door", AUTO_IRON_DOOR);
+         registriesWrapper.registerBlockEntityType("apg_glass_1", APG_GLASS_DRL);
+         registriesWrapper.registerBlockEntityType("faresaver_1", FARE_SAVER);
+         registriesWrapper.registerBlockEntityType("signal_light_inverted_1", SIGNAL_LIGHT_INVERTED_RED_ABOVE);
+         registriesWrapper.registerBlockEntityType("signal_light_inverted_2", SIGNAL_LIGHT_INVERTED_RED_BELOW);
+         registriesWrapper.registerBlockEntityType("signal_light_red_1", SIGNAL_LIGHT_RED_BELOW);
+         registriesWrapper.registerBlockEntityType("signal_light_red_2", SIGNAL_LIGHT_RED_TOP);
+         registriesWrapper.registerBlockEntityType("signal_light_blue", SIGNAL_LIGHT_BLUE);
+         registriesWrapper.registerBlockEntityType("signal_light_green", SIGNAL_LIGHT_GREEN);
+         registriesWrapper.registerBlockEntityType("subsidy_machine", SUBSIDY_MACHINE);
+         registriesWrapper.registerBlockEntityType("sound_looper", SOUND_LOOPER);
+         registriesWrapper.registerBlockEntityType("butterfly_light", BUTTERFLY_LIGHT);
+         registriesWrapper.registerBlockEntityType("departure_timer", DEPARTURE_TIMER);
+         registriesWrapper.registerBlockEntityType("kcr_name_sign", KCR_STATION_NAME_SIGN);
+         registriesWrapper.registerBlockEntityType("kcr_name_sign_station_color", KCR_STATION_NAME_SIGN_STATION_COLOR);
+         registriesWrapper.registerBlockEntityType("pids_projector", PIDS_PROJECTOR);
+         registriesWrapper.registerBlockEntityType("pids_4", PIDS_1A);
+         registriesWrapper.registerBlockEntityType("pids_4a", LCD_PIDS);
+         registriesWrapper.registerBlockEntityType("pids_5", RV_PIDS);
+         registriesWrapper.registerBlockEntityType("pids_rv_sil", RV_PIDS_SIL_1);
+         registriesWrapper.registerBlockEntityType("pids_rv_sil_2", RV_PIDS_SIL_2);
+         registriesWrapper.registerBlockEntityType("station_name_tall_stand", STATION_NAME_STANDING);
     }
 }

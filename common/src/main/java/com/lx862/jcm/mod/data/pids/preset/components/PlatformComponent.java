@@ -8,6 +8,10 @@ import com.lx862.jcm.mod.data.pids.preset.components.base.TextComponent;
 import com.lx862.jcm.mod.render.text.TextAlignment;
 import com.lx862.jcm.mod.render.text.TextOverflowMode;
 import com.mojang.blaze3d.vertex.PoseStack;
+import mtr.client.ClientData;
+import mtr.data.Platform;
+import mtr.data.Route;
+import mtr.data.ScheduleEntry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 
@@ -20,11 +24,19 @@ public class PlatformComponent extends TextComponent {
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, Direction facing, PIDSContext context) {
-        ArrivalResponse arrival = Utilities.getElement(context.arrivals, arrivalIndex);
+        ScheduleEntry arrival = context.arrivals.get(arrivalIndex);
         if(arrival == null) return;
 
-        graphicsHolder.translate(width / 1.6, 2, 0);
-        drawText(graphicsHolder, guiDrawing, facing, arrival.getPlatformName());
+        final Route route = ClientData.DATA_CACHE.routeIdMap.get(arrival.routeId);
+
+        final Route.RoutePlatform routePlatform = route == null ? null : route.platformIds.get(arrival.currentStationIndex);
+        if(routePlatform == null) return;
+
+        final Platform platform = ClientData.DATA_CACHE.platformIdMap.get(routePlatform.platformId);
+        if(platform == null) return;
+
+        poseStack.translate(width / 1.6, 2, 0);
+        drawText(poseStack, bufferSource, platform.name);
     }
 
     public static PIDSComponent parseComponent(double x, double y, double width, double height, JsonObject jsonObject) {

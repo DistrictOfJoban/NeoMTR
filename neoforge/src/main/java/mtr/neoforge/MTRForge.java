@@ -1,7 +1,7 @@
 package mtr.neoforge;
 
 import cn.zbx1425.mtrsteamloco.neoforge.ClientProxy;
-import cn.zbx1425.mtrsteamloco.neoforge.RegistriesWrapperImpl;
+import cn.zbx1425.mtrsteamloco.neoforge.JCMRegistriesWrapperImpl;
 import com.lx862.jcm.mod.JCM;
 import com.lx862.jcm.mod.JCMClient;
 import mtr.*;
@@ -46,13 +46,14 @@ public class MTRForge {
 	private static final DeferredRegisterHolder<SoundEvent> SOUND_EVENTS = new DeferredRegisterHolder<>(MTR.MOD_ID, ForgeUtilities.registryGetSoundEvent());
 	private static final DeferredRegisterHolder<CreativeModeTab> CREATIVE_MODE_TABS = new DeferredRegisterHolder<>(MTR.MOD_ID, Registries.CREATIVE_MODE_TAB);
 	private static final RegistriesWrapperImpl registries = new RegistriesWrapperImpl();
+	private static final JCMRegistriesWrapperImpl jcmRegistries = new JCMRegistriesWrapperImpl();
 
 	public static final CompatPacketRegistry PACKET_REGISTRY = new CompatPacketRegistry();
 
 	static {
 		MTR.init(MTRForge::registerItem, MTRForge::registerBlock, MTRForge::registerBlock, MTRForge::registerEnchantedBlock, MTRForge::registerBlockEntityType, MTRForge::registerEntityType, MTRForge::registerSoundEvent);
 		cn.zbx1425.mtrsteamloco.Main.init(registries);
-		JCM.init(MTRForge::registerItem, MTRForge::registerBlock, MTRForge::registerBlock, MTRForge::registerEnchantedBlock, MTRForge::registerBlockEntityType, MTRForge::registerEntityType, MTRForge::registerSoundEvent);
+		JCM.init(jcmRegistries);
 	}
 
 	public MTRForge(IEventBus eventBus) {

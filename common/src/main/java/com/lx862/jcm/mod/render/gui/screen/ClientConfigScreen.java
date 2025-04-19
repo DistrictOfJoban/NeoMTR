@@ -5,14 +5,17 @@ import com.lx862.jcm.mod.JCMClient;
 import com.lx862.jcm.mod.render.GuiHelper;
 import com.lx862.jcm.mod.render.gui.screen.base.TitledScreen;
 import com.lx862.jcm.mod.render.gui.widget.ListViewWidget;
-import com.lx862.jcm.mod.render.gui.widget.MappedWidget;
 import com.lx862.jcm.mod.render.gui.widget.WidgetSet;
 import com.lx862.jcm.mod.util.JCMLogger;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
+import mtr.mappings.UtilitiesClient;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
@@ -30,9 +33,8 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
 
     private final WidgetSet bottomRowWidget;
     private final ListViewWidget listViewWidget;
-    private final CheckboxWidgetExtension disableRenderingButton;
-    private final CheckboxWidgetExtension debugModeButton;
-    private final ButtonWidgetExtension textAtlasButton;
+    private final Checkbox disableRenderingButton;
+    private final Checkbox debugModeButton;
 
     private boolean discardConfig = false;
 
@@ -42,17 +44,13 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
         bottomRowWidget = new WidgetSet(20);
         listViewWidget = new ListViewWidget();
 
-        this.disableRenderingButton = new CheckboxWidgetExtension(0, 0, 20, 20, false, bool -> {
-            JCMClient.getConfig().disableRendering = bool;
-        });
+        this.disableRenderingButton = Checkbox.builder(Component.empty(), Minecraft.getInstance().font).selected(JCMClient.getConfig().disableRendering).pos(0, 0).onValueChange((cb, bl) -> {
+            JCMClient.getConfig().disableRendering = bl;
+        }).build();
 
-        this.debugModeButton = new CheckboxWidgetExtension(0, 0, 20, 20, false, bool -> {
-            JCMClient.getConfig().debug = bool;
-        });
-
-        this.textAtlasButton = new ButtonWidgetExtension(0, 0, 60, 20, TextUtil.translatable(TextCategory.GUI, "config.listview.widget.open"), (buttonWidget -> {
-            Minecraft.getInstance().setScreen(new TextureTextAtlasScreen().withPreviousScreen(this));
-        }));
+        this.debugModeButton = Checkbox.builder(Component.empty(), Minecraft.getInstance().font).pos(0, 0).selected(JCMClient.getConfig().debug).onValueChange((cb, bl) -> {
+            JCMClient.getConfig().debug = bl;
+        }).build();
     }
 
     @Override
@@ -80,62 +78,55 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
 
         addConfigEntries();
         addBottomButtons();
-        addWidget(listViewWidget);
-        addWidget(bottomRowWidget);
+        addRenderableWidget(listViewWidget);
+        addRenderableWidget(bottomRowWidget);
         listViewWidget.setXYSize(startX, startY, contentWidth, listViewHeight);
         bottomRowWidget.setXYSize(startX, startY + listViewHeight + BOTTOM_ROW_MARGIN, contentWidth, bottomEntryHeight);
     }
 
-    private void setEntryStateFromClientConfig() {
-        disableRenderingButton.setChecked(JCMClient.getConfig().disableRendering);
-        debugModeButton.setChecked(JCMClient.getConfig().debug);
-    }
-
     private void addConfigEntries() {
-        setEntryStateFromClientConfig();
-
         // General
         listViewWidget.addCategory(TextUtil.translatable(TextCategory.GUI, "config.listview.category.general"));
 
-        listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "config.listview.title.disable_rendering"), new MappedWidget(disableRenderingButton));
-        addWidget(disableRenderingButton);
+        listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "config.listview.title.disable_rendering"), disableRenderingButton);
+        addRenderableWidget(disableRenderingButton);
 
         // Debug
         listViewWidget.addCategory(TextUtil.translatable(TextCategory.GUI, "config.listview.category.debug"));
-        listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "config.listview.title.debug_mode"), new MappedWidget(debugModeButton));
-        addWidget(debugModeButton);
+        listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "config.listview.title.debug_mode"), debugModeButton);
+        addRenderableWidget(debugModeButton);
     }
 
 
     private void addBottomButtons() {
-        ButtonWidgetExtension latestLogButton = new ButtonWidgetExtension(0, 0, 0, 20, TextUtil.translatable(TextCategory.GUI, "config.latest_log"), (btn) -> {
+        Button latestLogButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "config.latest_log"), (btn) -> {
             openLatestLog();
-        });
+        }).size(0, 20).build();
 
-        ButtonWidgetExtension crashLogButton = new ButtonWidgetExtension(0, 0, 0, 20, TextUtil.translatable(TextCategory.GUI, "config.crash_log"), (btn) -> {
+        Button crashLogButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "config.crash_log"), (btn) -> {
             openLatestCrashReport();
-        });
+        }).size(0, 20).build();
 
-        ButtonWidgetExtension saveButton = new ButtonWidgetExtension(0, 0, 0, 20, TextUtil.translatable(TextCategory.GUI, "config.save"), (btn) -> {
-            onClose2();
-        });
+        Button saveButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "config.save"), (btn) -> {
+            onClose();
+        }).size(0, 20).build();
 
-        ButtonWidgetExtension discardButton = new ButtonWidgetExtension(0, 0, 0, 20, TextUtil.translatable(TextCategory.GUI, "config.discard"), (btn) -> {
+        Button discardButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "config.discard"), (btn) -> {
             discardConfig = true;
-            onClose2();
-        });
+            onClose();
+        }).size(0, 20).build();
 
-        ButtonWidgetExtension resetButton = new ButtonWidgetExtension(0, 0, 0, 20, TextUtil.translatable(TextCategory.GUI, "config.reset"), (btn) -> {
+        Button resetButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "config.reset"), (btn) -> {
             JCMClient.getConfig().reset();
-            setEntryStateFromClientConfig();
-        });
+            //setEntryStateFromClientConfig();
+        }).size(0, 20).build();
 
-        addWidget(latestLogButton);
-        addWidget(crashLogButton);
+        addRenderableWidget(latestLogButton);
+        addRenderableWidget(crashLogButton);
 
-        addWidget(saveButton);
-        addWidget(discardButton);
-        addWidget(resetButton);
+        addRenderableWidget(saveButton);
+        addRenderableWidget(discardButton);
+        addRenderableWidget(resetButton);
 
         bottomRowWidget.addWidget(latestLogButton);
         bottomRowWidget.addWidget(crashLogButton);
@@ -152,21 +143,21 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
         float starUVSize = (float) (starSize / 384F);
         double translateY = height * (1 - animationProgress);
         GuiHelper.drawTexture(guiGraphics, TEXTURE_BACKGROUND, 0, 0, width, height);
-        graphicsHolder.push();
-        graphicsHolder.translate(0, translateY * 0.2f, 0);
-        graphicsHolder.translate(width / 2.0, height / 2.0, 0);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0, translateY * 0.2f, 0);
+        guiGraphics.pose().translate(width / 2.0, height / 2.0, 0);
 
         float starRot = (System.currentTimeMillis() % STAR_ROTATION_LENGTH) / (float)STAR_ROTATION_LENGTH;
-        graphicsHolder.rotateZDegrees(starRot * 360);
-        graphicsHolder.translate(-width / 2.0, -height / 2.0, 0);
-        GuiHelper.drawTexture(guiDrawing, TEXTURE_STAR, 0, 0, starSize, starSize, 0, 0, starUVSize, starUVSize);
-        graphicsHolder.pop();
+        UtilitiesClient.rotateZDegrees(guiGraphics.pose(), starRot * 360);
+        guiGraphics.pose().translate(-width / 2.0, -height / 2.0, 0);
+        GuiHelper.drawTexture(guiGraphics, TEXTURE_STAR, 0, 0, starSize, starSize, 0, 0, starUVSize, starUVSize);
+        guiGraphics.pose().popPose();
 
-        GuiHelper.drawTexture(guiDrawing, TEXTURE_TERRAIN, 0, translateY + height - terrainHeight, width, terrainHeight);
+        GuiHelper.drawTexture(guiGraphics, TEXTURE_TERRAIN, 0, translateY + height - terrainHeight, width, terrainHeight);
     }
 
     @Override
-    public void onClose2() {
+    public void onClose() {
         if(!closing) {
             if (!discardConfig) {
                 JCMClient.getConfig().write();
@@ -176,7 +167,7 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
             }
         }
 
-        super.onClose2();
+        super.onClose();
     }
 
     public static void openLatestLog() {

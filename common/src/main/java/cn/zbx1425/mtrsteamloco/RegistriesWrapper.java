@@ -8,6 +8,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,7 +17,7 @@ public interface RegistriesWrapper {
 
     void registerBlock(String id, RegistryObject<Block> block);
 
-    void registerItem(String id, RegistryObject<ItemWithCreativeTabBase> item);
+    void registerItem(String id, RegistryObject<? extends Item> item);
 
     void registerBlockAndItem(String id, RegistryObject<Block> block, CreativeModeTabs.Wrapper tab);
 

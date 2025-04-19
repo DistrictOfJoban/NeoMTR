@@ -5,33 +5,36 @@ import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mtr.client.Config;
 import mtr.data.IGui;
+import mtr.mappings.Text;
+import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 
 
 /**
  * Copied from MTR's IDrawing, but just for rendering with a specific font other than the hardcoded mtr one
  */
 public interface IDrawingJoban {
-    static void drawStringWithFont(GuiGraphics graphicsHolder, String text, ResourceLocation font, float x, float y, int light) {
-        drawStringWithFont(graphicsHolder, text, font, IGui.HorizontalAlignment.CENTER, IGui.VerticalAlignment.CENTER, x, y, -1, -1, 1, IGui.ARGB_WHITE, true, light, null);
+    static void drawStringWithFont(PoseStack matrices, Font font, MultiBufferSource.BufferSource immediate, String text, ResourceLocation fontId, float x, float y, int light) {
+        drawStringWithFont(matrices, font, immediate, text, fontId, IGui.HorizontalAlignment.CENTER, IGui.VerticalAlignment.CENTER, x, y, -1, -1, 1, IGui.ARGB_WHITE, true, light, null);
     }
 
-    static void drawStringWithFont(GuiGraphics graphicsHolder, String text, ResourceLocation font, IGui.HorizontalAlignment horizontalAlignment, IGui.VerticalAlignment verticalAlignment, float x, float y, float maxWidth, float maxHeight, float scale, int textColor, boolean shadow, int light, @Nullable DrawingCallback drawingCallback) {
-        drawStringWithFont(graphicsHolder, text, font, horizontalAlignment, verticalAlignment, horizontalAlignment, x, y, maxWidth, maxHeight, scale, textColor, shadow, light, drawingCallback);
+    static void drawStringWithFont(PoseStack matrices, Font font, MultiBufferSource.BufferSource immediate, String text, ResourceLocation fontId, IGui.HorizontalAlignment horizontalAlignment, IGui.VerticalAlignment verticalAlignment, float x, float y, float maxWidth, float maxHeight, float scale, int textColor, boolean shadow, int light, DrawingCallback drawingCallback) {
+        drawStringWithFont(matrices, font, immediate, text, fontId, horizontalAlignment, verticalAlignment, horizontalAlignment, x, y, maxWidth, maxHeight, scale, textColor, shadow, light, drawingCallback);
     }
 
-    static void drawStringWithFont(GuiGraphics graphicsHolder, String text, ResourceLocation font, IGui.HorizontalAlignment horizontalAlignment, IGui.VerticalAlignment verticalAlignment, IGui.HorizontalAlignment xAlignment, float x, float y, float maxWidth, float maxHeight, float scale, int textColor, boolean shadow, int light, @Nullable DrawingCallback drawingCallback) {
-        drawStringWithFont(graphicsHolder, text, font, horizontalAlignment, verticalAlignment, xAlignment, x, y, maxWidth, maxHeight, scale, textColor, textColor, 2, shadow, light, drawingCallback);
+    static void drawStringWithFont(PoseStack matrices, Font font, MultiBufferSource.BufferSource immediate, String text, ResourceLocation fontId, IGui.HorizontalAlignment horizontalAlignment, IGui.VerticalAlignment verticalAlignment, IGui.HorizontalAlignment xAlignment, float x, float y, float maxWidth, float maxHeight, float scale, int textColor, boolean shadow, int light, DrawingCallback drawingCallback) {
+        drawStringWithFont(matrices, font, immediate, text, fontId, horizontalAlignment, verticalAlignment, xAlignment, x, y, maxWidth, maxHeight, scale, textColor, textColor, 2, shadow, light, drawingCallback);
     }
 
-    static void drawStringWithFont(GuiGraphics graphicsHolder, String text, ResourceLocation font, IGui.HorizontalAlignment horizontalAlignment, IGui.VerticalAlignment verticalAlignment, IGui.HorizontalAlignment xAlignment, float x, float y, float maxWidth, float maxHeight, float scale, int textColorCjk, int textColor, float fontSizeRatio, boolean shadow, int light, @Nullable DrawingCallback drawingCallback) {
+    static void drawStringWithFont(PoseStack pose, Font font, MultiBufferSource.BufferSource immediate, String text, ResourceLocation fontId, IGui.HorizontalAlignment horizontalAlignment, IGui.VerticalAlignment verticalAlignment, IGui.HorizontalAlignment xAlignment, float x, float y, float maxWidth, float maxHeight, float scale, int textColorCjk, int textColor, float fontSizeRatio, boolean shadow, int light, DrawingCallback drawingCallback) {
         final Font mcFont = Minecraft.getInstance().font;
-        final Style style = Config.useMTRFont() ? Style.EMPTY.withFont(font) : Style.EMPTY;
-        final PoseStack pose = graphicsHolder.pose();
+        final Style style = Config.useMTRFont() ? Style.EMPTY.withFont(fontId) : Style.EMPTY;
 
         while (text.contains("||")) {
             text = text.replace("||", "|");
@@ -39,17 +42,17 @@ public interface IDrawingJoban {
         final String[] stringSplit = text.split("\\|");
 
         final BooleanArrayList isCJKList = new BooleanArrayList();
-        final ObjectArrayList<OrderedText> orderedTexts = new ObjectArrayList<>();
+        final ObjectArrayList<FormattedCharSequence> orderedTexts = new ObjectArrayList<>();
         int totalHeight = 0, totalWidth = 0;
         for (final String stringSplitPart : stringSplit) {
             final boolean isCJK = IGui.isCjk(stringSplitPart);
             isCJKList.add(isCJK);
 
-            final OrderedText orderedText = TextHelper.MutableComponentToOrderedText(TextHelper.setStyle(TextHelper.literal(stringSplitPart), style));
+            final FormattedCharSequence orderedText = Text.literal(stringSplitPart).setStyle(style).getVisualOrderText();
             orderedTexts.add(orderedText);
 
             totalHeight += Math.round(IGui.LINE_HEIGHT * (isCJK ? fontSizeRatio : 1));
-            final int width = (int) Math.ceil(GraphicsHolder.getTextWidth(orderedText) * (isCJK ? fontSizeRatio : 1));
+            final int width = (int) Math.ceil(font.width(orderedText) * (isCJK ? fontSizeRatio : 1));
             if (width > totalWidth) {
                 totalWidth = width;
             }
@@ -83,13 +86,13 @@ public interface IDrawingJoban {
 
             final float xOffset = horizontalAlignment.getOffset(xAlignment.getOffset(x * scaleX, totalWidth), mcFont.width(orderedTexts.get(i)) * extraScale - totalWidth);
 
-            final float shade = light == GraphicsHolder.getDefaultLight() ? 1 : Math.min(LightmapTextureManager.getBlockLightCoordinates(light) / 16F * 0.1F + 0.7F, 1);
+            final float shade = light == IGui.MAX_LIGHT_GLOWING ? 1 : Math.min(LightTexture.block(light) / 16F * 0.1F + 0.7F, 1);
             final int a = ((isCJK ? textColorCjk : textColor) >> 24) & 0xFF;
             final int r = (int) ((((isCJK ? textColorCjk : textColor) >> 16) & 0xFF) * shade);
             final int g = (int) ((((isCJK ? textColorCjk : textColor) >> 8) & 0xFF) * shade);
             final int b = (int) (((isCJK ? textColorCjk : textColor) & 0xFF) * shade);
 
-            graphicsHolder.drawText(orderedTexts.get(i), Math.round(xOffset / extraScale), Math.round(offset / extraScale), (a << 24) + (r << 16) + (g << 8) + b, shadow, light);
+            UtilitiesClient.drawInBatch(font, orderedTexts.get(i), xOffset / extraScale, offset / extraScale, (a << 24) + (r << 16) + (g << 8) + b, shadow, pose.last().pose(), immediate, 0, light);
 
             if (isCJK) {
                 pose.popPose();

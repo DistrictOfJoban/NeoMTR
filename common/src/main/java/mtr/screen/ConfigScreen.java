@@ -1,5 +1,6 @@
 package mtr.screen;
 
+import com.lx862.jcm.mod.render.gui.screen.ClientConfigScreen;
 import mtr.Keys;
 import mtr.Patreon;
 import mtr.client.ClientData;
@@ -11,6 +12,7 @@ import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -142,6 +144,10 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 			addDrawableChild(sliderDynamicTextureResolution);
 			addDrawableChild(sliderTrainRenderDistanceRatio);
 		}
+
+		addDrawableChild(
+			Button.builder(Component.literal("NeoJCM Config"), (btn) -> Minecraft.getInstance().setScreen(new ClientConfigScreen().withPreviousScreen(this))).size(100, 20).build()
+		);
 		addDrawableChild(buttonSupportPatreon);
 	}
 
