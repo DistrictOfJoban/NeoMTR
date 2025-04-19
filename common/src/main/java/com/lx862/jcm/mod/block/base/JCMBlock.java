@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
 
 public abstract class JCMBlock extends Block {
     public JCMBlock(BlockBehaviour.Properties settings) {
-        super(settings);
+        super(settings.forceSolidOn());
     }
 
     /**
