@@ -1,6 +1,6 @@
 package cn.zbx1425.mtrsteamloco.render.scripting;
 
-import vendor.cn.zbx1425.mtrsteamloco.org.mozilla.javascript.Scriptable;
+import com.lx862.mtrscripting.lib.org.mozilla.javascript.Scriptable;
 
 import java.util.HashMap;
 import java.util.Map;

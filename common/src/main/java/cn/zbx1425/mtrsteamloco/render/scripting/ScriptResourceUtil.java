@@ -20,8 +20,8 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vendor.cn.zbx1425.mtrsteamloco.org.mozilla.javascript.Context;
-import vendor.cn.zbx1425.mtrsteamloco.org.mozilla.javascript.Scriptable;
+import com.lx862.mtrscripting.lib.org.mozilla.javascript.Context;
+import com.lx862.mtrscripting.lib.org.mozilla.javascript.Scriptable;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

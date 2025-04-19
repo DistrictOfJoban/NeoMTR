@@ -44,3 +44,6 @@ version.js
 .architectury-transformer/
 
 /build.properties
+
+# rhino js engine
+rhino/src/main/java

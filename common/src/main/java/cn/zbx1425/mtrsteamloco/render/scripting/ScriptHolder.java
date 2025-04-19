@@ -14,7 +14,7 @@ import mtr.client.ClientData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import vendor.cn.zbx1425.mtrsteamloco.org.mozilla.javascript.*;
+import com.lx862.mtrscripting.lib.org.mozilla.javascript.*;
 
 import java.util.ArrayList;
 import java.util.List;
