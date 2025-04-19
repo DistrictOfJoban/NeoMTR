@@ -156,7 +156,7 @@ public class Config {
 		MTR.LOGGER.info("[NeoMTR] Reading config file...");
 
 		try {
-			final JsonObject jsonConfig = new JsonParser().parse(String.join("", Files.readAllLines(CONFIG_FILE_PATH))).getAsJsonObject();
+			final JsonObject jsonConfig = JsonParser.parseString(String.join("", Files.readAllLines(CONFIG_FILE_PATH))).getAsJsonObject();
 			try {
 				useMTRFont = jsonConfig.get(USE_MTR_FONT_KEY).getAsBoolean();
 			} catch (Exception ignored) {
@@ -198,6 +198,7 @@ public class Config {
 			} catch (Exception ignored) {
 			}
 		} catch (NoSuchFileException e) {
+			// Generate config if non-existent
 			writeToFile();
 		} catch (Exception e) {
 			MTR.LOGGER.error("[NeoMTR] Failed to read config file!", e);

@@ -1,5 +1,6 @@
 package mtr.screen;
 
+import mtr.MTR;
 import mtr.client.ClientData;
 import mtr.data.DataConverter;
 import mtr.data.IGui;
@@ -61,16 +62,14 @@ public class LiftSelectionScreen extends ScreenMapper implements IGui {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
 		try {
-			super.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.pose().pushPose();
-			guiGraphics.pose().translate(0, 0, -100);
 			selectionList.render(guiGraphics, font);
-			guiGraphics.pose().popPose();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
+		guiGraphics.pose().translate(0, 0, 100);
 	}
 
 	@Override

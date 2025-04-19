@@ -111,7 +111,7 @@ public class CustomResources implements IResourcePackCreatorProperties, ICustomR
 							}));
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						MTR.LOGGER.error("[NeoMTR] Failed to load custom train!", e);
 					}
 				});
 			} catch (Exception ignored) {
@@ -130,7 +130,7 @@ public class CustomResources implements IResourcePackCreatorProperties, ICustomR
 
 						CUSTOM_SIGNS.put(CUSTOM_SIGN_ID_PREFIX + entry.getKey(), new CustomSign(ResourceLocation.parse(jsonObject.get(CUSTOM_SIGNS_TEXTURE_ID).getAsString()), flipTexture, customText, flipCustomText, small, backgroundColor));
 					} catch (Exception e) {
-						e.printStackTrace();
+						MTR.LOGGER.error("[NeoMTR] Failed to load custom sign!", e);
 					}
 				});
 			} catch (Exception ignored) {
@@ -140,9 +140,10 @@ public class CustomResources implements IResourcePackCreatorProperties, ICustomR
 		RELOAD_LISTENERS.forEach(resourceManagerConsumer -> resourceManagerConsumer.accept(manager));
 
 		MTR.LOGGER.info("[NeoMTR] Loaded {} custom train(s)", customTrains.size());
-		customTrains.forEach(System.out::println);
+		MTR.LOGGER.info(String.join(", ", customTrains));
+
 		MTR.LOGGER.info("[NeoMTR] Loaded {} custom sign(s)", CUSTOM_SIGNS.size());
-		CUSTOM_SIGNS.keySet().forEach(System.out::println);
+		MTR.LOGGER.info(String.join(", ", CUSTOM_SIGNS.keySet()));
 	}
 
 	public static int colorStringToInt(String string) {
@@ -157,14 +158,14 @@ public class CustomResources implements IResourcePackCreatorProperties, ICustomR
 		try {
 			UtilitiesClient.getResources(manager, ResourceLocation.parse(path)).forEach(resource -> {
 				try (final InputStream stream = Utilities.getInputStream(resource)) {
-					callback.accept(new JsonParser().parse(new InputStreamReader(stream, StandardCharsets.UTF_8)).getAsJsonObject());
+					callback.accept(JsonParser.parseReader(new InputStreamReader(stream, StandardCharsets.UTF_8)).getAsJsonObject());
 				} catch (Exception e) {
-					e.printStackTrace();
+					MTR.LOGGER.error("", e);
 				}
 				try {
 					Utilities.closeResource(resource);
 				} catch (IOException e) {
-					e.printStackTrace();
+					MTR.LOGGER.error("", e);
 				}
 			});
 		} catch (Exception ignored) {

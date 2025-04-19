@@ -1,5 +1,6 @@
 package mtr.screen;
 
+import mtr.MTR;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.*;
@@ -145,19 +146,16 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
 		try {
-			super.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.pose().pushPose();
-			guiGraphics.pose().translate(0, 0, -200);
 			widgetMap.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.pose().translate(0, 0, 100);
 			guiGraphics.fill(0, 0, PANEL_WIDTH, height, ARGB_BACKGROUND);
 			dashboardList.render(guiGraphics, font);
-			guiGraphics.pose().popPose();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
+		guiGraphics.pose().translate(0, 0, 100);
 	}
 
 	@Override
@@ -216,7 +214,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 					break;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 	}
 
@@ -344,7 +342,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 					break;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 	}
 
@@ -430,7 +428,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 			try {
 				ClientData.ROUTES.add(editingRoute);
 			} catch (Exception e) {
-				e.printStackTrace();
+				MTR.LOGGER.error("", e);
 			}
 		}
 		editingRoute.name = IGui.textOrUntitled(textFieldName.getValue());

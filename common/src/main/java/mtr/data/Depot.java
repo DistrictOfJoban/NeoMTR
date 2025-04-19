@@ -77,7 +77,7 @@ public class Depot extends AreaBase implements IReducedSaveData {
 				frequencies[i] = frequenciesArray.get(i).asIntegerValue().asInt();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 
 		messagePackHelper.iterateArrayValue(KEY_DEPARTURES, departure -> departures.add(departure.asIntegerValue().asInt()));
@@ -303,9 +303,8 @@ public class Depot extends AreaBase implements IReducedSaveData {
 				PacketTrainDataGuiServer.generatePathS2C(world, id, successfulSegments[0]);
 				MTR.LOGGER.info("[NeoMTR] Finished path generation {}", (name.isEmpty() ? "" : "for " + name));
 			} catch (Exception e) {
-				e.printStackTrace();
 				PacketTrainDataGuiServer.generatePathS2C(world, id, 0);
-				MTR.LOGGER.info("[NeoMTR] Failed to generate path {}", (name.isEmpty() ? "" : "for " + name));
+				MTR.LOGGER.error("[NeoMTR] Failed to generate path {}", (name.isEmpty() ? "" : "for " + name), e);
 			}
 		});
 		callback.accept(thread);

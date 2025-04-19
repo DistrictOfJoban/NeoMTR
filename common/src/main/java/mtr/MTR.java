@@ -1,11 +1,7 @@
 package mtr;
 
-import mtr.data.Depot;
-import mtr.data.Route;
-import mtr.data.Station;
 import mtr.mappings.BlockEntityMapper;
 import mtr.registry.Networking;
-import mtr.packet.PacketTrainDataGuiServer;
 import mtr.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;

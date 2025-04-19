@@ -6,10 +6,12 @@ import mtr.Registry;
 import mtr.block.BlockNode;
 import mtr.client.ClientData;
 import mtr.mappings.PersistentStateMapper;
+import mtr.mappings.Utilities;
 import mtr.packet.*;
 import mtr.path.PathData;
 import mtr.registry.Networking;
 import mtr.util.BlockUtil;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -177,7 +179,7 @@ public class RailwayData extends PersistentStateMapper {
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				MTR.LOGGER.error("", e);
 			}
 		} else {
 			try {
@@ -217,7 +219,7 @@ public class RailwayData extends PersistentStateMapper {
 					signalBlocks.signalBlocks.add(new SignalBlocks.SignalBlock(tagNewSignalBlocks.getCompound(key)));
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				MTR.LOGGER.error("", e);
 			}
 		}
 
@@ -560,7 +562,7 @@ public class RailwayData extends PersistentStateMapper {
 		try {
 			return platforms.stream().filter(platform -> platform.containsPos(pos)).findFirst().orElse(null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 			return null;
 		}
 	}
@@ -582,7 +584,7 @@ public class RailwayData extends PersistentStateMapper {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 	}
 
@@ -599,7 +601,7 @@ public class RailwayData extends PersistentStateMapper {
 				validateRails(world, rails);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 	}
 
@@ -628,7 +630,7 @@ public class RailwayData extends PersistentStateMapper {
 				validateRails(world, rails);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 	}
 
@@ -644,7 +646,7 @@ public class RailwayData extends PersistentStateMapper {
 				return stations.stream().filter(station -> station.inArea(pos.getX(), pos.getZ())).findFirst().orElse(null);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 			return null;
 		}
 	}
@@ -671,7 +673,7 @@ public class RailwayData extends PersistentStateMapper {
 				return platformId;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 			return 0;
 		}
 	}

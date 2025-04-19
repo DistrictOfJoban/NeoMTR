@@ -2,6 +2,7 @@ package mtr.screen;
 
 import com.lx862.jcm.mod.render.gui.screen.ClientConfigScreen;
 import mtr.Keys;
+import mtr.MTR;
 import mtr.Patreon;
 import mtr.client.ClientData;
 import mtr.client.Config;
@@ -152,11 +153,9 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
 		try {
-			super.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.pose().pushPose();
-			guiGraphics.pose().translate(0, 0, -100);
 			guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.mtr_options"), width / 2, TEXT_PADDING, ARGB_WHITE);
 
 			final int yStart1 = SQUARE_SIZE + TEXT_PADDING / 2;
@@ -200,11 +199,10 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 				guiGraphics.drawString(font, text, SQUARE_SIZE - TEXT_PADDING + x, yStart2 + y + TEXT_HEIGHT + TEXT_PADDING, ARGB_LIGHT_GRAY);
 				y += TEXT_HEIGHT + 2;
 			}
-
-			guiGraphics.pose().popPose();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
+		guiGraphics.pose().translate(0, 0, 100);
 	}
 
 	@Override

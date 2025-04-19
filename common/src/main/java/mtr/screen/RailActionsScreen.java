@@ -1,6 +1,7 @@
 package mtr.screen;
 
 import io.netty.buffer.Unpooled;
+import mtr.MTR;
 import mtr.RegistryClient;
 import mtr.client.ClientData;
 import mtr.data.IGui;
@@ -33,17 +34,15 @@ public class RailActionsScreen extends ScreenMapper implements IGui {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
 		try {
-			super.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.pose().pushPose();
-			guiGraphics.pose().translate(0, 0, -100);
 			railActionsList.render(guiGraphics, font);
 			guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.rail_actions"), width / 2, SQUARE_SIZE + TEXT_PADDING, ARGB_WHITE);
-			guiGraphics.pose().popPose();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
+		guiGraphics.pose().translate(0, 0, 100);
 	}
 
 	@Override

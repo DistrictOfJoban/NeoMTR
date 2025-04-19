@@ -2,6 +2,7 @@ package mtr.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import mtr.MTR;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.*;
@@ -120,7 +121,7 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 				mouseOnSavedRail(mouseWorldPos, (savedRail, x1, z1, x2, z2) -> drawRectangleFromWorldCoords(guiGraphics.pose(), buffer, x1, z1, x2, z2, ARGB_WHITE), false);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 
 		if (mapState == MapState.EDITING_AREA && drawArea1 != null && drawArea2 != null) {
@@ -153,7 +154,7 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 					ClientData.DATA_CACHE.getPosToSidings(transportMode).forEach((sidingPos, sidings) -> drawSavedRail(guiGraphics, sidingPos, sidings));
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				MTR.LOGGER.error("", e);
 			}
 		}
 
@@ -312,7 +313,7 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 			});
 		} catch (ConcurrentModificationException ignored) {
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 	}
 

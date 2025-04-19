@@ -84,7 +84,7 @@ public class RailwayDataFileSaveModule extends RailwayDataModule {
 			Files.createDirectories(railsPath);
 			Files.createDirectories(signalBlocksPath);
 		} catch (IOException e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("Failed to create MTR data directory!", e);
 		}
 	}
 
@@ -189,7 +189,7 @@ public class RailwayDataFileSaveModule extends RailwayDataModule {
 				try {
 					Files.deleteIfExists(path);
 				} catch (IOException e) {
-					e.printStackTrace();
+					MTR.LOGGER.error("", e);
 				}
 				existingFiles.remove(path);
 				filesDeleted++;
@@ -256,21 +256,21 @@ public class RailwayDataFileSaveModule extends RailwayDataModule {
 
 									existingFiles.put(idFile, getHash(data, true));
 								} catch (Exception e) {
-									e.printStackTrace();
+									MTR.LOGGER.error("", e);
 								}
 							} catch (IOException e) {
-								e.printStackTrace();
+								MTR.LOGGER.error("", e);
 							}
 						} catch (IOException e) {
-							e.printStackTrace();
+							MTR.LOGGER.error("", e);
 						}
 					});
 				} catch (IOException e) {
-					e.printStackTrace();
+					MTR.LOGGER.error("", e);
 				}
 			});
 		} catch (IOException e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 	}
 
@@ -293,7 +293,7 @@ public class RailwayDataFileSaveModule extends RailwayDataModule {
 
 			return dataPath;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 		return null;
 	}
@@ -333,7 +333,7 @@ public class RailwayDataFileSaveModule extends RailwayDataModule {
 
 			return hash;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 		return 0;
 	}

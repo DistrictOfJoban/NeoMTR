@@ -1,6 +1,7 @@
 package mtr.data;
 
 import com.google.gson.JsonParser;
+import mtr.MTR;
 import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CollectionTag;
@@ -63,7 +64,7 @@ public class RailwayDataLoggingModule extends RailwayDataModule {
 				}
 				queuedEvents.clear();
 			} catch (Exception e) {
-				e.printStackTrace();
+				MTR.LOGGER.error("", e);
 			}
 		}
 	}
@@ -140,10 +141,10 @@ public class RailwayDataLoggingModule extends RailwayDataModule {
 
 				return dataList;
 			} catch (Exception e) {
-				e.printStackTrace();
+				MTR.LOGGER.error("", e);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 
 		return new ArrayList<>();

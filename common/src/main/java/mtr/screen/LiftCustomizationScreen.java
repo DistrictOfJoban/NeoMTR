@@ -1,5 +1,6 @@
 package mtr.screen;
 
+import mtr.MTR;
 import mtr.client.IDrawing;
 import mtr.data.IGui;
 import mtr.data.Lift;
@@ -151,13 +152,10 @@ public class LiftCustomizationScreen extends ScreenMapper implements IGui {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
 		try {
-			super.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.pose().pushPose();
-			guiGraphics.pose().translate(0, 0, -100);
 			guiGraphics.fill(0, 0, width2, height, ARGB_BACKGROUND);
-			guiGraphics.pose().popPose();
 			guiGraphics.drawCenteredString(font, Text.translatable("tooltip.mtr.rail_action_height", lift.liftHeight / 2F), width2 / 2, TEXT_PADDING, ARGB_WHITE);
 			guiGraphics.drawCenteredString(font, Text.translatable("tooltip.mtr.rail_action_width", lift.liftWidth), width2 / 2, SQUARE_SIZE + TEXT_PADDING, ARGB_WHITE);
 			guiGraphics.drawCenteredString(font, Text.translatable("tooltip.mtr.rail_action_depth", lift.liftDepth), width2 / 2, SQUARE_SIZE * 2 + TEXT_PADDING, ARGB_WHITE);
@@ -165,8 +163,9 @@ public class LiftCustomizationScreen extends ScreenMapper implements IGui {
 			guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.offset_y", lift.liftOffsetY), width2 / 2, SQUARE_SIZE * 4 + TEXT_PADDING, ARGB_WHITE);
 			guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.offset_z", lift.liftOffsetZ / 2F), width2 / 2, SQUARE_SIZE * 5 + TEXT_PADDING, ARGB_WHITE);
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
+		guiGraphics.pose().translate(0, 0, 100);
 	}
 
 	@Override

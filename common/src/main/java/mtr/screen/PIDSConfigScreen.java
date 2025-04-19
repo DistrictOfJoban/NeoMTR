@@ -1,5 +1,6 @@
 package mtr.screen;
 
+import mtr.MTR;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.*;
@@ -175,18 +176,16 @@ public class PIDSConfigScreen extends ScreenMapper implements IGui {
 		try {
 			displayPage = Math.max(0, Integer.parseInt(displayPageInput.getValue()) - 1);
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 		PacketTrainDataGuiClient.sendPIDSConfigC2S(pos1, pos2, messages, hideArrival, filterPlatformIds, displayPage);
 		super.onClose();
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
 		try {
-			super.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.pose().pushPose();
-			guiGraphics.pose().translate(0, 0, -100);
 			guiGraphics.drawString(font, Text.translatable("gui.mtr.display_page"), SQUARE_SIZE, SQUARE_SIZE * 4 + TEXT_PADDING, ARGB_WHITE);
 			guiGraphics.drawString(font, Text.translatable("gui.mtr.filtered_platforms", selectAllCheckbox.selected() ? 0 : filterPlatformIds.size()), SQUARE_SIZE, SQUARE_SIZE * 2 + TEXT_PADDING, ARGB_WHITE);
 			guiGraphics.drawString(font, messageText, SQUARE_SIZE, SQUARE_SIZE * 7 + TEXT_PADDING, ARGB_WHITE);
@@ -194,10 +193,10 @@ public class PIDSConfigScreen extends ScreenMapper implements IGui {
 			if (maxPages > 1) {
 				guiGraphics.drawCenteredString(font, String.format("%s/%s", page + 1, maxPages), SQUARE_SIZE * 3 + font.width(messageText) + TEXT_PADDING, SQUARE_SIZE * 7 + TEXT_PADDING, ARGB_WHITE);
 			}
-			guiGraphics.pose().popPose();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
+		guiGraphics.pose().translate(0, 0, 100);
 	}
 
 	@Override

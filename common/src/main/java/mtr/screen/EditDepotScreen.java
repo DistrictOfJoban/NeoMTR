@@ -1,5 +1,6 @@
 package mtr.screen;
 
+import mtr.MTR;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.*;
@@ -192,11 +193,9 @@ public class EditDepotScreen extends EditNameColorScreenBase<Depot> {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
 		try {
-			super.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.pose().pushPose();
-			guiGraphics.pose().translate(0, 0, -100);
 			guiGraphics.vLine(rightPanelsX - 1, -1, height, ARGB_WHITE_TRANSLUCENT);
 			renderTextFields(guiGraphics);
 
@@ -212,8 +211,6 @@ public class EditDepotScreen extends EditNameColorScreenBase<Depot> {
 				UtilitiesClient.setWidgetY(sliders[i], SQUARE_SIZE * 2 + lineHeight * i);
 				sliders[i].setHeight(lineHeight);
 			}
-
-			guiGraphics.pose().popPose();
 
 			final int yStartRightPane = PANELS_START + SQUARE_SIZE * (checkboxRepeatIndefinitely.visible ? 3 : 2) + (showCruisingAltitude ? SQUARE_SIZE + TEXT_FIELD_PADDING : 0) + TEXT_PADDING;
 			if (showCruisingAltitude) {
@@ -244,9 +241,11 @@ public class EditDepotScreen extends EditNameColorScreenBase<Depot> {
 				guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.vehicles_per_hour"), sliderX + sliderWidthWithText / 2, SQUARE_SIZE + TEXT_PADDING, ARGB_LIGHT_GRAY);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
+		guiGraphics.pose().translate(0, 0, 100);
 	}
+
 
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
@@ -266,8 +265,8 @@ public class EditDepotScreen extends EditNameColorScreenBase<Depot> {
 		try {
 			data.cruisingAltitude = Integer.parseInt(textFieldCruisingAltitude.getValue());
 		} catch (Exception e) {
-			e.printStackTrace();
 			data.cruisingAltitude = Depot.DEFAULT_CRUISING_ALTITUDE;
+			MTR.LOGGER.error("", e);
 		}
 		data.setData(packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_DEPOT, packet));
 	}

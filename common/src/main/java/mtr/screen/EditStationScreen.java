@@ -1,5 +1,6 @@
 package mtr.screen;
 
+import mtr.MTR;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.DataConverter;
@@ -125,11 +126,9 @@ public class EditStationScreen extends EditNameColorScreenBase<Station> {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
 		try {
-			super.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.pose().pushPose();
-			guiGraphics.pose().translate(0, 0, -100);
 			renderTextFields(guiGraphics);
 
 			guiGraphics.vLine(width / 2, EXIT_PANELS_START - SQUARE_SIZE, height, ARGB_WHITE_TRANSLUCENT);
@@ -142,11 +141,10 @@ public class EditStationScreen extends EditNameColorScreenBase<Station> {
 			if (parentExists()) {
 				guiGraphics.drawCenteredString(font, exitDestinationsText, 3 * width / 4, EXIT_PANELS_START - SQUARE_SIZE + TEXT_PADDING, ARGB_WHITE);
 			}
-
-			guiGraphics.pose().popPose();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
+		guiGraphics.pose().translate(0, 0, 100);
 	}
 
 	@Override
@@ -207,7 +205,7 @@ public class EditStationScreen extends EditNameColorScreenBase<Station> {
 				final String exitParent = parentLetter + Integer.parseInt(parentNumber);
 				data.setExitParent(editingExit, exitParent, packet -> PacketTrainDataGuiClient.sendUpdate(Networking.PACKET_UPDATE_STATION, packet));
 			} catch (Exception e) {
-				e.printStackTrace();
+				MTR.LOGGER.error("", e);
 			}
 		}
 		changeEditingExit(null, -1);

@@ -2,6 +2,7 @@ package mtr.packet;
 
 import io.netty.buffer.Unpooled;
 import mtr.Keys;
+import mtr.MTR;
 import mtr.Registry;
 import mtr.block.*;
 import mtr.data.*;
@@ -484,7 +485,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		try {
 			Registry.sendToPlayer(player, Networking.PACKET_CHUNK_S2C, packetChunk);
 		} catch (Exception e) {
-			e.printStackTrace();
+			MTR.LOGGER.error("", e);
 		}
 
 		return success;
