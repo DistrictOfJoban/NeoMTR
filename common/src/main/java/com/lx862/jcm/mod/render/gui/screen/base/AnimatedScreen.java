@@ -7,7 +7,7 @@ public abstract class AnimatedScreen extends ScreenBase {
     protected double linearAnimationProgress = 0;
     protected double animationProgress;
     protected boolean closing = false;
-    private final boolean shouldAnimate;
+    protected final boolean shouldAnimate;
     public AnimatedScreen(boolean animatable) {
         super();
         this.shouldAnimate = animatable;

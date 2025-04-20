@@ -22,6 +22,7 @@ public class WidgetShorterSlider extends AbstractSliderButton implements IGui {
 	private final int markerDisplayedRatio;
 	private final Function<Integer, String> setMessage;
 	private final Consumer<Integer> shiftClickAction;
+	private boolean drawTextCentered = false;
 
 	private static final int SLIDER_WIDTH = 6;
 	private static final int TICK_HEIGHT = SQUARE_SIZE / 2;
@@ -65,12 +66,13 @@ public class WidgetShorterSlider extends AbstractSliderButton implements IGui {
 	protected void applyValue() {
 	}
 
+	@Override
 	public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		render(guiGraphics);
 	}
 
-	public void renderButton(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-		render(guiGraphics);
+	public void setDrawTextCentered(boolean bl) {
+		this.drawTextCentered = bl;
 	}
 
 	public void setValue(int valueInt) {
@@ -101,7 +103,14 @@ public class WidgetShorterSlider extends AbstractSliderButton implements IGui {
 		guiGraphics.blit(WIDGETS_LOCATION, UtilitiesClient.getWidgetX(this) + xOffset + SLIDER_WIDTH / 2, UtilitiesClient.getWidgetY(this), 200 - SLIDER_WIDTH / 2, v, SLIDER_WIDTH / 2, height / 2);
 		guiGraphics.blit(WIDGETS_LOCATION, UtilitiesClient.getWidgetX(this) + xOffset + SLIDER_WIDTH / 2, UtilitiesClient.getWidgetY(this) + height / 2, 200 - SLIDER_WIDTH / 2, v + 20 - height / 2, SLIDER_WIDTH / 2, height / 2);
 
-		guiGraphics.drawString(client.font, getMessage().getString(), UtilitiesClient.getWidgetX(this) + width + TEXT_PADDING, UtilitiesClient.getWidgetY(this) + (height - TEXT_HEIGHT) / 2, ARGB_WHITE);
+		final int startX;
+		if(drawTextCentered) {
+			int msgWidth = Minecraft.getInstance().font.width(getMessage());
+			startX = UtilitiesClient.getWidgetX(this) + ((width - msgWidth) / 2);
+		} else {
+			startX = UtilitiesClient.getWidgetX(this) + width + TEXT_PADDING;
+		}
+		guiGraphics.drawString(client.font, getMessage().getString(), startX, UtilitiesClient.getWidgetY(this) + (height - TEXT_HEIGHT) / 2, ARGB_WHITE);
 
 		if (markerFrequency > 0) {
 			for (int i = 1; i <= maxValue / markerFrequency; i++) {

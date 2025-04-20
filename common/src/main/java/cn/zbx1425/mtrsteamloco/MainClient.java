@@ -2,6 +2,7 @@ package cn.zbx1425.mtrsteamloco;
 
 import cn.zbx1425.mtrsteamloco.game.TrainVirtualDrive;
 import cn.zbx1425.mtrsteamloco.game.VirtualDriveClientData;
+import cn.zbx1425.mtrsteamloco.gui.ConfigScreen;
 import cn.zbx1425.mtrsteamloco.network.PacketScreen;
 import cn.zbx1425.mtrsteamloco.network.PacketVersionCheck;
 import cn.zbx1425.mtrsteamloco.network.PacketVirtualDrivingPlayers;
@@ -12,8 +13,12 @@ import cn.zbx1425.sowcer.util.DrawContext;
 import cn.zbx1425.sowcerext.reuse.AtlasManager;
 import cn.zbx1425.sowcerext.reuse.DrawScheduler;
 import cn.zbx1425.sowcerext.reuse.ModelManager;
+import com.lx862.jcm.mod.Constants;
+import com.lx862.jcm.mod.render.gui.screen.ClientConfigScreen;
 import mtr.RegistryClient;
 import mtr.item.ItemBlockClickingBase;
+import mtr.registry.MTRAddonRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 
 public class MainClient {
@@ -50,6 +55,8 @@ public class MainClient {
 			VirtualDriveClientData.drivingPlayers.clear();
 			TrainVirtualDrive.activeTrain = null;
 		});
+
+		MTRAddonRegistry.registerAddon(new MTRAddonRegistry.MTRAddon("MTR-NTE", BuildConfig.MOD_VERSION, (prevScreen) -> Minecraft.getInstance().setScreen(ConfigScreen.createScreen(prevScreen))));
 	}
 
 }

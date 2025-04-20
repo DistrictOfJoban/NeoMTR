@@ -4,8 +4,10 @@ import mtr.client.ClientData;
 import mtr.client.Config;
 import mtr.registry.Networking;
 import mtr.registry.*;
+import mtr.screen.NewConfigScreen;
 import mtr.sound.LoopingSoundInstance;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Locale;
@@ -89,5 +91,9 @@ public class MTRClient {
 			lastPlayedTrainSoundsTick = gameTick;
 		}
 		return gameTick == lastPlayedTrainSoundsTick && !Minecraft.getInstance().isPaused();
+	}
+
+	public static Screen getConfigScreen(Screen previous) {
+		return new NewConfigScreen().withPreviousScreen(previous);
 	}
 }

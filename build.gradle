@@ -71,11 +71,11 @@ configure(subprojects.findAll {it.name != 'rhino'}) {
 }
 
 tasks.register("setupFiles") {
-	copy {
-		outputs.upToDateWhen { false }
-		from(zipTree("common/src/main/java/mtr/mappings/lang.zip"))
-		into "common/src/main/resources/assets/mtr/lang"
-	}
+//	copy {
+//		outputs.upToDateWhen { false }
+//		from(zipTree("common/src/main/java/mtr/mappings/lang.zip"))
+//		into "common/src/main/resources/assets/mtr/lang"
+//	}
 
 	copy {
 		outputs.upToDateWhen { false }

@@ -6,7 +6,9 @@ import com.lx862.jcm.mod.registry.Blocks;
 import com.lx862.jcm.mod.registry.Events;
 import com.lx862.jcm.mod.render.gui.screen.ClientConfigScreen;
 import com.lx862.jcm.mod.resources.mcmeta.McMetaManager;
+import mtr.registry.MTRAddonRegistry;
 import mtr.registry.Networking;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 
 public class JCMClient {
@@ -21,6 +23,8 @@ public class JCMClient {
         Blocks.registerClient();
         BlockEntityRenderers.registerClient();
         Networking.registerClient();
+
+        MTRAddonRegistry.registerAddon(new MTRAddonRegistry.MTRAddon("NeoJCM", Constants.MOD_VERSION, (prevScreen) -> Minecraft.getInstance().setScreen(new ClientConfigScreen().withPreviousScreen(prevScreen))));
     }
 
     public static Screen getClientConfigScreen(Screen previousScreen) {

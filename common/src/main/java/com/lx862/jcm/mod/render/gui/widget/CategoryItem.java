@@ -1,6 +1,7 @@
 package com.lx862.jcm.mod.render.gui.widget;
 
 import com.lx862.jcm.mod.render.GuiHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,13 +21,13 @@ public class CategoryItem extends AbstractListItem {
 
     public CategoryItem(MutableComponent title) {
         super();
-        this.title = title;
+        this.title = title.withStyle(ChatFormatting.UNDERLINE);
     }
 
     /* */
     @Override
     public void draw(GuiGraphics guiGraphics, int entryX, int entryY, int width, int height, int mouseX, int mouseY, boolean widgetVisible, double elapsed, float tickDelta) {
-        GuiHelper.drawRectangle(guiGraphics, entryX, entryY, width, this.height, 0x99999999);
+        GuiHelper.drawRectangle(guiGraphics, entryX, entryY, width, this.height, 0x77999999);
         guiGraphics.drawCenteredString(Minecraft.getInstance().font, title, (entryX + width / 2), entryY - (8/2) + (this.height / 2), ARGB_WHITE);
     }
 

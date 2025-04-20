@@ -270,7 +270,7 @@
 	"gui.mtr.mismatched_versions_server_version": "伺服器版本：%s",
 	"gui.mtr.mismatched_versions_your_version": "目前版本：%s",
 	"gui.mtr.moving_only": "僅移動車輛",
-	"gui.mtr.mtr_options": "Minecraft Transit Railway 設置",
+	"gui.mtr.mtr_options": "NeoMTR 設置",
 	"gui.mtr.name": "名稱",
 	"gui.mtr.next_departure": "下一班車預計出發時間：%s",
 	"gui.mtr.next_departure_none": "沒有預計班次",

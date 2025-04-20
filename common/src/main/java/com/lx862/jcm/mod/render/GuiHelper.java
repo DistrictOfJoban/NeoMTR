@@ -48,29 +48,29 @@ public interface GuiHelper {
     /**
      * Draw text that would shift back and fourth if there's not enough space to display
      * Similar to the scrollable text added in Minecraft 1.19.4
-     * @param graphicsHolder Graphics holder
+     * @param guiGraphics Graphics holder
      * @param text The text to display
      * @param elapsed The time elapsed, this would dictate the scrolling animation speed
      * @param startX The start X where your text should be clipped. (Measure from the left edge of your window)
      * @param textX The text X that would be rendered
      * @param textY The text Y that would be rendered
-     * @param maxW The maximum width allowed for your text
+     * @param maxWidth The maximum width allowed for your text
      * @param color Color of the text
      * @param shadow Whether text should be rendered with shadow
      */
-    static void drawScrollableText(GuiGraphics graphicsHolder, MutableComponent text, double elapsed, int startX, int textX, int textY, int maxW, int color, boolean shadow) {
+    static void drawScrollableText(GuiGraphics guiGraphics, MutableComponent text, double elapsed, int startX, int textX, int textY, int maxWidth, int color, boolean shadow) {
         Font font = Minecraft.getInstance().font;
         int textWidth = font.width(text);
-        PoseStack ps = graphicsHolder.pose();
+        PoseStack ps = guiGraphics.pose();
 
-        if(textWidth > maxW) {
+        if(textWidth > maxWidth) {
             double slideProgress = ((Math.sin(elapsed / 4)) / 2) + 0.5;
-            ps.translate(-slideProgress * (textWidth - maxW), 0, 0);
-            ClipStack.add(startX, 0, maxW, 500);
-            graphicsHolder.drawString(font, text, textX, textY, color, shadow);
-            ClipStack.pop();
+            ps.translate(-slideProgress * (textWidth - maxWidth), 0, 0);
+            guiGraphics.enableScissor(startX, 0, startX + maxWidth, guiGraphics.guiHeight());
+            guiGraphics.drawString(font, text, textX, textY, color, shadow);
+            guiGraphics.disableScissor();
         } else {
-            graphicsHolder.drawString(font, text, textX, textY, color, shadow);
+            guiGraphics.drawString(font, text, textX, textY, color, shadow);
         }
     }
 

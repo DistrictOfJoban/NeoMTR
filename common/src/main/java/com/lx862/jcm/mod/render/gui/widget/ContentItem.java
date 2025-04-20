@@ -25,6 +25,11 @@ public class ContentItem extends AbstractListItem {
         this.widget = widget;
     }
 
+    /**
+     * Create a new content item
+     * @param title The main text that will appear on the left side
+     * @param widget The widget to be placed on the right side. Note that it shall not be added as a renderable widget, as this list content will manually render the widget.
+     */
     public ContentItem(MutableComponent title, AbstractWidget widget) {
         this(title, widget, 22);
     }
@@ -87,11 +92,8 @@ public class ContentItem extends AbstractListItem {
 
         if(widget != null) {
             widget.visible = widgetVisible;
-            // We have to draw our widget (Right side) again after rendering the highlight so it doesn't get covered.
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(0, 0, 100);
+            // Manually draw the widget to ensure it conforms to our clip area
             widget.render(guiGraphics, mouseX, mouseY, tickDelta);
-            guiGraphics.pose().popPose();
         }
     }
 
@@ -111,7 +113,7 @@ public class ContentItem extends AbstractListItem {
             guiGraphics.pose().translate(iconSize + ENTRY_PADDING, 0, 0); // Shift the text to the right
         }
 
-        GuiHelper.drawScrollableText(guiGraphics, title, elapsed, entryX + ENTRY_PADDING + iconSize, 0, textY, availableTextWidth - iconSize - ENTRY_PADDING - ENTRY_PADDING - ENTRY_PADDING, ARGB_WHITE, true);
+        GuiHelper.drawScrollableText(guiGraphics, title, elapsed, entryX + ENTRY_PADDING + iconSize, 0, textY, availableTextWidth - iconSize - ENTRY_PADDING - ENTRY_PADDING - ENTRY_PADDING, 0xFFDDDDDD, true);
         guiGraphics.pose().popPose();
     }
 }

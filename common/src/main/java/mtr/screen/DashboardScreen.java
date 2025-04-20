@@ -1,6 +1,7 @@
 package mtr.screen;
 
 import mtr.MTR;
+import mtr.MTRClient;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.*;
@@ -82,7 +83,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 		});
 		buttonOptions = UtilitiesClient.newButton(Text.translatable("menu.options"), button -> {
 			if (minecraft != null) {
-				UtilitiesClient.setScreen(minecraft, new ConfigScreen());
+				minecraft.setScreen(MTRClient.getConfigScreen(this));
 			}
 		});
 

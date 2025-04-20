@@ -1,6 +1,5 @@
 package com.lx862.jcm.mod.render.gui.widget;
 
-import com.lx862.jcm.mod.render.ClipStack;
 import com.lx862.jcm.mod.render.GuiHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -112,14 +111,13 @@ public abstract class AbstractScrollViewWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
-        ClipStack.push(getX(), getY(), getWidth(), getHeight());
-
-        ClipStack.push(getX(), getY(), getWidth() - getScrollbarOffset(), getHeight());
-        renderContent(guiGraphics, mouseX, mouseY, tickDelta);
-        ClipStack.pop();
-
+        guiGraphics.enableScissor(getX(), getY(), getX() + getWidth(), getY() + getHeight());
         renderScrollbar(guiGraphics, isOverScrollbar(mouseX, mouseY));
-        ClipStack.pop();
+        guiGraphics.disableScissor();
+
+        guiGraphics.enableScissor(getX(), getY(), getX() + (getWidth() - getScrollbarOffset()), getY() + getHeight());
+        renderContent(guiGraphics, mouseX, mouseY, tickDelta);
+        guiGraphics.disableScissor();
     }
 
     private boolean isOverScrollbar(double mouseX, double mouseY) {

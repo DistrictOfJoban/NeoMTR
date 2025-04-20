@@ -1,7 +1,6 @@
 package com.lx862.jcm.mod.render.gui.widget;
 
 import com.lx862.jcm.mod.Constants;
-import com.lx862.jcm.mod.render.ClipStack;
 import com.lx862.jcm.mod.render.GuiHelper;
 import com.lx862.jcm.mod.render.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
@@ -76,7 +75,7 @@ public class ListViewWidget extends AbstractScrollViewWidget implements RenderHe
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
         GuiHelper.drawRectangle(guiGraphics, getX(), getY(), width, height, 0x4F4C4C4C);
-        guiGraphics.renderOutline(getX(), getY(), getWidth(), getHeight(), 0x88FFFFFF);
+        guiGraphics.renderOutline(getX()-1, getY()-1, getWidth()+2, getHeight()+2, 0x66FFFFFF);
         super.renderWidget(guiGraphics, mouseX, mouseY, tickDelta);
     }
 
@@ -95,7 +94,6 @@ public class ListViewWidget extends AbstractScrollViewWidget implements RenderHe
 
         int incY = 0;
         for (AbstractListItem abstractListItem : displayedEntryList) {
-            ClipStack.ensureStateCorrect();
             int entryX = getX();
             int entryY = getY() + incY - (int) currentScroll;
             boolean widgetVisible = false;
@@ -104,7 +102,7 @@ public class ListViewWidget extends AbstractScrollViewWidget implements RenderHe
                 ContentItem contentItem = (ContentItem) abstractListItem;
                 boolean topLeftVisible = inRectangle(contentItem.widget.getX(), contentItem.widget.getY(), getX(), getY(), getWidth(), getHeight());
                 boolean bottomRightVisible = inRectangle(contentItem.widget.getX() + contentItem.widget.getWidth(), contentItem.widget.getY() + contentItem.widget.getHeight(), getX(), getY(), getWidth(), getHeight());
-                widgetVisible = topLeftVisible && bottomRightVisible;
+                widgetVisible = topLeftVisible || bottomRightVisible;
             }
 
             abstractListItem.draw(guiGraphics, entryX, entryY, width - getScrollbarOffset(), height, mouseX, mouseY, widgetVisible, elapsed, tickDelta);

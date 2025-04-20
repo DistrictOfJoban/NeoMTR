@@ -1,8 +1,10 @@
 package com.lx862.jcm.mod.render.gui.screen.base;
 
 import com.lx862.jcm.mod.Constants;
+import com.lx862.jcm.mod.render.GuiHelper;
 import com.lx862.jcm.mod.render.RenderHelper;
 import com.lx862.jcm.mod.util.TextUtil;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,8 +18,15 @@ public abstract class TitledScreen extends AnimatedScreen {
     public static final int TEXT_PADDING = 10;
     public static final int TITLE_SCALE = 2;
     protected double elapsed = 0;
+    protected boolean showJCMWarning;
+
     public TitledScreen(boolean animatable) {
+        this(animatable, true);
+    }
+
+    public TitledScreen(boolean animatable, boolean showJCMWarning) {
         super(animatable);
+        this.showJCMWarning = showJCMWarning;
     }
 
     @Override
@@ -26,9 +35,21 @@ public abstract class TitledScreen extends AnimatedScreen {
         drawTitle(guiGraphics);
         drawSubtitle(guiGraphics);
 
-        // TODO: Remove this on release
-        guiGraphics.drawString(font, TextUtil.literal("JCM Beta Release").setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)), width - font.width("JCM Beta release") - 6, 6, 0xFFFFFFFF, true);
-        guiGraphics.drawString(font, TextUtil.literal("Report issues here!").setStyle(Style.EMPTY.withUnderlined(true)), width - font.width("Report issues here!") - 6, 18, 0xFFFFFFFF, true);
+        // Draw darkened header for non-animated screen.
+        if(!shouldAnimate) {
+            guiGraphics.fill(0, 0, width, getStartY(), 0x88000000);
+
+            RenderSystem.enableBlend();
+            GuiHelper.drawTexture(guiGraphics, HEADER_SEPARATOR, 0, getStartY(), width, 2);
+            RenderSystem.disableBlend();
+        }
+
+        if(showJCMWarning) {
+            // TODO: Remove this on release
+            guiGraphics.drawString(font, TextUtil.literal("JCM Beta Release").setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)), width - font.width("JCM Beta release") - 6, 6, 0xFFFFFFFF, true);
+            guiGraphics.drawString(font, TextUtil.literal("Report issues here!").setStyle(Style.EMPTY.withUnderlined(true)), width - font.width("Report issues here!") - 6, 18, 0xFFFFFFFF, true);
+        }
+
         elapsed += tickDelta / Constants.MC_TICK_PER_SECOND;
     }
 
@@ -72,6 +93,15 @@ public abstract class TitledScreen extends AnimatedScreen {
         RenderHelper.scaleToFit(poseStack, font.width(subtitleText), width, true);
         guiGraphics.drawCenteredString(font, subtitleText, 0, 0, 0xFFFFFFFF);
         poseStack.popPose();
+    }
+
+    /**
+     * @return Return the Y coordinate that is below the title and subtitle
+     */
+    protected int getStartY() {
+        double titleHeight = RenderHelper.lineHeight * TITLE_SCALE;
+        double subtitleHeight = font.lineHeight + (TEXT_PADDING);
+        return TEXT_PADDING + (int)(titleHeight + subtitleHeight);
     }
 
     public abstract MutableComponent getScreenTitle();
