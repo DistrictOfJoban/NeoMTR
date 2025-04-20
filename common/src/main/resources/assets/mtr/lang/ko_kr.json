@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "페트론(Patreon) 에서 모드 개발을 도와주세요!",
 	"options.mtr.track_texture_offset": "Track Texture Offset",
 	"options.mtr.use_dynamic_fps": "Dynamically boost FPS",
-	"options.mtr.use_mtr_font": "커스텀 MTR 폰트 사용하기 (일부 컴퓨터에서는 작동하지 않습니다)",
+	"options.mtr.use_mtr_font": "커스텀 MTR 폰트 사용하기",
 	"options.mtr.use_tts_announcements": "\"다음 역\" tts(text-to-speech) 알림 활성화",
 	"options.mtr.vehicle_render_distance_ratio": "Vehicle rendering to Minecraft render distance ratio",
 	"sign.mtr.airport": "공항",

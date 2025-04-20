@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Tue modia Patreonissa!",
 	"options.mtr.track_texture_offset": "Kappaleen Tekstuurin Siirtymä",
 	"options.mtr.use_dynamic_fps": "Dynaamisesti tehostettu FPS",
-	"options.mtr.use_mtr_font": "Käytä mukautettuja MTR-kirjasimia (ei välttämättä toimi joillakin tietokoneilla)",
+	"options.mtr.use_mtr_font": "Käytä mukautettuja MTR-kirjasimia",
 	"options.mtr.use_tts_announcements": "Ota käyttöön \"seuraava asema\" tekstistä puheeksi -ilmoitukset",
 	"options.mtr.vehicle_render_distance_ratio": "Ajoneuvon renderöinti Minecraft renderöintimatkan suhteeseen",
 	"sign.mtr.airport": "Airport",

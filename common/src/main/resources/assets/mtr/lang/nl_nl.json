@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Ondersteun de mod op Patreon!",
 	"options.mtr.track_texture_offset": "Traceer textureverschuiving",
 	"options.mtr.use_dynamic_fps": "Boost FPS dynamisch",
-	"options.mtr.use_mtr_font": "Gebruik aangepaste MTR-lettertypen (werkt mogelijk niet op alle computers)",
+	"options.mtr.use_mtr_font": "Gebruik aangepaste MTR-lettertypen",
 	"options.mtr.use_tts_announcements": "Schakel \"volgende station\"-tekst-naar-spraakaankondigingen in",
 	"options.mtr.vehicle_render_distance_ratio": "Voertuigrendering in verhouding met Minecraft renderafstand",
 	"sign.mtr.airport": "Vliegveld",

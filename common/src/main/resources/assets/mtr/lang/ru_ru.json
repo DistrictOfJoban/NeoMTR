@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Поддержите мод на Patreon!",
 	"options.mtr.track_texture_offset": "Смещение текстуры пути",
 	"options.mtr.use_dynamic_fps": "Динамическое увеличение FPS",
-	"options.mtr.use_mtr_font": "Использовать шрифты MTR (может не работать на некоторых компьютерах)",
+	"options.mtr.use_mtr_font": "Использовать шрифты MTR",
 	"options.mtr.use_tts_announcements": "Включить информатор",
 	"options.mtr.vehicle_render_distance_ratio": "Отображение составов в соотношении с дальностью прорисовки Minecraft",
 	"sign.mtr.airport": "Аэропорт",

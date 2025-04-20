@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Támogassa a modot a Patreonon! Ezzel segíthet, hogy újabb funkciók mihamarabb hozzáadásra kerülhessenek!",
 	"options.mtr.track_texture_offset": "Nyomvonal textúra eltolása",
 	"options.mtr.use_dynamic_fps": "Dinamikusan növelje az FPS-t",
-	"options.mtr.use_mtr_font": "Egyéni MTR betűtípusok használata (egyes számítógépeken nem működik)",
+	"options.mtr.use_mtr_font": "Egyéni MTR betűtípusok használata",
 	"options.mtr.use_tts_announcements": "Engedélyezze a \"következő állomás\" szövegfelolvasó közleményeket",
 	"options.mtr.vehicle_render_distance_ratio": "Jármű renderelés Minecraft renderelés távolság aránya",
 	"sign.mtr.airport": "Repülőtér",

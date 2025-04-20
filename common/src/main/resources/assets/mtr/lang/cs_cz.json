@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Podpořte mód na Patreonu!",
 	"options.mtr.track_texture_offset": "Odsazení textur trasy",
 	"options.mtr.use_dynamic_fps": "Dynamický boost FPS",
-	"options.mtr.use_mtr_font": "Používat font MTR (nemusí fungovat na všech počítačích)",
+	"options.mtr.use_mtr_font": "Používat font MTR",
 	"options.mtr.use_tts_announcements": "Povolit zvuková hlášení o \"přístí stanici\" pomocí systému převodu textu na řeč",
 	"options.mtr.vehicle_render_distance_ratio": "Poměr vykreslování vozidla k vzdálenosti vykreslení Minecraftu",
 	"sign.mtr.airport": "Letiště",

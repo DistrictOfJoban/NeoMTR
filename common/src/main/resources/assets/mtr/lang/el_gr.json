@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Υποστηρίξτε το mod στο Patreon!",
 	"options.mtr.track_texture_offset": "Μετατόπιση Υφής Κομματιού",
 	"options.mtr.use_dynamic_fps": "Δυναμική ενίσχυση FPS",
-	"options.mtr.use_mtr_font": "Χρήση προσαρμοσμένων γραμματοσειρών MTR (μπορεί να μην λειτουργεί σε ορισμένους υπολογιστές)",
+	"options.mtr.use_mtr_font": "Χρήση προσαρμοσμένων γραμματοσειρών MTR",
 	"options.mtr.use_tts_announcements": "Ενεργοποίηση ανακοινώσεων κειμένου σε ομιλία \"επόμενος σταθμός\"",
 	"options.mtr.vehicle_render_distance_ratio": "Η απόδοση οχήματος σε σχέση με την απόδοση του Minecraft",
 	"sign.mtr.airport": "Airport",

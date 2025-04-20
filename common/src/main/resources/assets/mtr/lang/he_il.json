@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "תמוך במוד בPatreon!",
 	"options.mtr.track_texture_offset": "Track Texture Offset",
 	"options.mtr.use_dynamic_fps": "Dynamically boost FPS",
-	"options.mtr.use_mtr_font": "השתמש בגופני MTR (ייתכן ולא יפעל כשורה בחלק מהמחשבים)",
+	"options.mtr.use_mtr_font": "השתמש בגופני MTR",
 	"options.mtr.use_tts_announcements": "אפשר כריזה של התחנה הבאה",
 	"options.mtr.vehicle_render_distance_ratio": "Vehicle rendering to Minecraft render distance ratio",
 	"sign.mtr.airport": "שדה תעופה",

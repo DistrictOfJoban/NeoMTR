@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Подржите мод на Patreon-у!",
 	"options.mtr.track_texture_offset": "Track Texture Offset",
 	"options.mtr.use_dynamic_fps": "Динамички појачава FPS",
-	"options.mtr.use_mtr_font": "Користите прилагођене MTR фонтове (можда неће радити на неким рачунарима)",
+	"options.mtr.use_mtr_font": "Користите прилагођене MTR фонтове",
 	"options.mtr.use_tts_announcements": "Омогућите најаве претварања текста у говор „следећа станица“",
 	"options.mtr.vehicle_render_distance_ratio": "Однос удаљености рендеровања возила у Minecraft-у",
 	"sign.mtr.airport": "Airport",

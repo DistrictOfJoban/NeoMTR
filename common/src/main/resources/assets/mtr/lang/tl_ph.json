@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Suportahan ang mod sa Patreon!",
 	"options.mtr.track_texture_offset": "Track Texture Offset",
 	"options.mtr.use_dynamic_fps": "Dynamically boost FPS",
-	"options.mtr.use_mtr_font": "Gamitin ang custom MTR fonts (maaring hindi gumana sa ibang mga kompyuter)",
+	"options.mtr.use_mtr_font": "Gamitin ang custom MTR fonts",
 	"options.mtr.use_tts_announcements": "I-enable ang \"susunod na istasyon\" na text-to-speech na anunsyo",
 	"options.mtr.vehicle_render_distance_ratio": "Ratio ng rendering ng sasakyan at Minecraft render distance",
 	"sign.mtr.airport": "Paliparan",

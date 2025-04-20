@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Patreonで支援する",
 	"options.mtr.track_texture_offset": "レールテクスチャのオフセット",
 	"options.mtr.use_dynamic_fps": "FPSブースト",
-	"options.mtr.use_mtr_font": "MTRフォントを使用する。（環境により正常に表示できない可能性があります。）",
+	"options.mtr.use_mtr_font": "MTRフォントを使用する。",
 	"options.mtr.use_tts_announcements": "次駅放送をテキスト読み上げする",
 	"options.mtr.vehicle_render_distance_ratio": "車両の描画距離",
 	"sign.mtr.airport": "Airport",

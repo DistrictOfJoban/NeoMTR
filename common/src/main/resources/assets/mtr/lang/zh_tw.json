@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "在 Patreon 上贊助本模組！",
 	"options.mtr.track_texture_offset": "軌道紋理偏移",
 	"options.mtr.use_dynamic_fps": "動態提升影格率",
-	"options.mtr.use_mtr_font": "使用自訂MTR字體（在一些電腦上可能無法使用）",
+	"options.mtr.use_mtr_font": "使用MTR風格字體",
 	"options.mtr.use_tts_announcements": "使用文字轉語音「下一站」廣播",
 	"options.mtr.vehicle_render_distance_ratio": "車輛渲染到 Minecraft 渲染距離比率",
 	"sign.mtr.airport": "Airport",

@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Støt mod på Patreon!",
 	"options.mtr.track_texture_offset": "Spor Teksturforskydning",
 	"options.mtr.use_dynamic_fps": "Boost FPS dynamisk",
-	"options.mtr.use_mtr_font": "Brug brugerdefinerede MTR skrifttyper (virker måske ikke på nogle computere)",
+	"options.mtr.use_mtr_font": "Brug brugerdefinerede MTR skrifttyper",
 	"options.mtr.use_tts_announcements": "Aktiver \"næste station\" tekst-til-tale meddelelser",
 	"options.mtr.vehicle_render_distance_ratio": "Gengivelse af køretøj til Minecraft gengivelses afstandsforhold",
 	"sign.mtr.airport": "Lufthavn",

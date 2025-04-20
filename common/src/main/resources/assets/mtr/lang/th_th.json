@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "สนับสนุนเราบน Patreon",
 	"options.mtr.track_texture_offset": "ทรัพยากรราง",
 	"options.mtr.use_dynamic_fps": "เพิ่ม FPS",
-	"options.mtr.use_mtr_font": "ใช้ฟอนต์ของ MTR (อาจใช้ไม่ได้ในบางเครื่อง)",
+	"options.mtr.use_mtr_font": "ใช้ฟอนต์ของ MTR",
 	"options.mtr.use_tts_announcements": "ใช้ตัวพูด Text-To-Speech ประกาศ \"สถานีต่อไป\"",
 	"options.mtr.vehicle_render_distance_ratio": "Vehicle rendering to Minecraft render distance ratio",
 	"sign.mtr.airport": "Airport",

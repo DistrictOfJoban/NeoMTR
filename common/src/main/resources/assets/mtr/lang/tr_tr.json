@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Bu modu Patreon'da destekleyin!",
 	"options.mtr.track_texture_offset": "Yol Doku Aralığı",
 	"options.mtr.use_dynamic_fps": "Dinamik olarak FPS'i yükselt",
-	"options.mtr.use_mtr_font": "MTR'nin kendi fontunu kullan (bazı bilgisayarlarda çalışmayabilir)",
+	"options.mtr.use_mtr_font": "MTR'nin kendi fontunu kullan",
 	"options.mtr.use_tts_announcements": "\"gelecek istasyon\" sesli anonsları etkinleştir",
 	"options.mtr.vehicle_render_distance_ratio": "Araç görüntüleme mesafesinin, Minecraft'ın görüntüleme mesafesine oranı",
 	"sign.mtr.airport": "Havalimanı",

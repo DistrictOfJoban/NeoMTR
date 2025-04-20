@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Dona suport al mod a Patreon!",
 	"options.mtr.track_texture_offset": "Offset de la textura de la via",
 	"options.mtr.use_dynamic_fps": "Augmentar dinàmicament els FPS",
-	"options.mtr.use_mtr_font": "Utilitza les fonts de la MTR (pot no funcionar en alguns ordinadors)",
+	"options.mtr.use_mtr_font": "Utilitza les fonts de la MTR",
 	"options.mtr.use_tts_announcements": "Activa la megafonia de \"pròxima estació\"",
 	"options.mtr.vehicle_render_distance_ratio": "Vehicle rendering to Minecraft render distance ratio",
 	"sign.mtr.airport": "Aeroport",

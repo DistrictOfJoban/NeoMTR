@@ -554,7 +554,7 @@
 	"options.mtr.support_patreon": "Wesprzyj mod na Patreon!",
 	"options.mtr.track_texture_offset": "Przesunięcie tekstur toru",
 	"options.mtr.use_dynamic_fps": "Dynamiczne podbij FPS",
-	"options.mtr.use_mtr_font": "Użyj niestandardowych czcionek MTR (może nie działać na niektórych komputerach)",
+	"options.mtr.use_mtr_font": "Użyj niestandardowych czcionek MTR",
 	"options.mtr.use_tts_announcements": "Włącz powiadomienia zmiany tekstu-na-mowę \"następna stacja\"",
 	"options.mtr.vehicle_render_distance_ratio": "Współczynnik odległości renderowania pojazdu do Minecraft",
 	"sign.mtr.airport": "Lotnisko",
