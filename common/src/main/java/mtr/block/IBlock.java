@@ -14,10 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -29,6 +26,8 @@ public interface IBlock {
 	EnumProperty<EnumThird> THIRD = EnumProperty.create("third", EnumThird.class);
 	EnumProperty<EnumSide> SIDE_EXTENDED = EnumProperty.create("side", EnumSide.class);
 	EnumProperty<EnumSide> SIDE = EnumProperty.create("side", EnumSide.class, side -> side != EnumSide.MIDDLE && side != EnumSide.SINGLE);
+	static EnumProperty<EnumBooleanInverted> IS_22_5 = EnumProperty.create("is_22_5", EnumBooleanInverted.class);
+	static EnumProperty<EnumBooleanInverted> IS_45 = EnumProperty.create("is_45", EnumBooleanInverted.class);
 
 	default <T extends Comparable<T>> void propagate(Level world, BlockPos pos, Direction direction, Property<T> property, int maxBlocksAway) {
 		final T originalPropertyValue = IBlock.getStatePropertySafe(world, pos, property);
@@ -160,6 +159,28 @@ public interface IBlock {
 		@Override
 		public String getSerializedName() {
 			return name;
+		}
+	}
+
+	/**
+	 * This is BooleanProperty but with the first value being false, which means existing blocks without such property won't be affected.
+	 */
+	enum EnumBooleanInverted implements StringRepresentable {
+
+		FALSE(false), TRUE(true);
+		public final boolean booleanValue;
+
+		EnumBooleanInverted(boolean booleanValue) {
+			this.booleanValue = booleanValue;
+		}
+
+		@Override
+		public String getSerializedName() {
+			return String.valueOf(booleanValue);
+		}
+
+		public static EnumBooleanInverted fromBoolean(boolean value) {
+			return value ? TRUE : FALSE;
 		}
 	}
 }

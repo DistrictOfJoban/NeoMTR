@@ -63,17 +63,19 @@ public abstract class RenderSignalBase<T extends BlockEntityMapper> extends Bloc
 		if (startPos == null) {
 			return;
 		}
+		final float angle = (IBlock.getStatePropertySafe(state, BlockSignalLightBase.IS_22_5).booleanValue ? 22.5F : 0) + (IBlock.getStatePropertySafe(state, BlockSignalLightBase.IS_45).booleanValue ? 45 : 0);
 
 		matrices.pushPose();
 		matrices.translate(0.5, 0, 0.5);
 
 		for (int i = 0; i < 2; i++) {
 			final Direction newFacing = (i == 1 ? facing.getOpposite() : facing);
-			final int occupiedAspect = getOccupiedAspect(startPos, newFacing.toYRot() + 90);
+			final float newAngle = newFacing.toYRot() + angle;
+			final int occupiedAspect = getOccupiedAspect(startPos, newAngle + 90);
 
 			if (occupiedAspect >= 0) {
 				matrices.pushPose();
-				UtilitiesClient.rotateYDegrees(matrices, -newFacing.toYRot());
+				UtilitiesClient.rotateYDegrees(matrices, -newAngle);
 				final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(MoreRenderLayers.getLight(ResourceLocation.parse("mtr:textures/block/white.png"), false));
 				render(matrices, vertexConsumers, vertexConsumer, entity, tickDelta, newFacing, occupiedAspect, i == 1);
 				// TODO temporary code
