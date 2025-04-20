@@ -13,7 +13,7 @@ import java.util.List;
  * Holds a set of widget within a defined area.
  * Able to tile the widgets horizontally and add new rows like a grid/table.
  */
-public class WidgetSet extends AbstractWidget implements RenderHelper {
+public class WidgetSet extends AbstractWidget implements WidgetWithChildren, RenderHelper {
     private final List<List<AbstractWidget>> widgetRows = new ArrayList<>();
     private final int maxWidgetHeight;
     public final int widgetXMargin;
@@ -96,6 +96,7 @@ public class WidgetSet extends AbstractWidget implements RenderHelper {
         positionWidgets();
     }
 
+    @Override
     public void setVisible(boolean visible) {
         for(List<AbstractWidget> row : widgetRows) {
             for(AbstractWidget widget : row) {

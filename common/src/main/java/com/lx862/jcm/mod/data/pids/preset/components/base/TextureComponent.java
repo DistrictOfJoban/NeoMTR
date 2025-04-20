@@ -1,7 +1,6 @@
 package com.lx862.jcm.mod.data.pids.preset.components.base;
 
 import com.lx862.jcm.mod.data.KVPair;
-import com.lx862.jcm.mod.render.GuiHelper;
 import com.lx862.jcm.mod.render.RenderHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

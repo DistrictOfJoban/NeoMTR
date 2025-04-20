@@ -1,6 +1,6 @@
 package com.lx862.jcm.mod.render.gui.widget;
 
-import com.lx862.jcm.mod.render.GuiHelper;
+import com.lx862.jcm.mod.render.gui.GuiHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

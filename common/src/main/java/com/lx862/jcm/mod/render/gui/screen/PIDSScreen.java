@@ -90,7 +90,7 @@ public class PIDSScreen extends BlockConfigScreen {
     @Override
     public void addConfigEntries() {
         // Preset button
-        addRenderableWidget(choosePresetButton);
+        addWidget(choosePresetButton);
         ContentItem presetEntry = new ContentItem(TextUtil.translatable(TextCategory.GUI, "pids.listview.title.pids_preset"), choosePresetButton, 26);
         presetEntry.setIconCallback((guiDrawing, startX, startY, width, height) -> {
             PIDSPresetScreen.drawPIDSPreview(PIDSManager.getPreset(presetId), guiDrawing, startX, startY, width, height, true);
@@ -109,11 +109,11 @@ public class PIDSScreen extends BlockConfigScreen {
         }
         String platforms = String.join(",", platformList);
         listViewWidget.add(filteredPlatforms.isEmpty() ? TextUtil.translatable(TextCategory.GUI, "pids.listview.title.filtered_platform.nearby") : TextUtil.translatable(TextCategory.GUI, "pids.listview.title.filtered_platform", platforms), choosePlatformButton);
-        addRenderableWidget(choosePlatformButton);
+        addWidget(choosePlatformButton);
 
         for(int i = 0; i < this.customMessagesWidgets.length; i++) {
-            addRenderableWidget(this.customMessagesWidgets[i]);
-            addRenderableWidget(this.rowHiddenWidgets[i]);
+            addWidget(this.customMessagesWidgets[i]);
+            addWidget(this.rowHiddenWidgets[i]);
 
             int w = listViewWidget.getWidth();
             this.rowHiddenWidgets[i].setWidth(95);
@@ -126,7 +126,7 @@ public class PIDSScreen extends BlockConfigScreen {
             listViewWidget.add(null, widgetSet);
         }
 
-        addRenderableWidget(hidePlatformNumber);
+        addWidget(hidePlatformNumber);
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "pids.listview.title.hide_platform_number"), hidePlatformNumber);
     }
 

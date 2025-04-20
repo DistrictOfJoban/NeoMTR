@@ -1,7 +1,7 @@
 package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.Constants;
-import com.lx862.jcm.mod.render.GuiHelper;
+import com.lx862.jcm.mod.render.gui.GuiHelper;
 import com.lx862.jcm.mod.render.gui.screen.base.TitledScreen;
 import com.lx862.jcm.mod.util.TextUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -29,7 +29,7 @@ public class TestScreen extends TitledScreen implements GuiHelper {
     }
 
     @Override
-    public void drawBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+    public void drawCustomBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
         double terrainHeight = (width / 3.75);
         GuiHelper.drawTexture(guiGraphics, TEXTURE_BACKGROUND, 0, 0, width, height);
 

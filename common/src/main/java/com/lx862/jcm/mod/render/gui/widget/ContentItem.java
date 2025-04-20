@@ -1,6 +1,6 @@
 package com.lx862.jcm.mod.render.gui.widget;
 
-import com.lx862.jcm.mod.render.GuiHelper;
+import com.lx862.jcm.mod.render.gui.GuiHelper;
 import com.lx862.jcm.mod.render.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -76,14 +76,14 @@ public class ContentItem extends AbstractListItem {
     @Override
     public void hidden() {
         if(widget != null) {
-            widget.visible = false;
+            GuiHelper.setWidgetVisibility(widget, false);
         }
     }
 
     @Override
     public void shown() {
         if(widget != null) {
-            widget.visible = true;
+            GuiHelper.setWidgetVisibility(widget, true);
         }
     }
 
@@ -91,7 +91,7 @@ public class ContentItem extends AbstractListItem {
         if(title != null) drawListEntryDescription(guiGraphics, entryX, entryY, width, elapsed);
 
         if(widget != null) {
-            widget.visible = widgetVisible;
+            GuiHelper.setWidgetVisibility(widget, widgetVisible);
             // Manually draw the widget to ensure it conforms to our clip area
             widget.render(guiGraphics, mouseX, mouseY, tickDelta);
         }

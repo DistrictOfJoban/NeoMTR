@@ -27,8 +27,8 @@ public class FareSaverScreen extends BlockConfigScreen {
 
     @Override
     public void addConfigEntries() {
-        addRenderableWidget(prefixTextField);
-        addRenderableWidget(discountTextField);
+        addWidget(prefixTextField);
+        addWidget(discountTextField);
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "faresaver.prefix"), prefixTextField);
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "faresaver.discount"), discountTextField);
     }

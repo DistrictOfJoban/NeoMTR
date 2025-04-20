@@ -1,15 +1,15 @@
-package com.lx862.jcm.mod.render;
+package com.lx862.jcm.mod.render.gui;
 
 import com.lx862.jcm.mod.JCMClient;
 import com.lx862.jcm.mod.data.Pair;
+import com.lx862.jcm.mod.render.gui.widget.WidgetWithChildren;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
@@ -81,5 +81,13 @@ public interface GuiHelper {
      */
     static int getButtonWidth(double width) {
         return (int)Math.min(MAX_BUTTON_WIDTH, width);
+    }
+
+    static void setWidgetVisibility(AbstractWidget widget, boolean bl) {
+        if(widget instanceof WidgetWithChildren widgetWithChildren) {
+            widgetWithChildren.setVisible(bl);
+        } else {
+            widget.visible = bl;
+        }
     }
 }

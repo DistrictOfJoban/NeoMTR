@@ -1,6 +1,6 @@
 package com.lx862.jcm.mod.render.gui.screen.base;
 
-import com.lx862.jcm.mod.render.GuiHelper;
+import com.lx862.jcm.mod.render.gui.GuiHelper;
 import com.lx862.jcm.mod.render.gui.widget.ListViewWidget;
 import com.lx862.jcm.mod.render.gui.widget.WidgetSet;
 import com.lx862.jcm.mod.util.TextCategory;
@@ -44,7 +44,7 @@ public abstract class BlockConfigScreen extends TitledScreen implements GuiHelpe
     protected void init() {
         super.init();
         int contentWidth = (int)Math.min((width * 0.75), MAX_CONTENT_WIDTH);
-        int listViewHeight = Math.max(160, (int)((height - 60) * 0.75));
+        int listViewHeight = Math.max(150, (int)((height - 60) * 0.75));
         int startX = (width - contentWidth) / 2;
         int startY = getStartY() + TEXT_PADDING;
         int bottomEntryHeight = (height - startY - listViewHeight - (BOTTOM_ROW_MARGIN * 2));

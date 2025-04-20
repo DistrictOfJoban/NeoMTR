@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
-public class BlockPosWidget extends AbstractWidget {
+public class BlockPosWidget extends AbstractWidget implements WidgetWithChildren {
     private final CoordTextField posXTextField;
     private final CoordTextField posYTextField;
     private final CoordTextField posZTextField;
@@ -45,14 +45,15 @@ public class BlockPosWidget extends AbstractWidget {
         this.posXTextField.active = active;
         this.posYTextField.active = active;
         this.posZTextField.active = active;
-        super.active = active;
+        this.active = active;
     }
 
+    @Override
     public void setVisible(boolean visible) {
         this.posXTextField.setVisible(visible);
         this.posYTextField.setVisible(visible);
         this.posZTextField.setVisible(visible);
-        super.active = visible;
+        this.visible = visible;
     }
 
     public void positionWidgets() {

@@ -48,15 +48,15 @@ public class PIDSProjectorScreen extends PIDSScreen {
         WidgetSet positionFields = new WidgetSet(20, 0);
         WidgetSet rotationFields = new WidgetSet(20, 0);
 
-        addRenderableWidget(xField);
-        addRenderableWidget(yField);
-        addRenderableWidget(zField);
-        addRenderableWidget(rotateXField);
-        addRenderableWidget(rotateYField);
-        addRenderableWidget(rotateZField);
-        addRenderableWidget(scaleField);
-        addRenderableWidget(positionFields);
-        addRenderableWidget(rotationFields);
+        addWidget(xField);
+        addWidget(yField);
+        addWidget(zField);
+        addWidget(rotateXField);
+        addWidget(rotateYField);
+        addWidget(rotateZField);
+        addWidget(scaleField);
+        addWidget(positionFields);
+        addWidget(rotationFields);
 
         positionFields.addWidget(xField);
         positionFields.addWidget(yField);

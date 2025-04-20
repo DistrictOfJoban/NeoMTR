@@ -30,8 +30,8 @@ public class SubsidyMachineScreen extends BlockConfigScreen {
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "subsidy_machine.price"), priceTextField);
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "subsidy_machine.cooldown"), cooldownTextField);
 
-        addRenderableWidget(priceTextField);
-        addRenderableWidget(cooldownTextField);
+        addWidget(priceTextField);
+        addWidget(cooldownTextField);
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.List;
  * Able to tile the widgets horizontally.<br>
  * Unlike {@link WidgetSet}, this widget does not automatically distribute the widget evenly and you can control the width of each element.
  */
-public class HorizontalWidgetSet extends AbstractWidget implements RenderHelper {
+public class HorizontalWidgetSet extends AbstractWidget implements WidgetWithChildren, RenderHelper {
     public final int widgetXMargin;
     private final List<AbstractWidget> widgets = new ArrayList<>();
 
@@ -66,6 +66,7 @@ public class HorizontalWidgetSet extends AbstractWidget implements RenderHelper 
         }
     }
 
+    @Override
     public void setVisible(boolean visible) {
         for(AbstractWidget widget : widgets) {
             widget.visible = visible;

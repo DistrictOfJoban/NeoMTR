@@ -25,7 +25,7 @@ public class ButterflyLightScreen extends BlockConfigScreen {
 
     @Override
     public void addConfigEntries() {
-        addRenderableWidget(startBlinkingSecondsTextField);
+        addWidget(startBlinkingSecondsTextField);
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "butterfly_light.countdown"), startBlinkingSecondsTextField);
     }
 

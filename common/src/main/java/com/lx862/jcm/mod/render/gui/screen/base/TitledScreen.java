@@ -1,7 +1,7 @@
 package com.lx862.jcm.mod.render.gui.screen.base;
 
 import com.lx862.jcm.mod.Constants;
-import com.lx862.jcm.mod.render.GuiHelper;
+import com.lx862.jcm.mod.render.gui.GuiHelper;
 import com.lx862.jcm.mod.render.RenderHelper;
 import com.lx862.jcm.mod.util.TextUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -31,13 +31,13 @@ public abstract class TitledScreen extends AnimatedScreen {
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
-        drawBackground(guiGraphics, mouseX, mouseY, tickDelta);
+        drawCustomBackground(guiGraphics, mouseX, mouseY, tickDelta);
         drawTitle(guiGraphics);
         drawSubtitle(guiGraphics);
 
         // Draw darkened header for non-animated screen.
         if(!shouldAnimate) {
-            guiGraphics.fill(0, 0, width, getStartY(), 0x88000000);
+            guiGraphics.fill(0, 0, width, getStartY(), 0x66000000);
 
             RenderSystem.enableBlend();
             GuiHelper.drawTexture(guiGraphics, HEADER_SEPARATOR, 0, getStartY(), width, 2);
@@ -46,7 +46,7 @@ public abstract class TitledScreen extends AnimatedScreen {
 
         if(showJCMWarning) {
             // TODO: Remove this on release
-            guiGraphics.drawString(font, TextUtil.literal("JCM Beta Release").setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)), width - font.width("JCM Beta release") - 6, 6, 0xFFFFFFFF, true);
+            guiGraphics.drawString(font, TextUtil.literal("NeoJCM Beta Release").setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)), width - font.width("NeoJCM Beta release") - 6, 6, 0xFFFFFFFF, true);
             guiGraphics.drawString(font, TextUtil.literal("Report issues here!").setStyle(Style.EMPTY.withUnderlined(true)), width - font.width("Report issues here!") - 6, 18, 0xFFFFFFFF, true);
         }
 
@@ -55,18 +55,19 @@ public abstract class TitledScreen extends AnimatedScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        boolean clickedResult = super.mouseClicked(mouseX, mouseY, button);
         int x1 = width - font.width("Report issues here!") - 6;
         int x2 = width - 6;
         int y1 = 18;
         int y2 = 18 + 8;
         if(button == 0 && mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
-            ConfirmLinkScreen.confirmLinkNow(this, URI.create("https://github.com/DistrictOfJoban/Joban-Client-Mod/issues"), true);
-//            new ClickableWidgetExtension(0, 0, 0, 0).playDownSound2(Minecraft.getInstance().getSoundManager());
+            ConfirmLinkScreen.confirmLinkNow(this, URI.create("https://github.com/DistrictOfJoban/NeoMTR/issues"), true);
+            return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return clickedResult;
     }
 
-    public void drawBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+    public void drawCustomBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
         super.renderBackground(guiGraphics, mouseX, mouseY, tickDelta);
     }
 

@@ -2,7 +2,7 @@ package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.Constants;
 import com.lx862.jcm.mod.JCMClient;
-import com.lx862.jcm.mod.render.GuiHelper;
+import com.lx862.jcm.mod.render.gui.GuiHelper;
 import com.lx862.jcm.mod.render.gui.screen.base.TitledScreen;
 import com.lx862.jcm.mod.render.gui.widget.ListViewWidget;
 import com.lx862.jcm.mod.render.gui.widget.WidgetSet;
@@ -89,12 +89,12 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
         listViewWidget.addCategory(TextUtil.translatable(TextCategory.GUI, "config.listview.category.general"));
 
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "config.listview.title.disable_rendering"), disableRenderingButton);
-        addRenderableWidget(disableRenderingButton);
+        addWidget(disableRenderingButton);
 
         // Debug
         listViewWidget.addCategory(TextUtil.translatable(TextCategory.GUI, "config.listview.category.debug"));
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "config.listview.title.debug_mode"), debugModeButton);
-        addRenderableWidget(debugModeButton);
+        addWidget(debugModeButton);
     }
 
 
@@ -137,7 +137,7 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
     }
 
     @Override
-    public void drawBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+    public void drawCustomBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
         double terrainHeight = (width / 3.75);
         double starSize = Math.max(width, height) * 4;
         float starUVSize = (float) (starSize / 384F);

@@ -38,7 +38,7 @@ public class SoundLooperScreen extends BlockConfigScreen {
         this.corner2Widget = new BlockPosWidget(0, 0, 120, 20);
         this.corner2Widget.setBlockPos(blockEntity.getCorner2());
 
-        this.soundIdTextField = new WidgetBetterTextField(WidgetBetterTextField.TextFieldFilter.INTEGER, "mtr:ticket_barrier", 100);
+        this.soundIdTextField = new WidgetBetterTextField("", "mtr:ticket_barrier", 100);
         this.soundIdTextField.setSize(100, 20);
         this.soundIdTextField.setValue(blockEntity.getSoundId());
         this.soundVolumeTextField = new IntegerTextField(0, 0, 60, 20, 1, 1000, 100);
@@ -66,16 +66,16 @@ public class SoundLooperScreen extends BlockConfigScreen {
 
     @Override
     public void addConfigEntries() {
-        corner1Widget.addWidget(this::addRenderableWidget);
-        corner2Widget.addWidget(this::addRenderableWidget);
-        addRenderableWidget(soundCategoryButton);
-        addRenderableWidget(soundIdTextField);
-        addRenderableWidget(soundVolumeTextField);
-        addRenderableWidget(repeatTickTextField);
-        addRenderableWidget(needRedstoneCheckbox);
-        addRenderableWidget(limitSoundRangeCheckbox);
-        addRenderableWidget(corner1Widget);
-        addRenderableWidget(corner2Widget);
+        corner1Widget.addWidget(this::addWidget);
+        corner2Widget.addWidget(this::addWidget);
+        addWidget(soundCategoryButton);
+        addWidget(soundIdTextField);
+        addWidget(soundVolumeTextField);
+        addWidget(repeatTickTextField);
+        addWidget(needRedstoneCheckbox);
+        addWidget(limitSoundRangeCheckbox);
+        addWidget(corner1Widget);
+        addWidget(corner2Widget);
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "sound_looper.listview.title.sound_category"), soundCategoryButton);
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "sound_looper.listview.title.sound_id"), soundIdTextField);
         listViewWidget.add(TextUtil.translatable(TextCategory.GUI, "sound_looper.listview.title.sound_volume"), soundVolumeTextField);

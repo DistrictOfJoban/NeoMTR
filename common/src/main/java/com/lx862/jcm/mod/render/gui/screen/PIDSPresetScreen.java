@@ -3,11 +3,10 @@ package com.lx862.jcm.mod.render.gui.screen;
 import com.lx862.jcm.mod.block.entity.PIDSBlockEntity;
 import com.lx862.jcm.mod.data.pids.PIDSManager;
 import com.lx862.jcm.mod.data.pids.preset.PIDSPresetBase;
-import com.lx862.jcm.mod.render.GuiHelper;
+import com.lx862.jcm.mod.render.gui.GuiHelper;
 import com.lx862.jcm.mod.render.RenderHelper;
 import com.lx862.jcm.mod.render.gui.screen.base.TitledScreen;
 import com.lx862.jcm.mod.render.gui.widget.ContentItem;
-import com.lx862.jcm.mod.render.gui.widget.HorizontalWidgetSet;
 import com.lx862.jcm.mod.render.gui.widget.ListViewWidget;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
@@ -94,7 +93,7 @@ public class PIDSPresetScreen extends TitledScreen implements RenderHelper, GuiH
             selectBtn.active = false;
         }
 
-        addRenderableWidget(selectBtn);
+        addWidget(selectBtn);
         ContentItem contentItem = new ContentItem(TextUtil.literal(preset.getName()), selectBtn, 26);
 
         contentItem.setIconCallback((guiDrawing, startX, startY, width, height) -> {
