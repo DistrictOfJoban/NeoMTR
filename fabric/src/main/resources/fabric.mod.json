@@ -29,6 +29,7 @@
 	"mixins": [
 		"mtr.mixins.json",
 		"mtr-common.mixins.json",
+		"jsblock-common.mixins.json",
 		"mtrsteamloco.mixins.json"
 	],
 	"depends": {

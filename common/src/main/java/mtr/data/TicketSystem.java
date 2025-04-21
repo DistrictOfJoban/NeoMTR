@@ -2,6 +2,7 @@ package mtr.data;
 
 import mtr.mappings.Text;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
@@ -116,6 +117,12 @@ public class TicketSystem {
 			player.displayClientMessage(Text.translatable("gui.mtr.exit_barrier", String.format("%s (%s)", station.name.replace('|', ' '), station.zone), finalFare, balanceScore.get()), true);
 			return true;
 		}
+	}
+
+	public static void addBalance(Level level, ServerPlayer player, int amount) {
+		addObjectivesIfMissing(level);
+		ScoreAccess balanceScore = TicketSystem.getPlayerScore(level, player, TicketSystem.BALANCE_OBJECTIVE);
+		balanceScore.add(amount);
 	}
 
 	private static boolean isConcessionary(Player player) {

@@ -40,11 +40,9 @@ public class SubsidyMachineBlock extends WallAttachedBlock implements EntityBloc
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if(level.getBlockEntity(pos) instanceof SubsidyMachineBlockEntity be) {
-            if(JCMUtil.playerHoldingBrush(player)) {
-                if(level.isClientSide()) {
-                    ScreenType.BLOCK_CONFIG_SUBSIDY_MACHINE.open(be);
-                }
-            } else {
+            if(JCMUtil.playerHoldingBrush(player) && level.isClientSide()) {
+                ScreenType.BLOCK_CONFIG_SUBSIDY_MACHINE.open(be);
+            } else if(!level.isClientSide()) {
                 if(cooldownExpired(player, be.getCooldown())) {
                     updateCooldown(player);
                     int finalBalance = addMTRBalanceToPlayer(level, player, be.getSubsidyAmount());

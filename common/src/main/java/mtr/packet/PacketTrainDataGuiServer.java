@@ -365,9 +365,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		minecraftServer.execute(() -> {
 			final Level world = player.level();
 
-			TicketSystem.addObjectivesIfMissing(world);
-			ScoreAccess balanceScore = TicketSystem.getPlayerScore(world, player, TicketSystem.BALANCE_OBJECTIVE);
-			balanceScore.add(addAmount);
+			TicketSystem.addBalance(world, player, addAmount);
 
 			ContainerHelper.clearOrCountMatchingItems(Utilities.getInventory(player), itemStack -> itemStack.getItem() == Items.EMERALD, emeralds, false);
 			world.playSound(null, player.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1, 1);

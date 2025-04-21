@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "compat.SimpleDefaultedRegistryMixin",
-    "modded.mtr.MixinTicketSystem"
+    "modded.MixinTicketSystem"
   ],
   "injectors": {
     "defaultRequire": 1

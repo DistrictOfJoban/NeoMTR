@@ -29,3 +29,9 @@ config = "mtr.mixins.json"
 
 [[mixins]]
 config = "mtrsteamloco.mixins.json"
+
+[[mixins]]
+config = "mtr-common.mixins.json"
+
+[[mixins]]
+config = "jsblock-common.mixins.json"

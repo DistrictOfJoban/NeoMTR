@@ -43,17 +43,18 @@ public class FareSaverBlock extends Vertical3Block implements EntityBlockMapper 
                 if(level.isClientSide()) ScreenType.BLOCK_CONFIG_FARESAVER.open(be);
                 return InteractionResult.SUCCESS;
             }
-
-            int discount = be.getDiscount();
-            if(discountList.containsKey(playerUuid)) {
-                player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.fail", discountList.get(playerUuid)), true);
-            } else {
-                discountList.put(playerUuid, discount);
-
-                if(discount > 0) {
-                    player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.success", discount), true);
+            if(!level.isClientSide()) {
+                int discount = be.getDiscount();
+                if(discountList.containsKey(playerUuid)) {
+                    player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.fail", discountList.get(playerUuid)), true);
                 } else {
-                    player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.success.sarcasm", discount), true);
+                    discountList.put(playerUuid, discount);
+
+                    if(discount > 0) {
+                        player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.success", discount), true);
+                    } else {
+                        player.displayClientMessage(TextUtil.translatable(TextCategory.HUD, "faresaver.success.sarcasm", discount), true);
+                    }
                 }
             }
 
