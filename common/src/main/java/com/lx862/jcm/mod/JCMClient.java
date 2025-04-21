@@ -19,10 +19,10 @@ public class JCMClient {
         config.read();
 
         // Registry
-        Events.registerClient();
         Blocks.registerClient();
         BlockEntityRenderers.registerClient();
         Networking.registerClient();
+        Events.registerClient();
 
         MTRAddonRegistry.registerAddon(new MTRAddonRegistry.MTRAddon("NeoJCM", Constants.MOD_VERSION, (prevScreen) -> Minecraft.getInstance().setScreen( getClientConfigScreen(prevScreen))));
     }

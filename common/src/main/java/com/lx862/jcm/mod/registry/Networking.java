@@ -59,6 +59,7 @@ public class Networking {
     }
 
     public static void register() {
+        JCMLogger.debug("Registering network packets...");
         registerPacket(ButterflyLightUpdatePacket.class, ButterflyLightUpdatePacket::new);
         registerPacket(FareSaverUpdatePacket.class, FareSaverUpdatePacket::new);
         registerPacket(PIDSUpdatePacket.class, PIDSUpdatePacket::new);

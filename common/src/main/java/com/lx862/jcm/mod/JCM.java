@@ -2,15 +2,12 @@ package com.lx862.jcm.mod;
 
 import cn.zbx1425.mtrsteamloco.RegistriesWrapper;
 import com.lx862.jcm.mod.config.JCMConfig;
-import com.lx862.jcm.mod.registry.BlockEntities;
-import com.lx862.jcm.mod.registry.Blocks;
-import com.lx862.jcm.mod.registry.Items;
-import com.lx862.jcm.mod.registry.Networking;
+import com.lx862.jcm.mod.registry.*;
 import com.lx862.jcm.mod.util.JCMLogger;
 import mtr.Keys;
 
 public class JCM {
-    private static JCMConfig config = new JCMConfig();
+    private static final JCMConfig config = new JCMConfig();
 
     public static void init(RegistriesWrapper registriesWrapper) {
         try {
@@ -23,7 +20,7 @@ public class JCM {
         BlockEntities.register(registriesWrapper);
         Items.register(registriesWrapper);
         Networking.register();
-//        Events.register();
+        Events.register();
     }
 
     public static JCMConfig getConfig() {

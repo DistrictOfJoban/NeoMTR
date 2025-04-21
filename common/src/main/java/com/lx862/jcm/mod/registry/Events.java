@@ -4,6 +4,7 @@ import com.lx862.jcm.mod.JCMClient;
 import com.lx862.jcm.mod.data.JCMServerStats;
 import com.lx862.jcm.mod.resources.JCMResourceManager;
 import mtr.Registry;
+import mtr.RegistryClient;
 import mtr.client.CustomResources;
 
 public class Events {
@@ -19,8 +20,8 @@ public class Events {
             JCMResourceManager.reload();
         });
 
-//        JCMRegistryClient.REGISTRY_CLIENT.eventRegistryClient.registerStartClientTick(() -> {
-//            JCMClient.getMcMetaManager().tick();
-//        });
+        RegistryClient.registerTickEvent((minecraft) -> {
+            JCMClient.getMcMetaManager().tick();
+        });
     }
 }
