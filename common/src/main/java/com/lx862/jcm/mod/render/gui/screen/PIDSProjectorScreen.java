@@ -1,6 +1,8 @@
 package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.block.entity.PIDSProjectorBlockEntity;
+import com.lx862.jcm.mod.network.block.PIDSProjectorUpdatePacket;
+import com.lx862.jcm.mod.registry.Networking;
 import com.lx862.jcm.mod.render.gui.widget.CategoryItem;
 import com.lx862.jcm.mod.render.gui.widget.DoubleTextField;
 import com.lx862.jcm.mod.render.gui.widget.WidgetSet;
@@ -89,6 +91,6 @@ public class PIDSProjectorScreen extends PIDSScreen {
             rowHidden[i] = this.rowHiddenWidgets[i].selected();
         }
 
-//        Networking.sendPacketToServer(new PIDSProjectorUpdatePacket(blockPos, filteredPlatforms, customMessages, rowHidden, hidePlatformNumber.isChecked2(), presetId, xField.getNumber(), yField.getNumber(), zField.getNumber(), rotateXField.getNumber(), rotateYField.getNumber(), rotateZField.getNumber(), scaleField.getNumber()));
+        Networking.sendPacketToServer(new PIDSProjectorUpdatePacket(blockPos, filteredPlatforms, customMessages, rowHidden, hidePlatformNumber.selected(), presetId, xField.getNumber(), yField.getNumber(), zField.getNumber(), rotateXField.getNumber(), rotateYField.getNumber(), rotateZField.getNumber(), scaleField.getNumber()));
     }
 }

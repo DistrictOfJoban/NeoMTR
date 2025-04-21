@@ -16,7 +16,7 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class AutoIronDoorBlockEntity extends JCMBlockEntityBase implements TickableMapper {
+public class AutoIronDoorBlockEntity extends JCMBlockEntity implements TickableMapper {
     public static final int DETECT_RADIUS = 3;
 
     public AutoIronDoorBlockEntity(BlockPos blockPos, BlockState blockState) {

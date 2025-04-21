@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 
-public abstract class PIDSBlockEntity extends JCMBlockEntityBase {
+public abstract class PIDSBlockEntity extends JCMBlockEntity {
     private final String[] customMessages;
     private final boolean[] rowHidden;
     private boolean hidePlatformNumber;
@@ -78,6 +78,7 @@ public abstract class PIDSBlockEntity extends JCMBlockEntityBase {
         this.platformIds.clear();
         this.platformIds.addAll(filteredPlatforms);
         this.setChanged();
+        this.syncData();
     }
 
     public String getPresetId() {

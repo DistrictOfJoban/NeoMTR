@@ -1,6 +1,8 @@
 package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.block.entity.SoundLooperBlockEntity;
+import com.lx862.jcm.mod.network.block.SoundLooperUpdatePacket;
+import com.lx862.jcm.mod.registry.Networking;
 import com.lx862.jcm.mod.render.gui.screen.base.BlockConfigScreen;
 import com.lx862.jcm.mod.render.gui.widget.BlockPosWidget;
 import com.lx862.jcm.mod.render.gui.widget.IntegerTextField;
@@ -88,7 +90,7 @@ public class SoundLooperScreen extends BlockConfigScreen {
 
     @Override
     public void onSave() {
-//        Networking.sendPacketToServer(new SoundLooperUpdatePacket(blockPos, corner1Widget.getBlockPos(), corner2Widget.getBlockPos(), soundIdTextField.getText2(), soundCategory, (int)repeatTickTextField.getNumber(), soundVolumeTextField.getNumber() / 100f, needRedstoneCheckbox.isChecked2(), limitSoundRangeCheckbox.isChecked2()));
+        Networking.sendPacketToServer(new SoundLooperUpdatePacket(blockPos, corner1Widget.getBlockPos(), corner2Widget.getBlockPos(), soundIdTextField.getValue(), soundCategory, (int)repeatTickTextField.getNumber(), soundVolumeTextField.getNumber() / 100f, needRedstoneCheckbox.selected(), limitSoundRangeCheckbox.selected()));
     }
 
     private void setSoundCategory(int category) {

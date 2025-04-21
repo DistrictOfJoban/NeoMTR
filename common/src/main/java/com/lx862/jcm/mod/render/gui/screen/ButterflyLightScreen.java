@@ -1,6 +1,8 @@
 package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.block.entity.ButterflyLightBlockEntity;
+import com.lx862.jcm.mod.network.block.ButterflyLightUpdatePacket;
+import com.lx862.jcm.mod.registry.Networking;
 import com.lx862.jcm.mod.render.gui.screen.base.BlockConfigScreen;
 import com.lx862.jcm.mod.render.gui.widget.IntegerTextField;
 import com.lx862.jcm.mod.util.TextCategory;
@@ -31,6 +33,6 @@ public class ButterflyLightScreen extends BlockConfigScreen {
 
     @Override
     public void onSave() {
-        //Networking.sendPacketToServer(new ButterflyLightUpdatePacket(blockPos, (int) startBlinkingSecondsTextField.getNumber()));
+        Networking.sendPacketToServer(new ButterflyLightUpdatePacket(blockPos, (int) startBlinkingSecondsTextField.getNumber()));
     }
 }

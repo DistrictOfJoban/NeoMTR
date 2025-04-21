@@ -6,28 +6,25 @@ import net.minecraft.client.Minecraft;
 
 import java.nio.file.Path;
 
-public class ClientConfig extends Config {
+public class JCMConfig extends Config {
 
-    private static final Path CONFIG_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("config").resolve("jsblock_client.json");
-    public boolean disableRendering;
+    private static final Path CONFIG_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("config").resolve("jsblock.json");
     public boolean debug;
 
-    public ClientConfig() {
+    public JCMConfig() {
         super(CONFIG_PATH);
     }
 
     @Override
     public void fromJson(JsonObject jsonConfig) {
-        JCMLogger.info("Loading client config...");
-        this.disableRendering = jsonConfig.get("disable_rendering").getAsBoolean();
+        JCMLogger.info("Loading config...");
         this.debug = jsonConfig.get("debug_mode").getAsBoolean();
     }
 
     @Override
     public JsonObject toJson() {
-        JCMLogger.info("Writing client config...");
+        JCMLogger.info("Writing config...");
         final JsonObject jsonConfig = new JsonObject();
-        jsonConfig.addProperty("disable_rendering", disableRendering);
         jsonConfig.addProperty("debug_mode", debug);
         return jsonConfig;
     }

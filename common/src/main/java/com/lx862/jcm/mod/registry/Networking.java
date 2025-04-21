@@ -1,3 +1,97 @@
+package com.lx862.jcm.mod.registry;
+
+import com.lx862.jcm.mod.Constants;
+import com.lx862.jcm.mod.network.PacketHandler;
+import com.lx862.jcm.mod.network.block.*;
+import com.lx862.jcm.mod.network.gui.EnquiryUpdateGUIPacket;
+import com.lx862.jcm.mod.util.JCMLogger;
+import com.lx862.jcm.mod.util.JCMUtil;
+import io.netty.buffer.Unpooled;
+import mtr.Registry;
+import mtr.RegistryClient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+
+import java.util.HashMap;
+import java.util.function.Function;
+
+public class Networking {
+    private static final HashMap<String, Function<FriendlyByteBuf, ? extends PacketHandler>> packets = new HashMap<>();
+    private static final ResourceLocation PACKET_ID = Constants.id("packet");
+
+    public static <T extends PacketHandler> void registerPacket(Class<T> clazz, Function<FriendlyByteBuf, T> packet) {
+        packets.put(clazz.getName(), packet);
+    }
+
+    public static void setupPacketServer() {
+        Registry.registerNetworkPacket(PACKET_ID);
+        Registry.registerNetworkReceiver(PACKET_ID, (MinecraftServer server, ServerPlayer player, FriendlyByteBuf packet) -> {
+            String className = packet.readUtf();
+            JCMLogger.debug("Received C2S packet: " + className);
+            Function<FriendlyByteBuf, ? extends PacketHandler> packetHandlerConstructor = packets.get(className);
+            if(packetHandlerConstructor == null) {
+                JCMLogger.warn("Unknown C2S packet: " + className);
+                return;
+            }
+
+            PacketHandler packetHandler = packetHandlerConstructor.apply(packet);
+            server.execute(() -> {
+                packetHandler.runServer(server, player);
+            });
+        });
+    }
+
+    public static void setupPacketClient() {
+        RegistryClient.registerNetworkReceiver(PACKET_ID, packet -> {
+            String className = packet.readUtf();
+            JCMLogger.debug("Received S2C packet: " + className);
+            Function<FriendlyByteBuf, ? extends PacketHandler> packetHandlerConstructor = packets.get(className);
+            if(packetHandlerConstructor == null) {
+                JCMLogger.warn("Unknown S2C packet: " + className);
+                return;
+            }
+
+            PacketHandler packetHandler = packetHandlerConstructor.apply(packet);
+            JCMUtil.executeOnClientThread(() -> packetHandler.runClient());
+        });
+    }
+
+    public static void register() {
+        registerPacket(ButterflyLightUpdatePacket.class, ButterflyLightUpdatePacket::new);
+        registerPacket(FareSaverUpdatePacket.class, FareSaverUpdatePacket::new);
+        registerPacket(PIDSUpdatePacket.class, PIDSUpdatePacket::new);
+        registerPacket(PIDSProjectorUpdatePacket.class, PIDSProjectorUpdatePacket::new);
+        registerPacket(SoundLooperUpdatePacket.class, SoundLooperUpdatePacket::new);
+        registerPacket(SubsidyMachineUpdatePacket.class, SubsidyMachineUpdatePacket::new);
+        registerPacket(EnquiryUpdateGUIPacket.class, EnquiryUpdateGUIPacket::new);
+        setupPacketServer();
+    }
+
+    public static void registerClient() {
+        setupPacketClient();
+    }
+
+    public static <T extends PacketHandler> void sendPacketToClient(ServerPlayer player, T packetHandler) {
+        final String className = packetHandler.getClass().getName();
+        FriendlyByteBuf newPacket = new FriendlyByteBuf(Unpooled.buffer());
+        newPacket.writeUtf(className);
+        packetHandler.write(newPacket);
+        Registry.sendToPlayer(player, PACKET_ID, newPacket);
+        JCMLogger.debug("Sent S2C packet: " + className);
+    }
+
+    public static <T extends PacketHandler> void sendPacketToServer(T packetHandler) {
+        final String className = packetHandler.getClass().getName();
+        FriendlyByteBuf newPacket = new FriendlyByteBuf(Unpooled.buffer());
+        newPacket.writeUtf(className);
+        packetHandler.write(newPacket);
+        RegistryClient.sendToServer(PACKET_ID, newPacket);
+        JCMLogger.debug("Sent C2S packet: " + className);
+    }
+}
+
 //package com.lx862.jcm.mod.registry;
 //
 //import com.lx862.jcm.mod.network.block.*;

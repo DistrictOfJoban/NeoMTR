@@ -1,6 +1,8 @@
 package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.block.entity.FareSaverBlockEntity;
+import com.lx862.jcm.mod.network.block.FareSaverUpdatePacket;
+import com.lx862.jcm.mod.registry.Networking;
 import com.lx862.jcm.mod.render.gui.screen.base.BlockConfigScreen;
 import com.lx862.jcm.mod.render.gui.widget.IntegerTextField;
 import com.lx862.jcm.mod.util.TextCategory;
@@ -34,6 +36,6 @@ public class FareSaverScreen extends BlockConfigScreen {
     }
     @Override
     public void onSave() {
-//        Networking.sendPacketToServer(new FareSaverUpdatePacket(blockPos, prefixTextField.getText2(), (int)discountTextField.getNumber()));
+        Networking.sendPacketToServer(new FareSaverUpdatePacket(blockPos, prefixTextField.getValue(), (int)discountTextField.getNumber()));
     }
 }

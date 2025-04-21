@@ -75,6 +75,7 @@ public class PIDSProjectorBlockEntity extends PIDSBlockEntity {
         this.rotateY = rotateY;
         this.rotateZ = rotateZ;
         this.setChanged();
+        this.syncData();
     }
 
     public double getOffsetX() { return x; }

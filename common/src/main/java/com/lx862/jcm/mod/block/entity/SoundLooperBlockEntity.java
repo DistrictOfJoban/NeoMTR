@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class SoundLooperBlockEntity extends JCMBlockEntityBase implements TickableMapper {
+public class SoundLooperBlockEntity extends JCMBlockEntity implements TickableMapper {
     public static final SoundSource[] SOURCE_LIST = {SoundSource.MASTER, SoundSource.MUSIC, SoundSource.WEATHER, SoundSource.AMBIENT, SoundSource.PLAYERS, SoundSource.BLOCKS, SoundSource.VOICE};
     private String soundID = "";
     private BlockPos corner1 = new BlockPos(0, 0, 0);
@@ -144,5 +144,6 @@ public class SoundLooperBlockEntity extends JCMBlockEntityBase implements Tickab
         this.corner2 = corner2;
         this.limitRange = limitRange;
         this.setChanged();
+        this.syncData();
     }
 }

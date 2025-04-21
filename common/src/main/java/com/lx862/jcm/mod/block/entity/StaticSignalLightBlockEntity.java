@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class StaticSignalLightBlockEntity extends JCMBlockEntityBase {
+public class StaticSignalLightBlockEntity extends JCMBlockEntity {
     public StaticSignalLightBlockEntity(SignalType type, BlockPos blockPos, BlockState blockState) {
         super(type.getBlockEntityType(), blockPos, blockState);
     }

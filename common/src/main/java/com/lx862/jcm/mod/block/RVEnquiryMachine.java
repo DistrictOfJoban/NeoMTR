@@ -2,10 +2,10 @@ package com.lx862.jcm.mod.block;
 
 import com.lx862.jcm.mod.block.base.Vertical2Block;
 import com.lx862.jcm.mod.block.behavior.EnquiryMachineBehavior;
-import com.lx862.jcm.mod.data.EnquiryScreenType;
+import com.lx862.jcm.mod.render.gui.screen.ScreenType;
 import mtr.block.IBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -35,7 +35,7 @@ public class RVEnquiryMachine extends Vertical2Block implements EnquiryMachineBe
 
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        if(!world.isClientSide()) enquiry(EnquiryScreenType.NONE, pos, world, player);
+        if(!world.isClientSide()) enquiry(ScreenType.ENQUIRY_GUI_RV, pos, world, (ServerPlayer) player);
         return InteractionResult.SUCCESS;
     }
 }

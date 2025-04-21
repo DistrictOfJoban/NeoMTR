@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SubsidyMachineBlockEntity extends JCMBlockEntityBase {
+public class SubsidyMachineBlockEntity extends JCMBlockEntity {
     private int subsidyAmount = 10;
     private int cooldown = 0;
     public SubsidyMachineBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -30,6 +30,7 @@ public class SubsidyMachineBlockEntity extends JCMBlockEntityBase {
         this.subsidyAmount = pricePerUse;
         this.cooldown = cooldown;
         this.setChanged();
+        this.syncData();
     }
 
     public int getSubsidyAmount() {

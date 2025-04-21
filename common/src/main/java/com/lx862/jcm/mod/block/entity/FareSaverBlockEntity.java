@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FareSaverBlockEntity extends JCMBlockEntityBase {
+public class FareSaverBlockEntity extends JCMBlockEntity {
     private String prefix = "$";
     private int discount = 2;
     public FareSaverBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -30,6 +30,7 @@ public class FareSaverBlockEntity extends JCMBlockEntityBase {
         this.prefix = prefix;
         this.discount = discount;
         this.setChanged();
+        this.syncData();
     }
 
     public int getDiscount() {

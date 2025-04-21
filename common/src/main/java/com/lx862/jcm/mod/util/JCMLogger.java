@@ -1,6 +1,7 @@
 package com.lx862.jcm.mod.util;
 
 import com.lx862.jcm.mod.Constants;
+import com.lx862.jcm.mod.JCM;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +32,9 @@ public final class JCMLogger {
     }
 
     public static void debug(String s, Object... o) {
-        LOGGER.debug(Constants.LOGGING_PREFIX + "[DEBUG] " + s, o);
+        if(JCM.getConfig().debug) {
+
+        LOGGER.info(Constants.LOGGING_PREFIX + "[DEBUG] " + s, o);
+        }
     }
 }

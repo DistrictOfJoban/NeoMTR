@@ -1,6 +1,7 @@
 package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.Constants;
+import com.lx862.jcm.mod.JCM;
 import com.lx862.jcm.mod.JCMClient;
 import com.lx862.jcm.mod.render.gui.GuiHelper;
 import com.lx862.jcm.mod.render.gui.screen.base.TitledScreen;
@@ -48,8 +49,8 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
             JCMClient.getConfig().disableRendering = bl;
         }).build();
 
-        this.debugModeButton = Checkbox.builder(Component.empty(), Minecraft.getInstance().font).pos(0, 0).selected(JCMClient.getConfig().debug).onValueChange((cb, bl) -> {
-            JCMClient.getConfig().debug = bl;
+        this.debugModeButton = Checkbox.builder(Component.empty(), Minecraft.getInstance().font).pos(0, 0).selected(JCM.getConfig().debug).onValueChange((cb, bl) -> {
+            JCM.getConfig().debug = bl;
         }).build();
     }
 
@@ -160,10 +161,12 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
     public void onClose() {
         if(!closing) {
             if (!discardConfig) {
+                JCM.getConfig().write();
                 JCMClient.getConfig().write();
             } else {
-                // Don't save our change to disk, and read it from disk, effectively discarding the config
+                // Don't save our change to disk, and re-read it from disk, effectively discarding the config
                 JCMClient.getConfig().read();
+                JCM.getConfig().read();
             }
         }
 

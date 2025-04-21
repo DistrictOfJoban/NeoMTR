@@ -1,6 +1,8 @@
 package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.block.entity.SubsidyMachineBlockEntity;
+import com.lx862.jcm.mod.network.block.SubsidyMachineUpdatePacket;
+import com.lx862.jcm.mod.registry.Networking;
 import com.lx862.jcm.mod.render.gui.screen.base.BlockConfigScreen;
 import com.lx862.jcm.mod.render.gui.widget.IntegerTextField;
 import com.lx862.jcm.mod.util.TextCategory;
@@ -36,6 +38,6 @@ public class SubsidyMachineScreen extends BlockConfigScreen {
 
     @Override
     public void onSave() {
-//        Networking.sendPacketToServer(new SubsidyMachineUpdatePacket(blockPos, (int)priceTextField.getNumber(), (int)cooldownTextField.getNumber()));
+        Networking.sendPacketToServer(new SubsidyMachineUpdatePacket(blockPos, (int)priceTextField.getNumber(), (int)cooldownTextField.getNumber()));
     }
 }

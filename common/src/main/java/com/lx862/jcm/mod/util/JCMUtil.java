@@ -2,6 +2,7 @@ package com.lx862.jcm.mod.util;
 
 import com.lx862.jcm.mod.Constants;
 import mtr.registry.Items;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
@@ -92,5 +93,9 @@ public class JCMUtil {
             }
         }
         return checkId;
+    }
+
+    public static void executeOnClientThread(Runnable runnable) {
+        Minecraft.getInstance().execute(runnable);
     }
 }

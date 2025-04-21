@@ -2,9 +2,10 @@ package com.lx862.jcm.mod.block;
 
 import com.lx862.jcm.mod.block.base.WallAttachedBlock;
 import com.lx862.jcm.mod.block.behavior.EnquiryMachineBehavior;
-import com.lx862.jcm.mod.data.EnquiryScreenType;
+import com.lx862.jcm.mod.render.gui.screen.ScreenType;
 import mtr.block.IBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -26,7 +27,7 @@ public class MTREnquiryMachineWall extends WallAttachedBlock implements EnquiryM
 
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        if(!world.isClientSide()) enquiry(EnquiryScreenType.CLASSIC, pos, world, player);
+        if(!world.isClientSide()) enquiry(ScreenType.ENQUIRY_GUI_CLASSIC, pos, world, (ServerPlayer) player);
         return InteractionResult.SUCCESS;
     }
 }

@@ -2,6 +2,7 @@ package mtr.util;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import net.minecraft.client.Minecraft;
 
 public class Util {
     public static String prettyPrintJson(JsonElement jsonElement) {

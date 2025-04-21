@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ButterflyLightBlockEntity extends JCMBlockEntityBase {
+public class ButterflyLightBlockEntity extends JCMBlockEntity {
     private int startBlinkingSeconds = 10;
     public ButterflyLightBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntities.BUTTERFLY_LIGHT.get(), blockPos, blockState);
@@ -26,6 +26,7 @@ public class ButterflyLightBlockEntity extends JCMBlockEntityBase {
     public void setData(int secondsToBlink) {
         this.startBlinkingSeconds = secondsToBlink;
         this.setChanged();
+        this.syncData();
     }
 
     public int getStartBlinkingSeconds() {
