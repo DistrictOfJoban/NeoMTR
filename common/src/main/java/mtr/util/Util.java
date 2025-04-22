@@ -2,8 +2,10 @@ package mtr.util;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Function;
 
@@ -30,6 +32,10 @@ public class Util {
 
     public static boolean hasNoPermission(ServerPlayer serverPlayer) {
         return !hasPermission(serverPlayer::hasPermissions, serverPlayer.gameMode.getGameModeForPlayer());
+    }
+
+    public static Vec3 toVec3(BlockPos pos) {
+        return new Vec3(pos.getX(), pos.getY(), pos.getZ());
     }
 
 

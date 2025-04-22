@@ -35,3 +35,9 @@ config = "mtr-common.mixins.json"
 
 [[mixins]]
 config = "jsblock-common.mixins.json"
+
+[[mixins]]
+config = "mtrtm-common.mixins.json"
+
+[[mixins]]
+config = "msd-common.mixins.json"

@@ -20,6 +20,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import top.mcmtr.MSDMain;
+import top.mcmtr.MSDMainFabric;
 
 public class MTRFabric implements ModInitializer {
 
@@ -32,6 +34,7 @@ public class MTRFabric implements ModInitializer {
 		MTR.init(MTRFabric::registerItem, MTRFabric::registerBlock, MTRFabric::registerBlock, MTRFabric::registerEnchantedBlock, MTRFabric::registerBlockEntityType, MTRFabric::registerEntityType, MTRFabric::registerSoundEvent);
 		Main.init(REGISTRIES);
 		JCM.init(REGISTRIES_JCM);
+		MSDMain.init(MSDMainFabric::registerItem, MSDMainFabric::registerBlock, MSDMainFabric::registerBlock, MSDMainFabric::registerBlockEntityType, MSDMainFabric::registerEntityType, MSDMainFabric::registerSoundEvent);
 		PACKET_REGISTRY.commitCommon();
 	}
 

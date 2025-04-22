@@ -27,6 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.phys.Vec3;
+import top.mcmtr.MSDMainClient;
 
 public class MTRFabricClient implements ClientModInitializer, ICustomResources {
 
@@ -36,6 +37,8 @@ public class MTRFabricClient implements ClientModInitializer, ICustomResources {
 		Items.initItemModelPredicate();
 		MainClient.init();
 		JCMClient.initializeClient();
+		MSDMainClient.init();
+		MSDMainClient.registerItemModelPredicates();
 
 		WorldRenderEvents.AFTER_ENTITIES.register(context -> {
 			final PoseStack matrices = context.matrixStack();
