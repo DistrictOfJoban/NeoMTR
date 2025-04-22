@@ -8,6 +8,7 @@ import com.lx862.jcm.mod.registry.Networking;
 import com.lx862.jcm.mod.render.gui.screen.ClientConfigScreen;
 import com.lx862.jcm.mod.resources.mcmeta.McMetaManager;
 import mtr.MTRClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 
 public class JCMClient {
@@ -23,7 +24,7 @@ public class JCMClient {
         Networking.registerClient();
         Events.registerClient();
 
-        MTRClient.registerAddonConfigGUICallback(JCM.ADDON, JCMClient::getClientConfigScreen);
+        MTRClient.registerAddonConfigGUICallback(JCM.ADDON, (prevScreen) -> Minecraft.getInstance().setScreen(getClientConfigScreen(prevScreen)));
     }
 
     public static Screen getClientConfigScreen(Screen previousScreen) {

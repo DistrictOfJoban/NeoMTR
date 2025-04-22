@@ -16,6 +16,7 @@ import cn.zbx1425.sowcerext.reuse.ModelManager;
 import mtr.MTRClient;
 import mtr.RegistryClient;
 import mtr.item.ItemBlockClickingBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 
 public class MainClient {
@@ -53,7 +54,7 @@ public class MainClient {
 			TrainVirtualDrive.activeTrain = null;
 		});
 
-		MTRClient.registerAddonConfigGUICallback(Main.ADDON, ConfigScreen::createScreen);
+		MTRClient.registerAddonConfigGUICallback(Main.ADDON, (prevScreen) -> Minecraft.getInstance().setScreen(ConfigScreen.createScreen(prevScreen)));
 	}
 
 }
