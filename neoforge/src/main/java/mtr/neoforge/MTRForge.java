@@ -17,6 +17,9 @@ import mtr.Registry;
 import mtr.registry.Items;
 import mtr.registry.RegistryObject;
 import mtr.render.RenderDrivingOverlay;
+import net.londonunderground.LondonUnderground;
+import net.londonunderground.LondonUndergroundClient;
+import net.londonunderground.registry.neoforge.LondonUndergroundRegistryImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -57,6 +60,7 @@ public class MTRForge {
 		MTR.init(MTRForge::registerItem, MTRForge::registerBlock, MTRForge::registerBlock, MTRForge::registerEnchantedBlock, MTRForge::registerBlockEntityType, MTRForge::registerEntityType, MTRForge::registerSoundEvent);
 		cn.zbx1425.mtrsteamloco.Main.init(registries);
 		JCM.init(jcmRegistries);
+		LondonUnderground.init();
 		TransitManager.init();
 	}
 
@@ -68,6 +72,7 @@ public class MTRForge {
 		ENTITY_TYPES.register(eventBus);
 		SOUND_EVENTS.register(eventBus);
 		registries.registerAllDeferred(eventBus);
+		LondonUndergroundRegistryImpl.registerAllDeferred(eventBus);
 
 		ForgeUtilities.registerCreativeModeTabsToDeferredRegistry(CREATIVE_MODE_TABS);
 		CREATIVE_MODE_TABS.register(eventBus);
@@ -141,6 +146,7 @@ public class MTRForge {
 		public static void onClientSetupEvent(FMLClientSetupEvent event) {
 			MTRClient.init();
 			JCMClient.initializeClient();
+			LondonUndergroundClient.init();
 			event.enqueueWork(Items::initItemModelPredicate);
 			ForgeUtilities.registerTextureStitchEvent(textureAtlas -> {
 				if (((TextureAtlas) textureAtlas).location().getPath().equals("textures/atlas/blocks.png")) {
@@ -152,6 +158,7 @@ public class MTRForge {
 		@SubscribeEvent
 		public static void registerCommand(RegisterCommandsEvent registerCommandsEvent) {
 			LoaderImpl.invokeRegisterCommands(registerCommandsEvent.getDispatcher());
+			LondonUndergroundRegistryImpl.invokeRegisterCommands(registerCommandsEvent.getDispatcher());
 		}
 
 		@SubscribeEvent

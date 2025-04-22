@@ -18,10 +18,12 @@
 	"entrypoints": {
 		"main": [
 			"mtr.MTRFabric",
-			"com.lx862.mtrtm.TransitManagerFabric"
+			"com.lx862.mtrtm.TransitManagerFabric",
+			"net.londonunderground.LondonUndergroundFabric"
 		],
 		"client": [
-			"mtr.MTRFabricClient"
+			"mtr.MTRFabricClient",
+			"net.londonunderground.LondonUndergroundFabricClient"
 		],
 		"modmenu": [
 			"mtr.ModMenuConfig"

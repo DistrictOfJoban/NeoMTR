@@ -6,13 +6,13 @@ import net.minecraft.commands.CommandSourceStack;
 import java.util.function.Consumer;
 
 public class LoaderImpl {
-    private static Consumer<CommandDispatcher<CommandSourceStack>> callback;
+    private static Consumer<CommandDispatcher<CommandSourceStack>> cmdCallback;
 
     public static void registerCommands(Consumer<CommandDispatcher<CommandSourceStack>> commandRegisterCallback) {
-        callback = commandRegisterCallback;
+        cmdCallback = commandRegisterCallback;
     }
 
     public static void invokeRegisterCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
-        callback.accept(dispatcher);
+        if(cmdCallback != null) cmdCallback.accept(dispatcher);
     }
 }

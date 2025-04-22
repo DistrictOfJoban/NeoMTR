@@ -44,7 +44,7 @@ public class RegistryClientImpl {
 	}
 
 	public static <T extends BlockEntityMapper> void registerTileEntityRenderer(BlockEntityType<T> type, Function<BlockEntityRenderDispatcher, BlockEntityRendererMapper<T>> function) {
-		RegistryUtilitiesClient.registerTileEntityRenderer(type, function);
+		RegistryUtilitiesClient.registerBlockEntityRenderer(type, function);
 	}
 
 	public static <T extends Entity> void registerEntityRenderer(EntityType<T> type, Function<Object, EntityRendererMapper<T>> function) {
@@ -92,7 +92,7 @@ public class RegistryClientImpl {
 					itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).contains(tag) ? 1 : 0);
 		}
 
-		static <T extends BlockEntityMapper> void registerTileEntityRenderer(BlockEntityType<T> type, Function<BlockEntityRenderDispatcher, BlockEntityRendererMapper<T>> factory) {
+		static <T extends BlockEntityMapper> void registerBlockEntityRenderer(BlockEntityType<T> type, Function<BlockEntityRenderDispatcher, BlockEntityRendererMapper<T>> factory) {
 			BlockEntityRendererRegistry.register(type, context -> factory.apply(null));
 		}
 

@@ -1,0 +1,23 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "londonunderground:beeching.ttf",
+      "size": 9.0,
+      "shift": [ 0, 1.5 ],
+      "oversample": 8.0
+    },
+    {
+        "type": "reference",
+        "id": "minecraft:include/space"
+    },
+    {
+        "type": "reference",
+        "id": "minecraft:include/default"
+    },
+    {
+        "type": "reference",
+        "id": "minecraft:include/unifont"
+    }
+  ]
+}
