@@ -9,6 +9,7 @@ import mtr.data.*;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.Utilities;
 import mtr.registry.Networking;
+import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.scores.ScoreAccess;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -176,7 +176,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 	}
 
 	public static <T extends NameColorDataBase> void receiveUpdateOrDeleteC2S(MinecraftServer minecraftServer, ServerPlayer player, FriendlyByteBuf packet, ResourceLocation packetId, Function<RailwayData, Set<T>> dataSet, Function<RailwayData, Map<Long, T>> cacheMap, BiFunction<Long, TransportMode, T> createDataWithId, boolean isDelete) {
-		if (RailwayData.hasNoPermission(player)) {
+		if (Util.hasNoPermission(player)) {
 			return;
 		}
 
@@ -237,7 +237,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 	}
 
 	public static void clearTrainsC2S(MinecraftServer minecraftServer, ServerPlayer player, FriendlyByteBuf packet) {
-		if (RailwayData.hasNoPermission(player)) {
+		if (Util.hasNoPermission(player)) {
 			return;
 		}
 

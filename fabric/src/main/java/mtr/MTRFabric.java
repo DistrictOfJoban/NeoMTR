@@ -2,6 +2,7 @@ package mtr;
 
 import cn.zbx1425.mtrsteamloco.Main;
 import com.lx862.jcm.mod.JCM;
+import com.lx862.mtrtm.TransitManagerCommands;
 import mtr.fabric.CompatPacketRegistry;
 import mtr.item.ItemBlockEnchanted;
 import mtr.item.ItemWithCreativeTabBase;

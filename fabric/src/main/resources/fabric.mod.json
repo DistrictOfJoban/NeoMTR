@@ -17,7 +17,8 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"mtr.MTRFabric"
+			"mtr.MTRFabric",
+			"com.lx862.mtrtm.TransitManagerFabric"
 		],
 		"client": [
 			"mtr.MTRFabricClient"
@@ -30,7 +31,8 @@
 		"mtr.mixins.json",
 		"mtr-common.mixins.json",
 		"jsblock-common.mixins.json",
-		"mtrsteamloco.mixins.json"
+		"mtrsteamloco.mixins.json",
+		"mtrtm-common.mixins.json"
 	],
 	"depends": {
 		"fabric": "*",

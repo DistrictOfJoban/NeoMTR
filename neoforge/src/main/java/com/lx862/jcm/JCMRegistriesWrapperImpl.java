@@ -1,4 +1,4 @@
-package cn.zbx1425.mtrsteamloco.neoforge;
+package com.lx862.jcm;
 
 import cn.zbx1425.mtrsteamloco.RegistriesWrapper;
 import com.lx862.jcm.mod.Constants;

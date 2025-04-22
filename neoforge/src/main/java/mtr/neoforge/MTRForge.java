@@ -1,9 +1,11 @@
 package mtr.neoforge;
 
 import cn.zbx1425.mtrsteamloco.neoforge.ClientProxy;
-import cn.zbx1425.mtrsteamloco.neoforge.JCMRegistriesWrapperImpl;
+import com.lx862.jcm.JCMRegistriesWrapperImpl;
 import com.lx862.jcm.mod.JCM;
 import com.lx862.jcm.mod.JCMClient;
+import com.lx862.mtrtm.TransitManager;
+import com.lx862.mtrtm.neoforge.LoaderImpl;
 import mtr.*;
 import mtr.client.CustomResources;
 import mtr.item.ItemBlockEnchanted;
@@ -33,6 +35,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -54,6 +57,7 @@ public class MTRForge {
 		MTR.init(MTRForge::registerItem, MTRForge::registerBlock, MTRForge::registerBlock, MTRForge::registerEnchantedBlock, MTRForge::registerBlockEntityType, MTRForge::registerEntityType, MTRForge::registerSoundEvent);
 		cn.zbx1425.mtrsteamloco.Main.init(registries);
 		JCM.init(jcmRegistries);
+		TransitManager.init();
 	}
 
 	public MTRForge(IEventBus eventBus) {
@@ -143,6 +147,11 @@ public class MTRForge {
 					CustomResources.reload(Minecraft.getInstance().getResourceManager());
 				}
 			});
+		}
+
+		@SubscribeEvent
+		public static void registerCommand(RegisterCommandsEvent registerCommandsEvent) {
+			LoaderImpl.invokeRegisterCommands(registerCommandsEvent.getDispatcher());
 		}
 
 		@SubscribeEvent

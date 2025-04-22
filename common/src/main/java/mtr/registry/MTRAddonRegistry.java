@@ -17,5 +17,6 @@ public class MTRAddonRegistry {
         return new ArrayList<>(registeredAddons);
     }
 
-    public record MTRAddon(String name, String version, Consumer<Screen> openScreenCallback) {}
+    public record MTRAddon(String modId, String name, String version) {
+    }
 }

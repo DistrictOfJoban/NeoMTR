@@ -8,6 +8,7 @@ import mtr.MTRClient;
 import mtr.data.*;
 import mtr.mappings.Text;
 import mtr.packet.PacketTrainDataGuiClient;
+import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -313,7 +314,7 @@ public final class ClientData {
 		if (playerInfo == null) {
 			return false;
 		}
-		return RailwayData.hasPermission(playerInfo.getGameMode());
+		return Util.hasPermission(player::hasPermissions, playerInfo.getGameMode());
 	}
 
 	public static float getShiftHoldingTicks() {

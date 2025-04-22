@@ -7,8 +7,7 @@ import com.lx862.jcm.mod.registry.Events;
 import com.lx862.jcm.mod.registry.Networking;
 import com.lx862.jcm.mod.render.gui.screen.ClientConfigScreen;
 import com.lx862.jcm.mod.resources.mcmeta.McMetaManager;
-import mtr.registry.MTRAddonRegistry;
-import net.minecraft.client.Minecraft;
+import mtr.MTRClient;
 import net.minecraft.client.gui.screens.Screen;
 
 public class JCMClient {
@@ -24,7 +23,7 @@ public class JCMClient {
         Networking.registerClient();
         Events.registerClient();
 
-        MTRAddonRegistry.registerAddon(new MTRAddonRegistry.MTRAddon("NeoJCM", Constants.MOD_VERSION, (prevScreen) -> Minecraft.getInstance().setScreen( getClientConfigScreen(prevScreen))));
+        MTRClient.registerAddonConfigGUICallback(JCM.ADDON, JCMClient::getClientConfigScreen);
     }
 
     public static Screen getClientConfigScreen(Screen previousScreen) {

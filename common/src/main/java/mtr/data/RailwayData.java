@@ -6,12 +6,10 @@ import mtr.Registry;
 import mtr.block.BlockNode;
 import mtr.client.ClientData;
 import mtr.mappings.PersistentStateMapper;
-import mtr.mappings.Utilities;
 import mtr.packet.*;
 import mtr.path.PathData;
 import mtr.registry.Networking;
 import mtr.util.BlockUtil;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +20,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -719,14 +716,6 @@ public class RailwayData extends PersistentStateMapper {
 		final HashMap<String, Value> resultMap = new HashMap<>(oldMap.size());
 		oldMap.forEach((key, newValue) -> resultMap.put(key.asStringValue().asString(), newValue));
 		return resultMap;
-	}
-
-	public static boolean hasNoPermission(ServerPlayer serverPlayer) {
-		return !hasPermission(serverPlayer.gameMode.getGameModeForPlayer());
-	}
-
-	public static boolean hasPermission(GameType gameType) {
-		return gameType == GameType.CREATIVE || gameType == GameType.SURVIVAL;
 	}
 
 	public static RailwayData getInstance(Level world) {

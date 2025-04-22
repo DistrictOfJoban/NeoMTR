@@ -6,6 +6,7 @@ import cn.zbx1425.mtrsteamloco.network.*;
 import com.google.gson.JsonParser;
 import mtr.registry.CreativeModeTabs;
 import mtr.Registry;
+import mtr.registry.MTRAddonRegistry;
 import mtr.registry.RegistryObject;
 import mtr.item.ItemBridgeCreator;
 import mtr.item.ItemWithCreativeTabBase;
@@ -23,8 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class Main {
-
 	public static final String MOD_ID = "mtrsteamloco";
+	public static final MTRAddonRegistry.MTRAddon ADDON = new MTRAddonRegistry.MTRAddon(MOD_ID, "MTR-NTE", BuildConfig.MOD_VERSION);
 
 	public static final Logger LOGGER = LoggerFactory.getLogger("MTR-NTE");
 	public static final JsonParser JSON_PARSER = new JsonParser();
@@ -90,6 +91,7 @@ public class Main {
 		}
 
 		Registry.registerPlayerJoinEvent(PacketVirtualDrivingPlayers::sendVirtualDrivingPlayersS2C);
+		MTRAddonRegistry.registerAddon(ADDON);
 	}
 
 	@FunctionalInterface

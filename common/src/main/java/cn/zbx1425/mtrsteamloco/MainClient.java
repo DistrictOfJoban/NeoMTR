@@ -13,12 +13,9 @@ import cn.zbx1425.sowcer.util.DrawContext;
 import cn.zbx1425.sowcerext.reuse.AtlasManager;
 import cn.zbx1425.sowcerext.reuse.DrawScheduler;
 import cn.zbx1425.sowcerext.reuse.ModelManager;
-import com.lx862.jcm.mod.Constants;
-import com.lx862.jcm.mod.render.gui.screen.ClientConfigScreen;
+import mtr.MTRClient;
 import mtr.RegistryClient;
 import mtr.item.ItemBlockClickingBase;
-import mtr.registry.MTRAddonRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 
 public class MainClient {
@@ -56,7 +53,7 @@ public class MainClient {
 			TrainVirtualDrive.activeTrain = null;
 		});
 
-		MTRAddonRegistry.registerAddon(new MTRAddonRegistry.MTRAddon("MTR-NTE", BuildConfig.MOD_VERSION, (prevScreen) -> Minecraft.getInstance().setScreen(ConfigScreen.createScreen(prevScreen))));
+		MTRClient.registerAddonConfigGUICallback(Main.ADDON, ConfigScreen::createScreen);
 	}
 
 }

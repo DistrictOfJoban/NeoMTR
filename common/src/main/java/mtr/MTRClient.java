@@ -10,7 +10,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public class MTRClient {
 
@@ -22,6 +24,8 @@ public class MTRClient {
 
 	public static final int TICKS_PER_SPEED_SOUND = 4;
 	public static final LoopingSoundInstance TACTILE_MAP_SOUND_INSTANCE = new LoopingSoundInstance("tactile_map_music");
+
+	private static final HashMap<MTRAddonRegistry.MTRAddon, Consumer<Screen>> addonScreenCallback = new HashMap<>();
 
 	public static void init() {
 		Blocks.registerClient();
@@ -74,6 +78,14 @@ public class MTRClient {
 
 	public static double getGameTick() {
 		return gameTick;
+	}
+
+	public static void registerAddonConfigGUICallback(MTRAddonRegistry.MTRAddon addon, Consumer<Screen> openScreen) {
+		addonScreenCallback.put(addon, openScreen);
+	}
+
+	public static Consumer<Screen> getAddonConfigScreen(MTRAddonRegistry.MTRAddon addon) {
+		return addonScreenCallback.get(addon);
 	}
 
 	public static void incrementGameTick() {

@@ -2,7 +2,10 @@ package mtr.util;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameType;
+
+import java.util.function.Function;
 
 public class Util {
     public static String prettyPrintJson(JsonElement jsonElement) {
@@ -23,5 +26,15 @@ public class Util {
 
     public static boolean isBetween(double value, double value1, double value2, double padding) {
         return value >= Math.min(value1, value2) - padding && value <= Math.max(value1, value2) + padding;
+    }
+
+    public static boolean hasNoPermission(ServerPlayer serverPlayer) {
+        return !hasPermission(serverPlayer::hasPermissions, serverPlayer.gameMode.getGameModeForPlayer());
+    }
+
+
+    public static boolean hasPermission(Function<Integer, Boolean> permissionInvoker, GameType gameType) {
+//        return gameType == GameType.CREATIVE || gameType == GameType.SURVIVAL;
+        return permissionInvoker.apply(2);
     }
 }
