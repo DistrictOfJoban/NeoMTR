@@ -42,7 +42,7 @@ public class ScriptResourceUtil {
     protected static Context activeContext;
     protected static Scriptable activeScope;
     private static final Stack<ResourceLocation> scriptLocationStack = new Stack<>();
-    private static final Logger LOGGER = LoggerFactory.getLogger("MTR-NTE JS");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.BRAND + " JS");
 
     public static void init(ResourceManager resourceManager) {
         hasNotoSansCjk = UtilitiesClient.hasResource(NOTO_SANS_CJK_LOCATION);

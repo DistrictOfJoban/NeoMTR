@@ -42,7 +42,7 @@ public class CustomResources {
     }
 
     public static void init(ResourceManager resourceManager) {
-        Main.LOGGER.info("MTR-NTE has started loading custom resources.");
+        Main.LOGGER.info("{} has started loading custom resources.", Main.BRAND);
 
         EyeCandyRegistry.reload(resourceManager);
         RailModelRegistry.reload(resourceManager);
@@ -53,11 +53,7 @@ public class CustomResources {
 
         initHardcodedTrains(resourceManager);
 
-        Main.LOGGER.info("MTR-NTE: "
-                + "Uploaded Models: " + MainClient.modelManager.uploadedVertArrays.size()
-                + " (" + MainClient.modelManager.vaoCount + " VAOs, "
-                + MainClient.modelManager.vboCount + " VBOs)"
-        );
+        Main.LOGGER.info("{}: Uploaded Models: {} ({} VAOs, {} VBOs)", Main.BRAND, MainClient.modelManager.uploadedVertArrays.size(), MainClient.modelManager.vaoCount, MainClient.modelManager.vboCount);
     }
 
     public static void resetComponents() {

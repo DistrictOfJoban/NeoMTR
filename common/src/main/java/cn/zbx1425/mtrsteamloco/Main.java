@@ -25,9 +25,10 @@ import java.util.Locale;
 
 public class Main {
 	public static final String MOD_ID = "mtrsteamloco";
-	public static final MTRAddonRegistry.MTRAddon ADDON = new MTRAddonRegistry.MTRAddon(MOD_ID, "MTR-NTE", BuildConfig.MOD_VERSION);
+	public static final String BRAND = "NeoMTR-NeoNTE";
+	public static final MTRAddonRegistry.MTRAddon ADDON = new MTRAddonRegistry.MTRAddon(MOD_ID, BRAND, BuildConfig.MOD_VERSION);
 
-	public static final Logger LOGGER = LoggerFactory.getLogger("MTR-NTE");
+	public static final Logger LOGGER = LoggerFactory.getLogger(BRAND);
 	public static final JsonParser JSON_PARSER = new JsonParser();
 
 	public static final boolean enableRegistry;
@@ -63,8 +64,7 @@ public class Main {
 	}
 
 	public static void init(RegistriesWrapper registries) {
-		LOGGER.info("MTR-NTE " + BuildConfig.MOD_VERSION + " built at "
-				+ DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.systemDefault()).format(BuildConfig.BUILD_TIME));
+		LOGGER.info("{} {} built at {}", BRAND, BuildConfig.MOD_VERSION, DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.systemDefault()).format(BuildConfig.BUILD_TIME));
 		if (enableRegistry) {
 			registries.registerBlockAndItem("eye_candy", BLOCK_EYE_CANDY, CreativeModeTabs.STATION_BUILDING_BLOCKS);
 			registries.registerBlockEntityType("eye_candy", BLOCK_ENTITY_TYPE_EYE_CANDY);

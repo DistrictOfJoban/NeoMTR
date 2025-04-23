@@ -57,7 +57,7 @@ public class CustomResourcesMixin {
         }
         GlStateTracker.restore();
 
-        Main.LOGGER.info("MTR-NTE has finished loading custom resources.");
+        Main.LOGGER.info("{} has finished loading custom resources.", Main.BRAND);
     }
 
     @Inject(at = @At("HEAD"), method = "readResource", cancellable = true)
