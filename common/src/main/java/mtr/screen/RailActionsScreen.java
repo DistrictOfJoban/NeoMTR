@@ -2,7 +2,7 @@ package mtr.screen;
 
 import io.netty.buffer.Unpooled;
 import mtr.MTR;
-import mtr.RegistryClient;
+import mtr.loader.MTRRegistryClient;
 import mtr.client.ClientData;
 import mtr.data.IGui;
 import mtr.data.NameColorDataBase;
@@ -70,6 +70,6 @@ public class RailActionsScreen extends ScreenMapper implements IGui {
 	private void onDelete(NameColorDataBase data, int index) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeLong(data.id);
-		RegistryClient.sendToServer(Networking.PACKET_REMOVE_RAIL_ACTION, packet);
+		MTRRegistryClient.sendToServer(Networking.PACKET_REMOVE_RAIL_ACTION, packet);
 	}
 }

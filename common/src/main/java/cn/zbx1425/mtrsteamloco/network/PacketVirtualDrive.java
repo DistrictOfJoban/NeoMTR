@@ -2,7 +2,7 @@ package cn.zbx1425.mtrsteamloco.network;
 
 import cn.zbx1425.mtrsteamloco.Main;
 import io.netty.buffer.Unpooled;
-import mtr.RegistryClient;
+import mtr.loader.MTRRegistryClient;
 import mtr.data.RailwayData;
 import mtr.data.RailwayDataMountModule;
 import mtr.data.Siding;
@@ -18,7 +18,7 @@ public class PacketVirtualDrive {
     public static void sendVirtualDriveC2S(boolean isDriving) {
         final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
         packet.writeBoolean(isDriving);
-        RegistryClient.sendToServer(PACKET_VIRTUAL_DRIVE, packet);
+        MTRRegistryClient.sendToServer(PACKET_VIRTUAL_DRIVE, packet);
     }
 
     public static void receiveVirtualDriveC2S(MinecraftServer server, ServerPlayer player, FriendlyByteBuf packet) {

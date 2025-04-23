@@ -7,6 +7,8 @@ import mtr.client.IDrawing;
 import mtr.data.IGui;
 import mtr.data.RailwayData;
 import mtr.data.Station;
+import mtr.loader.MTRRegistry;
+import mtr.loader.MTRRegistryClient;
 import mtr.packet.PacketTrainDataGuiServer;
 import mtr.servlet.Webserver;
 import net.minecraft.client.Minecraft;
@@ -19,7 +21,7 @@ import static mtr.MTRClient.TACTILE_MAP_SOUND_INSTANCE;
 
 public class Events {
     public static void register() {
-        Registry.registerTickEvent(minecraftServer -> {
+        MTRRegistry.registerTickEvent(minecraftServer -> {
             for(ServerLevel serverLevel : minecraftServer.getAllLevels()) {
                 final RailwayData railwayData = RailwayData.getInstance(serverLevel);
                 if (railwayData != null) {
@@ -30,7 +32,7 @@ public class Events {
             MTR.incrementGameTick();
         });
 
-        Registry.registerPlayerJoinEvent(player -> {
+        MTRRegistry.registerPlayerJoinEvent(player -> {
             PacketTrainDataGuiServer.versionCheckS2C(player);
             final RailwayData railwayData = RailwayData.getInstance(player.level());
             if (railwayData != null) {
@@ -38,7 +40,7 @@ public class Events {
             }
         });
 
-        Registry.registerPlayerQuitEvent(player -> {
+        MTRRegistry.registerPlayerQuitEvent(player -> {
             final RailwayData railwayData = RailwayData.getInstance(player.level());
             if (railwayData != null) {
                 railwayData.disconnectPlayer(player);
@@ -48,7 +50,7 @@ public class Events {
         if (!Keys.LIFTS_ONLY) {
             // TODO: Move the webserver away
             Webserver.init();
-            Registry.registerServerStartingEvent(minecraftServer -> {
+            MTRRegistry.registerServerStartingEvent(minecraftServer -> {
                 Webserver.callback = minecraftServer::execute;
                 Webserver.getWorlds = () -> {
                     final List<Level> worlds = new ArrayList<>();
@@ -59,12 +61,12 @@ public class Events {
                 Webserver.getDataCache = railwayData -> railwayData == null ? null : railwayData.dataCache;
                 Webserver.start(minecraftServer.getServerDirectory().resolve("config").resolve("mtr_webserver_port.txt"));
             });
-            Registry.registerServerStoppingEvent(minecraftServer -> Webserver.stop());
+            MTRRegistry.registerServerStoppingEvent(minecraftServer -> Webserver.stop());
         }
     }
 
     public static void registerClient() {
-        RegistryClient.registerPlayerJoinEvent(player -> {
+        MTRRegistryClient.registerPlayerJoinEvent(player -> {
             MTRClient.probeForMod(player);
 
             if (!Keys.LIFTS_ONLY) {
@@ -81,7 +83,7 @@ public class Events {
 
         if (!Keys.LIFTS_ONLY) {
             Webserver.init();
-            Registry.registerPlayerQuitEvent(player -> Webserver.stop());
+            MTRRegistry.registerPlayerQuitEvent(player -> Webserver.stop());
 
             BlockTactileMap.TileEntityTactileMap.updateSoundSource = TACTILE_MAP_SOUND_INSTANCE::setPos;
             BlockTactileMap.TileEntityTactileMap.onUse = pos -> {

@@ -1,6 +1,5 @@
 package mtr.data;
 
-import mtr.TrigCache;
 import mtr.block.*;
 import mtr.path.PathData;
 import mtr.registry.Networking;

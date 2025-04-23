@@ -1,37 +1,24 @@
 package mtr.neoforge;
 
 import cn.zbx1425.mtrsteamloco.neoforge.ClientProxy;
-import com.lx862.jcm.JCMRegistriesWrapperImpl;
+import com.lx862.jcm.JCMForge;
+import com.lx862.jcm.loader.neoforge.JCMRegistryImpl;
 import com.lx862.jcm.mod.JCM;
 import com.lx862.jcm.mod.JCMClient;
-import com.lx862.mtrtm.TransitManager;
-import com.lx862.mtrtm.neoforge.LoaderImpl;
+import com.lx862.mtrtm.mod.TransitManager;
+import com.lx862.mtrtm.loader.neoforge.LoaderImpl;
 import mtr.*;
 import mtr.client.CustomResources;
-import mtr.item.ItemBlockEnchanted;
-import mtr.item.ItemWithCreativeTabBase;
-import mtr.mappings.BlockEntityMapper;
+import mtr.loader.neoforge.MTRRegistryImpl;
 import mtr.neoforge.mappings.ForgeUtilities;
-import mtr.registry.CreativeModeTabs;
-import mtr.Registry;
 import mtr.registry.Items;
-import mtr.registry.RegistryObject;
 import mtr.render.RenderDrivingOverlay;
-import net.londonunderground.LondonUnderground;
-import net.londonunderground.LondonUndergroundClient;
-import net.londonunderground.registry.neoforge.LondonUndergroundRegistryImpl;
+import net.londonunderground.mod.LUAddon;
+import net.londonunderground.mod.LUAddonClient;
+import net.londonunderground.loader.neoforge.LUAddonRegistryImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -41,46 +28,30 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import top.mcmtr.MSDMain;
-import top.mcmtr.MSDMainClient;
-import top.mcmtr.MSDMainForge;
+import top.mcmtr.loader.neoforge.MSDRegistryImpl;
+import top.mcmtr.mod.MSDMain;
+import top.mcmtr.mod.MSDMainClient;
 
 @Mod(MTR.MOD_ID)
 public class MTRForge {
-
-	private static final DeferredRegisterHolder<Item> ITEMS = new DeferredRegisterHolder<>(MTR.MOD_ID, ForgeUtilities.registryGetItem());
-	private static final DeferredRegisterHolder<Block> BLOCKS = new DeferredRegisterHolder<>(MTR.MOD_ID, ForgeUtilities.registryGetBlock());
-	private static final DeferredRegisterHolder<BlockEntityType<?>> BLOCK_ENTITY_TYPES = new DeferredRegisterHolder<>(MTR.MOD_ID, ForgeUtilities.registryGetBlockEntityType());
-	private static final DeferredRegisterHolder<EntityType<?>> ENTITY_TYPES = new DeferredRegisterHolder<>(MTR.MOD_ID, ForgeUtilities.registryGetEntityType());
-	private static final DeferredRegisterHolder<SoundEvent> SOUND_EVENTS = new DeferredRegisterHolder<>(MTR.MOD_ID, ForgeUtilities.registryGetSoundEvent());
-	private static final DeferredRegisterHolder<CreativeModeTab> CREATIVE_MODE_TABS = new DeferredRegisterHolder<>(MTR.MOD_ID, Registries.CREATIVE_MODE_TAB);
-	private static final RegistriesWrapperImpl registries = new RegistriesWrapperImpl();
-	private static final JCMRegistriesWrapperImpl jcmRegistries = new JCMRegistriesWrapperImpl();
-
-	public static final CompatPacketRegistry PACKET_REGISTRY = new CompatPacketRegistry();
+	private static final RegistriesWrapperImpl nteRegistries = new RegistriesWrapperImpl();
 
 	static {
-		MTR.init(MTRForge::registerItem, MTRForge::registerBlock, MTRForge::registerBlock, MTRForge::registerEnchantedBlock, MTRForge::registerBlockEntityType, MTRForge::registerEntityType, MTRForge::registerSoundEvent);
-		cn.zbx1425.mtrsteamloco.Main.init(registries);
-		JCM.init(jcmRegistries);
-		LondonUnderground.init();
+		MTR.init();
+		cn.zbx1425.mtrsteamloco.Main.init(nteRegistries);
+		JCM.init();
+		LUAddon.init();
 		TransitManager.init();
-		MSDMain.init(MSDMainForge::registerItem, MSDMainForge::registerBlock, MSDMainForge::registerBlock, MSDMainForge::registerBlockEntityType, MSDMainForge::registerEntityType, MSDMainForge::registerSoundEvent);
+		MSDMain.init();
 	}
 
 	public MTRForge(IEventBus eventBus) {
+		MTRRegistryImpl.registeredAllDeferred(eventBus);
+		nteRegistries.registerAllDeferred(eventBus);
+		JCMForge.init(eventBus);
 
-		ITEMS.register(eventBus);
-		BLOCKS.register(eventBus);
-		BLOCK_ENTITY_TYPES.register(eventBus);
-		ENTITY_TYPES.register(eventBus);
-		SOUND_EVENTS.register(eventBus);
-		registries.registerAllDeferred(eventBus);
-		LondonUndergroundRegistryImpl.registerAllDeferred(eventBus);
-		MSDMainForge.registerAllDeferred(eventBus);
-
-		ForgeUtilities.registerCreativeModeTabsToDeferredRegistry(CREATIVE_MODE_TABS);
-		CREATIVE_MODE_TABS.register(eventBus);
+		LUAddonRegistryImpl.registerAllDeferred(eventBus);
+		MSDRegistryImpl.registerAllDeferred(eventBus);
 
 		eventBus.register(MTRModEventBus.class);
 		eventBus.register(ForgeUtilities.RegisterCreativeTabs.class);
@@ -99,52 +70,6 @@ public class MTRForge {
 		}
 	}
 
-	private static void registerItem(String path, RegistryObject<Item> item) {
-		ITEMS.register(path, () -> {
-			final Item itemObject = item.get();
-			if (itemObject instanceof ItemWithCreativeTabBase) {
-				Registry.registerCreativeModeTab(((ItemWithCreativeTabBase) itemObject).creativeModeTab.resourceLocation, itemObject);
-			} else if (itemObject instanceof ItemWithCreativeTabBase.ItemPlaceOnWater) {
-				Registry.registerCreativeModeTab(((ItemWithCreativeTabBase.ItemPlaceOnWater) itemObject).creativeModeTab.resourceLocation, itemObject);
-			}
-			return itemObject;
-		});
-	}
-
-	private static void registerBlock(String path, RegistryObject<Block> block) {
-		BLOCKS.register(path, block::get);
-	}
-
-	private static void registerBlock(String path, RegistryObject<Block> block, CreativeModeTabs.Wrapper creativeModeTabWrapper) {
-		registerBlock(path, block);
-		ITEMS.register(path, () -> {
-			final BlockItem blockItem = new BlockItem(block.get(), new Item.Properties());
-			Registry.registerCreativeModeTab(creativeModeTabWrapper.resourceLocation, blockItem);
-			return blockItem;
-		});
-	}
-
-	private static void registerEnchantedBlock(String path, RegistryObject<Block> block, CreativeModeTabs.Wrapper creativeModeTab) {
-		registerBlock(path, block);
-		ITEMS.register(path, () -> {
-			final ItemBlockEnchanted itemBlockEnchanted = new ItemBlockEnchanted(block.get(), new Item.Properties());
-			Registry.registerCreativeModeTab(creativeModeTab.resourceLocation, itemBlockEnchanted);
-			return itemBlockEnchanted;
-		});
-	}
-
-	private static void registerBlockEntityType(String path, RegistryObject<? extends BlockEntityType<? extends BlockEntityMapper>> blockEntityType) {
-		BLOCK_ENTITY_TYPES.register(path, blockEntityType::get);
-	}
-
-	private static void registerEntityType(String path, RegistryObject<? extends EntityType<? extends Entity>> entityType) {
-		ENTITY_TYPES.register(path, entityType::get);
-	}
-
-	private static void registerSoundEvent(String path, SoundEvent soundEvent) {
-		SOUND_EVENTS.register(path, () -> soundEvent);
-	}
-
 	private static class MTRModEventBus {
 
 		@SubscribeEvent
@@ -153,7 +78,7 @@ public class MTRForge {
 			event.enqueueWork(Items::initItemModelPredicate);
 
 			JCMClient.initializeClient();
-			LondonUndergroundClient.init();
+			LUAddonClient.init();
 
 			// MSD
 			MSDMainClient.init();
@@ -169,13 +94,15 @@ public class MTRForge {
 		@SubscribeEvent
 		public static void registerCommand(RegisterCommandsEvent registerCommandsEvent) {
 			LoaderImpl.invokeRegisterCommands(registerCommandsEvent.getDispatcher());
-			LondonUndergroundRegistryImpl.invokeRegisterCommands(registerCommandsEvent.getDispatcher());
+			LUAddonRegistryImpl.invokeRegisterCommands(registerCommandsEvent.getDispatcher());
 		}
 
 		@SubscribeEvent
 		public static void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
 			PayloadRegistrar registrar = event.registrar("1");
-			MTRForge.PACKET_REGISTRY.commit(registrar);
+			MTRRegistryImpl.PACKET_REGISTRY.commit(registrar);
+			JCMRegistryImpl.PACKET_REGISTRY.commit(registrar);
+			MSDRegistryImpl.PACKET_REGISTRY.commit(registrar);
 		}
 	}
 }

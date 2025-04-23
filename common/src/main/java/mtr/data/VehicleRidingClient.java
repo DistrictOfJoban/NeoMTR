@@ -2,17 +2,15 @@ package mtr.data;
 
 import io.netty.buffer.Unpooled;
 import mtr.MTRClient;
-import mtr.RegistryClient;
+import mtr.loader.MTRRegistryClient;
 import mtr.client.ClientData;
 import mtr.mappings.Utilities;
-import mtr.packet.PacketTrainDataGuiClient;
 import mtr.render.TrainRendererBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -141,7 +139,7 @@ public class VehicleRidingClient {
 				packet.writeFloat(newPercentageX);
 				packet.writeFloat(newPercentageZ);
 				packet.writeUUID(uuid);
-				RegistryClient.sendToServer(packetId, packet);
+				MTRRegistryClient.sendToServer(packetId, packet);
 				oldPercentageX = newPercentageX;
 				oldPercentageZ = newPercentageZ;
 			}

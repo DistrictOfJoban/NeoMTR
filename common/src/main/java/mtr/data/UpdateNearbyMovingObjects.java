@@ -1,7 +1,7 @@
 package mtr.data;
 
 import io.netty.buffer.Unpooled;
-import mtr.Registry;
+import mtr.loader.MTRRegistry;
 import mtr.registry.Networking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -42,7 +42,7 @@ public class UpdateNearbyMovingObjects<T extends NameColorDataBase> {
 					}
 
 					if (packet.readableBytes() <= Networking.MAX_PACKET_BYTES) {
-						Registry.sendToPlayer((ServerPlayer) player, deletePacketId, packet);
+						MTRRegistry.sendToPlayer((ServerPlayer) player, deletePacketId, packet);
 					}
 
 					break;
@@ -75,7 +75,7 @@ public class UpdateNearbyMovingObjects<T extends NameColorDataBase> {
 					}
 				}
 
-				Registry.sendToPlayer((ServerPlayer) player, updatePacketId, packet);
+				MTRRegistry.sendToPlayer((ServerPlayer) player, updatePacketId, packet);
 			}
 		});
 

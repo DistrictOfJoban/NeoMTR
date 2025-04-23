@@ -2,8 +2,8 @@ package mtr.neoforge;
 
 import cn.zbx1425.mtrsteamloco.Main;
 import cn.zbx1425.mtrsteamloco.RegistriesWrapper;
+import mtr.loader.MTRRegistry;
 import mtr.registry.CreativeModeTabs;
-import mtr.Registry;
 import mtr.registry.RegistryObject;
 import mtr.item.ItemWithCreativeTabBase;
 import mtr.neoforge.mappings.ForgeUtilities;
@@ -39,7 +39,7 @@ public class RegistriesWrapperImpl implements RegistriesWrapper {
         BLOCKS.register(id, block::get);
         ITEMS.register(id, () -> {
             final BlockItem blockItem = new BlockItem(block.get(), new Item.Properties());
-            Registry.registerCreativeModeTab(tab.resourceLocation, blockItem);
+            MTRRegistry.registerCreativeModeTab(tab.resourceLocation, blockItem);
             return blockItem;
         });
     }
@@ -50,7 +50,7 @@ public class RegistriesWrapperImpl implements RegistriesWrapper {
             final Item itemObject = item.get();
 
             if(itemObject instanceof ItemWithCreativeTabBase itm) {
-                Registry.registerCreativeModeTab(itm.creativeModeTab.resourceLocation, itemObject);
+                MTRRegistry.registerCreativeModeTab(itm.creativeModeTab.resourceLocation, itemObject);
             }
             return itemObject;
         });

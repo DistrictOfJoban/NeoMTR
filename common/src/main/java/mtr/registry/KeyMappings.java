@@ -2,7 +2,7 @@ package mtr.registry;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import mtr.Keys;
-import mtr.RegistryClient;
+import mtr.loader.MTRRegistryClient;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
@@ -23,21 +23,21 @@ public class KeyMappings {
 	public static final KeyMapping DEBUG_ROTATE_CATEGORY_POSITIVE = new KeyMapping("key.mtr.debug_cycle_positive", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_ADD, "category.mtr.keybinding");
 
 	public static void registerClient() {
-		RegistryClient.registerKeyBinding(KeyMappings.LIFT_MENU);
+		MTRRegistryClient.registerKeyBinding(KeyMappings.LIFT_MENU);
 
 		if (!Keys.LIFTS_ONLY) {
-			RegistryClient.registerKeyBinding(KeyMappings.TRAIN_ACCELERATE);
-			RegistryClient.registerKeyBinding(KeyMappings.TRAIN_BRAKE);
-			RegistryClient.registerKeyBinding(KeyMappings.TRAIN_NEUTRAL);
-			RegistryClient.registerKeyBinding(KeyMappings.TRAIN_TOGGLE_DOORS);
-			RegistryClient.registerKeyBinding(KeyMappings.DEBUG_1_NEGATIVE);
-			RegistryClient.registerKeyBinding(KeyMappings.DEBUG_2_NEGATIVE);
-			RegistryClient.registerKeyBinding(KeyMappings.DEBUG_3_NEGATIVE);
-			RegistryClient.registerKeyBinding(KeyMappings.DEBUG_1_POSITIVE);
-			RegistryClient.registerKeyBinding(KeyMappings.DEBUG_2_POSITIVE);
-			RegistryClient.registerKeyBinding(KeyMappings.DEBUG_3_POSITIVE);
-			RegistryClient.registerKeyBinding(KeyMappings.DEBUG_ROTATE_CATEGORY_NEGATIVE);
-			RegistryClient.registerKeyBinding(KeyMappings.DEBUG_ROTATE_CATEGORY_POSITIVE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.TRAIN_ACCELERATE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.TRAIN_BRAKE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.TRAIN_NEUTRAL);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.TRAIN_TOGGLE_DOORS);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.DEBUG_1_NEGATIVE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.DEBUG_2_NEGATIVE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.DEBUG_3_NEGATIVE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.DEBUG_1_POSITIVE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.DEBUG_2_POSITIVE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.DEBUG_3_POSITIVE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.DEBUG_ROTATE_CATEGORY_NEGATIVE);
+			MTRRegistryClient.registerKeyBinding(KeyMappings.DEBUG_ROTATE_CATEGORY_POSITIVE);
 		}
 	}
 }

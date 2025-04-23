@@ -1,7 +1,7 @@
 package mtr.data;
 
 import io.netty.buffer.Unpooled;
-import mtr.Registry;
+import mtr.loader.MTRRegistry;
 import mtr.mappings.Utilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -52,7 +52,7 @@ public class RailwayDataMountModule extends RailwayDataModule {
 					packet.writeFloat(percentageX);
 					packet.writeFloat(percentageZ);
 					packet.writeUUID(player.getUUID());
-					level.players().forEach(worldPlayer -> Registry.sendToPlayer((ServerPlayer) worldPlayer, packetId, packet));
+					level.players().forEach(worldPlayer -> MTRRegistry.sendToPlayer((ServerPlayer) worldPlayer, packetId, packet));
 				}
 			});
 		}
@@ -103,7 +103,7 @@ public class RailwayDataMountModule extends RailwayDataModule {
 
 		playerInVirtualDrive.forEach(player -> {
 			playerRidingCoolDown.put(player, 2);
-			Registry.setInTeleportationState(player, true);
+			MTRRegistry.setInTeleportationState(player, true);
 		});
 
 		final Set<Player> playersToRemove = new HashSet<>();
@@ -144,7 +144,7 @@ public class RailwayDataMountModule extends RailwayDataModule {
 			playerInVirtualDrive.remove(player);
 			((ServerPlayer) player).gameMode.getGameModeForPlayer().updatePlayerAbilities(Utilities.getAbilities(player));
 		}
-		Registry.setInTeleportationState(player, isRiding);
+		MTRRegistry.setInTeleportationState(player, isRiding);
 	}
 
 	public boolean canRide(Player player) {
@@ -162,7 +162,7 @@ public class RailwayDataMountModule extends RailwayDataModule {
 			playerInVirtualDrive.remove(player);
 			((ServerPlayer) player).gameMode.getGameModeForPlayer().updatePlayerAbilities(Utilities.getAbilities(player));
 		}
-		Registry.setInTeleportationState(player, isRiding);
+		MTRRegistry.setInTeleportationState(player, isRiding);
 	}
 
 	public Route getRidingRoute(Player player) {

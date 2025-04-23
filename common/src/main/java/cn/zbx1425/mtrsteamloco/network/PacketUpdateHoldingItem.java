@@ -2,7 +2,7 @@ package cn.zbx1425.mtrsteamloco.network;
 
 import cn.zbx1425.mtrsteamloco.Main;
 import io.netty.buffer.Unpooled;
-import mtr.RegistryClient;
+import mtr.loader.MTRRegistryClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -23,7 +23,7 @@ public class PacketUpdateHoldingItem {
         assert Minecraft.getInstance().level != null;
         Tag tag = Minecraft.getInstance().player.getMainHandItem().save(Minecraft.getInstance().level.registryAccess());
         packet.writeNbt(tag);
-        RegistryClient.sendToServer(PACKET_UPDATE_HOLDING_ITEM, packet);
+        MTRRegistryClient.sendToServer(PACKET_UPDATE_HOLDING_ITEM, packet);
     }
 
     public static void receiveUpdateC2S(MinecraftServer server, ServerPlayer player, FriendlyByteBuf packet) {

@@ -3,7 +3,7 @@ package cn.zbx1425.mtrsteamloco.network;
 import cn.zbx1425.mtrsteamloco.BuildConfig;
 import cn.zbx1425.mtrsteamloco.Main;
 import io.netty.buffer.Unpooled;
-import mtr.Registry;
+import mtr.loader.MTRRegistry;
 import mtr.mappings.Text;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -19,7 +19,7 @@ public class PacketVersionCheck {
         final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
         packet.writeUtf(BuildConfig.MOD_VERSION);
         packet.writeInt(BuildConfig.MOD_PROTOCOL_VERSION);
-        Registry.sendToPlayer(player, PACKET_VERSION_CHECK, packet);
+        MTRRegistry.sendToPlayer(player, PACKET_VERSION_CHECK, packet);
     }
     public static void receiveVersionCheckS2C(FriendlyByteBuf packet) {
         final String remoteVersion = packet.readUtf();

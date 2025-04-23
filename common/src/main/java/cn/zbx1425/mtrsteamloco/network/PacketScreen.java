@@ -4,7 +4,7 @@ import cn.zbx1425.mtrsteamloco.Main;
 import cn.zbx1425.mtrsteamloco.gui.BrushEditRailScreen;
 import cn.zbx1425.mtrsteamloco.gui.EyeCandyScreen;
 import io.netty.buffer.Unpooled;
-import mtr.Registry;
+import mtr.loader.MTRRegistry;
 import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -20,7 +20,7 @@ public class PacketScreen {
         final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
         packet.writeUtf(screenName);
         packet.writeBlockPos(pos);
-        Registry.sendToPlayer(player, PACKET_SHOW_SCREEN, packet);
+        MTRRegistry.sendToPlayer(player, PACKET_SHOW_SCREEN, packet);
     }
 
     public static void receiveScreenS2C(FriendlyByteBuf packet) {

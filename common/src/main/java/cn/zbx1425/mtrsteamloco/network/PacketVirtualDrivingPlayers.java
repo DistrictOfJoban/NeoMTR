@@ -4,7 +4,7 @@ import cn.zbx1425.mtrsteamloco.Main;
 import cn.zbx1425.mtrsteamloco.game.VirtualDriveClientData;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import mtr.Registry;
+import mtr.loader.MTRRegistry;
 import mtr.data.RailwayData;
 import mtr.data.RailwayDataMountModule;
 import net.minecraft.network.FriendlyByteBuf;
@@ -25,7 +25,7 @@ public class PacketVirtualDrivingPlayers {
         for (Player drivingPlayer : playerInVirtualDrive) {
             packet.writeUUID(drivingPlayer.getUUID());
         }
-        Registry.sendToPlayer(player, PACKET_VIRTUAL_DRIVING_PLAYERS, packet);
+        MTRRegistry.sendToPlayer(player, PACKET_VIRTUAL_DRIVING_PLAYERS, packet);
     }
 
     public static void sendVirtualDrivingPlayersS2C(ServerPlayer player) {

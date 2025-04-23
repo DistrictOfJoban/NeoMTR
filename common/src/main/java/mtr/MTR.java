@@ -1,15 +1,8 @@
 package mtr;
 
-import mtr.mappings.BlockEntityMapper;
 import mtr.registry.Networking;
 import mtr.registry.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,20 +17,12 @@ public class MTR {
 		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
 	}
 
-	public static void init(
-			RegisterCallback<RegistryObject<Item>> registerItem,
-			RegisterCallback<RegistryObject<Block>> registerBlock,
-			RegisterBlockItem registerBlockItem,
-			RegisterBlockItem registerEnchantedBlockItem,
-			RegisterCallback<RegistryObject<? extends BlockEntityType<? extends BlockEntityMapper>>> registerBlockEntityType,
-			RegisterCallback<RegistryObject<? extends EntityType<? extends Entity>>> registerEntityType,
-			RegisterCallback<SoundEvent> registerSoundEvent
-	) {
-		Blocks.register(registerBlock, registerBlockItem, registerEnchantedBlockItem);
-		BlockEntityTypes.register(registerBlockEntityType);
-		Items.register(registerItem);
+	public static void init() {
+		Blocks.register();
+		BlockEntityTypes.register();
+		Items.register();
 		Networking.register();
-		SoundEvents.register(registerSoundEvent);
+		SoundEvents.register();
 		Events.register();
 	}
 
@@ -51,15 +36,5 @@ public class MTR {
 
 	public static boolean isGameTickInterval(int interval, int offset) {
 		return (gameTick + offset) % interval == 0;
-	}
-
-	@FunctionalInterface
-	public interface RegisterBlockItem {
-		void accept(String string, RegistryObject<Block> block, CreativeModeTabs.Wrapper tab);
-	}
-
-	@FunctionalInterface
-	public interface RegisterCallback<T> {
-		void register(String id, T data);
 	}
 }

@@ -47,11 +47,13 @@ public class CompatPacketRegistry {
 
     public void sendS2C(ServerPlayer player, ResourceLocation id, FriendlyByteBuf payload) {
         CompatPacket packet = packets.get(id);
+        if(packet == null) throw new IllegalStateException("Packet " + id + " is not registered!");
         PacketDistributor.sendToPlayer(player, packet.new Payload(payload));
     }
 
     public void sendC2S(ResourceLocation id, FriendlyByteBuf payload) {
         CompatPacket packet = packets.get(id);
+        if(packet == null) throw new IllegalStateException("Packet " + id + " is not registered!");
         PacketDistributor.sendToServer(packet.new Payload(payload));
     }
 }

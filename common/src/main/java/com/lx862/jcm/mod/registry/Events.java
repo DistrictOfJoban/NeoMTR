@@ -1,16 +1,16 @@
 package com.lx862.jcm.mod.registry;
 
+import com.lx862.jcm.loader.JCMRegistry;
+import com.lx862.jcm.loader.JCMRegistryClient;
 import com.lx862.jcm.mod.JCMClient;
 import com.lx862.jcm.mod.data.JCMServerStats;
 import com.lx862.jcm.mod.resources.JCMResourceManager;
-import mtr.Registry;
-import mtr.RegistryClient;
 import mtr.client.CustomResources;
 
 public class Events {
     public static void register() {
         // Start Tick Event for counting tick
-        Registry.registerTickEvent((server) -> {
+        JCMRegistry.registerTickEvent((server) -> {
             JCMServerStats.incrementGameTick();
         });
     }
@@ -20,7 +20,7 @@ public class Events {
             JCMResourceManager.reload();
         });
 
-        RegistryClient.registerTickEvent((minecraft) -> {
+        JCMRegistryClient.registerTickEvent((minecraft) -> {
             JCMClient.getMcMetaManager().tick();
         });
     }

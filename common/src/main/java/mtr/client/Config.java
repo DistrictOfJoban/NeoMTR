@@ -3,7 +3,6 @@ package mtr.client;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import mtr.MTR;
-import mtr.Patreon;
 import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;

@@ -1,5 +1,7 @@
 package com.lx862.jcm.mod.registry;
 
+import com.lx862.jcm.loader.JCMRegistry;
+import com.lx862.jcm.loader.JCMRegistryClient;
 import com.lx862.jcm.mod.Constants;
 import com.lx862.jcm.mod.network.PacketHandler;
 import com.lx862.jcm.mod.network.block.*;
@@ -7,8 +9,6 @@ import com.lx862.jcm.mod.network.gui.EnquiryUpdateGUIPacket;
 import com.lx862.jcm.mod.util.JCMLogger;
 import com.lx862.jcm.mod.util.JCMUtil;
 import io.netty.buffer.Unpooled;
-import mtr.Registry;
-import mtr.RegistryClient;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -26,8 +26,8 @@ public class Networking {
     }
 
     public static void setupPacketServer() {
-        Registry.registerNetworkPacket(PACKET_ID);
-        Registry.registerNetworkReceiver(PACKET_ID, (MinecraftServer server, ServerPlayer player, FriendlyByteBuf packet) -> {
+        JCMRegistry.registerNetworkPacket(PACKET_ID);
+        JCMRegistry.registerNetworkReceiver(PACKET_ID, (MinecraftServer server, ServerPlayer player, FriendlyByteBuf packet) -> {
             String className = packet.readUtf();
             JCMLogger.debug("Received C2S packet: " + className);
             Function<FriendlyByteBuf, ? extends PacketHandler> packetHandlerConstructor = packets.get(className);
@@ -44,7 +44,7 @@ public class Networking {
     }
 
     public static void setupPacketClient() {
-        RegistryClient.registerNetworkReceiver(PACKET_ID, packet -> {
+        JCMRegistryClient.registerNetworkReceiver(PACKET_ID, packet -> {
             String className = packet.readUtf();
             JCMLogger.debug("Received S2C packet: " + className);
             Function<FriendlyByteBuf, ? extends PacketHandler> packetHandlerConstructor = packets.get(className);
@@ -79,7 +79,7 @@ public class Networking {
         FriendlyByteBuf newPacket = new FriendlyByteBuf(Unpooled.buffer());
         newPacket.writeUtf(className);
         packetHandler.write(newPacket);
-        Registry.sendToPlayer(player, PACKET_ID, newPacket);
+        JCMRegistry.sendToPlayer(player, PACKET_ID, newPacket);
         JCMLogger.debug("Sent S2C packet: " + className);
     }
 
@@ -88,7 +88,7 @@ public class Networking {
         FriendlyByteBuf newPacket = new FriendlyByteBuf(Unpooled.buffer());
         newPacket.writeUtf(className);
         packetHandler.write(newPacket);
-        RegistryClient.sendToServer(PACKET_ID, newPacket);
+        JCMRegistryClient.sendToServer(PACKET_ID, newPacket);
         JCMLogger.debug("Sent C2S packet: " + className);
     }
 }

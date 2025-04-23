@@ -1,12 +1,14 @@
 package top.mcmtr;
 
 import net.fabricmc.api.ClientModInitializer;
+import top.mcmtr.loader.fabric.MSDRegistryImpl;
+import top.mcmtr.mod.MSDMainClient;
 
-// TODO: Entry point not used atm
 public class MSDMainFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         MSDMainClient.init();
         MSDMainClient.registerItemModelPredicates();
+        MSDRegistryImpl.PACKET_REGISTRY.commitClient();
     }
 }

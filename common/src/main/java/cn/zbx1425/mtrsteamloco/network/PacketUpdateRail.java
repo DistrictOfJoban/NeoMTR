@@ -4,8 +4,8 @@ import cn.zbx1425.mtrsteamloco.Main;
 import cn.zbx1425.mtrsteamloco.data.RailExtraSupplier;
 import cn.zbx1425.mtrsteamloco.mixin.RailwayDataAccessor;
 import io.netty.buffer.Unpooled;
-import mtr.Registry;
-import mtr.RegistryClient;
+import mtr.loader.MTRRegistry;
+import mtr.loader.MTRRegistryClient;
 import mtr.data.Rail;
 import mtr.data.RailwayData;
 import mtr.registry.Networking;
@@ -32,7 +32,7 @@ public class PacketUpdateRail {
         packet.writeBlockPos(posEnd);
         newState.writePacket(packet);
 
-        RegistryClient.sendToServer(PACKET_UPDATE_RAIL, packet);
+        MTRRegistryClient.sendToServer(PACKET_UPDATE_RAIL, packet);
     }
 
     public static void receiveUpdateC2S(MinecraftServer server, ServerPlayer player, FriendlyByteBuf packet) {
@@ -68,7 +68,7 @@ public class PacketUpdateRail {
             outboundPacket.writeLong(0); // We're actually updating instead of creating, so don't create saved rail
 
             for (ServerPlayer levelPlayer : level.players()) {
-                Registry.sendToPlayer(levelPlayer, Networking.PACKET_CREATE_RAIL, outboundPacket);
+                MTRRegistry.sendToPlayer(levelPlayer, Networking.PACKET_CREATE_RAIL, outboundPacket);
             }
         });
     }

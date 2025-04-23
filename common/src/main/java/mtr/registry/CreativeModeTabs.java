@@ -2,7 +2,7 @@ package mtr.registry;
 
 import mtr.Keys;
 import mtr.MTR;
-import mtr.Registry;
+import mtr.loader.MTRRegistry;
 import mtr.mappings.Utilities;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
@@ -25,7 +25,7 @@ public interface CreativeModeTabs {
 
 		public Wrapper(ResourceLocation resourceLocation, Supplier<ItemStack> itemSupplier) {
 			this.resourceLocation = resourceLocation;
-			creativeModeTabSupplier = Registry.getCreativeModeTab(resourceLocation, itemSupplier);
+			creativeModeTabSupplier = MTRRegistry.getCreativeModeTab(resourceLocation, itemSupplier);
 		}
 
 		public CreativeModeTab get() {

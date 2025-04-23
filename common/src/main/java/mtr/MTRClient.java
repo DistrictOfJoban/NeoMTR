@@ -2,6 +2,7 @@ package mtr;
 
 import mtr.client.ClientData;
 import mtr.client.Config;
+import mtr.client.Patreon;
 import mtr.registry.Networking;
 import mtr.registry.*;
 import mtr.screen.NewConfigScreen;
@@ -18,7 +19,6 @@ public class MTRClient {
 
 	private static boolean isReplayMod;
 	private static boolean isVivecraft;
-	private static boolean isPehkui;
 	private static double gameTick = 0;
 	private static double lastPlayedTrainSoundsTick = 0;
 
@@ -46,21 +46,12 @@ public class MTRClient {
 		} catch (Exception ignored) {
 			isVivecraft = false;
 		}
-		try {
-			Class.forName("virtuoel.pehkui.Pehkui");
-			isPehkui = true;
-		} catch (Exception ignored) {
-			isPehkui = false;
-		}
 
 		if (isReplayMod) {
 			MTR.LOGGER.info("[NeoMTR] Running in Replay Mod mode");
 		}
 		if (isVivecraft) {
 			MTR.LOGGER.info("[NeoMTR] Vivecraft detected");
-		}
-		if (isPehkui) {
-			MTR.LOGGER.info("[NeoMTR] Pehkui detected");
 		}
 	}
 
@@ -70,10 +61,6 @@ public class MTRClient {
 
 	public static boolean isVivecraft() {
 		return isVivecraft;
-	}
-
-	public static boolean isPehkui() {
-		return isPehkui;
 	}
 
 	public static double getGameTick() {

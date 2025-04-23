@@ -3,7 +3,7 @@ package mtr.packet;
 import io.netty.buffer.Unpooled;
 import mtr.Keys;
 import mtr.MTR;
-import mtr.Registry;
+import mtr.loader.MTRRegistry;
 import mtr.block.*;
 import mtr.data.*;
 import mtr.mappings.BlockEntityMapper;
@@ -37,43 +37,43 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 	public static void versionCheckS2C(ServerPlayer player) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeUtf(Keys.MOD_VERSION.split("-hotfix-")[0]);
-		Registry.sendToPlayer(player, Networking.PACKET_VERSION_CHECK, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_VERSION_CHECK, packet);
 	}
 
 	public static void openDashboardScreenS2C(ServerPlayer player, TransportMode transportMode) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeUtf(transportMode.toString());
-		Registry.sendToPlayer(player, Networking.PACKET_OPEN_DASHBOARD_SCREEN, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_OPEN_DASHBOARD_SCREEN, packet);
 	}
 
 	public static void openRailwaySignScreenS2C(ServerPlayer player, BlockPos signPos) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeBlockPos(signPos);
-		Registry.sendToPlayer(player, Networking.PACKET_OPEN_RAILWAY_SIGN_SCREEN, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_OPEN_RAILWAY_SIGN_SCREEN, packet);
 	}
 
 	public static void openTicketMachineScreenS2C(Level world, ServerPlayer player) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeInt(TicketSystem.getPlayerScore(world, player, TicketSystem.BALANCE_OBJECTIVE).get());
-		Registry.sendToPlayer(player, Networking.PACKET_OPEN_TICKET_MACHINE_SCREEN, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_OPEN_TICKET_MACHINE_SCREEN, packet);
 	}
 
 	public static void openTrainSensorScreenS2C(ServerPlayer player, BlockPos blockPos) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeBlockPos(blockPos);
-		Registry.sendToPlayer(player, Networking.PACKET_OPEN_TRAIN_SENSOR_SCREEN, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_OPEN_TRAIN_SENSOR_SCREEN, packet);
 	}
 
 	public static void openLiftTrackFloorScreenS2C(ServerPlayer player, BlockPos blockPos) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeBlockPos(blockPos);
-		Registry.sendToPlayer(player, Networking.PACKET_OPEN_LIFT_TRACK_FLOOR_SCREEN, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_OPEN_LIFT_TRACK_FLOOR_SCREEN, packet);
 	}
 
 	public static void openLiftCustomizationScreenS2C(ServerPlayer player, long id) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeLong(id);
-		Registry.sendToPlayer(player, Networking.PACKET_OPEN_LIFT_CUSTOMIZATION_SCREEN, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_OPEN_LIFT_CUSTOMIZATION_SCREEN, packet);
 	}
 
 	public static void openPIDSConfigScreenS2C(ServerPlayer player, BlockPos pos1, BlockPos pos2, int maxArrivals, int linesPerArrival) {
@@ -82,25 +82,25 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		packet.writeBlockPos(pos2);
 		packet.writeInt(maxArrivals);
 		packet.writeInt(linesPerArrival);
-		Registry.sendToPlayer(player, Networking.PACKET_OPEN_PIDS_CONFIG_SCREEN, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_OPEN_PIDS_CONFIG_SCREEN, packet);
 	}
 
 	public static void openArrivalProjectorConfigScreenS2C(ServerPlayer player, BlockPos pos) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeBlockPos(pos);
-		Registry.sendToPlayer(player, Networking.PACKET_OPEN_ARRIVAL_PROJECTOR_CONFIG_SCREEN, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_OPEN_ARRIVAL_PROJECTOR_CONFIG_SCREEN, packet);
 	}
 
 	public static void openResourcePackCreatorScreenS2C(ServerPlayer player) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-		Registry.sendToPlayer(player, Networking.PACKET_OPEN_RESOURCE_PACK_CREATOR_SCREEN, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_OPEN_RESOURCE_PACK_CREATOR_SCREEN, packet);
 	}
 
 	public static void announceS2C(ServerPlayer player, String message, ResourceLocation soundId) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeUtf(message);
 		packet.writeUtf(soundId == null ? "" : soundId.toString());
-		Registry.sendToPlayer(player, Networking.PACKET_ANNOUNCE, packet);
+		MTRRegistry.sendToPlayer(player, Networking.PACKET_ANNOUNCE, packet);
 	}
 
 	public static void createRailS2C(Level world, TransportMode transportMode, BlockPos pos1, BlockPos pos2, Rail rail1, Rail rail2, long savedRailId) {
@@ -111,7 +111,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		rail1.writePacket(packet);
 		rail2.writePacket(packet);
 		packet.writeLong(savedRailId);
-		world.players().forEach(worldPlayer -> Registry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_CREATE_RAIL, packet));
+		world.players().forEach(worldPlayer -> MTRRegistry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_CREATE_RAIL, packet));
 	}
 
 	public static void createSignalS2C(Level world, long id, DyeColor dyeColor, UUID rail) {
@@ -119,33 +119,33 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		packet.writeLong(id);
 		packet.writeInt(dyeColor.ordinal());
 		packet.writeUUID(rail);
-		world.players().forEach(worldPlayer -> Registry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_CREATE_SIGNAL, packet));
+		world.players().forEach(worldPlayer -> MTRRegistry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_CREATE_SIGNAL, packet));
 	}
 
 	public static void updateRailActionsS2C(Level world, List<Rail.RailActions> railActions) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeInt(railActions.size());
 		railActions.forEach(railAction -> railAction.writePacket(packet));
-		world.players().forEach(worldPlayer -> Registry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_UPDATE_RAIL_ACTIONS, packet));
+		world.players().forEach(worldPlayer -> MTRRegistry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_UPDATE_RAIL_ACTIONS, packet));
 	}
 
 	public static void removeNodeS2C(Level world, BlockPos pos) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeBlockPos(pos);
-		world.players().forEach(worldPlayer -> Registry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_REMOVE_NODE, packet));
+		world.players().forEach(worldPlayer -> MTRRegistry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_REMOVE_NODE, packet));
 	}
 
 	public static void removeLiftFloorTrackS2C(Level world, BlockPos pos) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeBlockPos(pos);
-		world.players().forEach(worldPlayer -> Registry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_REMOVE_LIFT_FLOOR_TRACK, packet));
+		world.players().forEach(worldPlayer -> MTRRegistry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_REMOVE_LIFT_FLOOR_TRACK, packet));
 	}
 
 	public static void removeRailConnectionS2C(Level world, BlockPos pos1, BlockPos pos2) {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeBlockPos(pos1);
 		packet.writeBlockPos(pos2);
-		world.players().forEach(worldPlayer -> Registry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_REMOVE_RAIL, packet));
+		world.players().forEach(worldPlayer -> MTRRegistry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_REMOVE_RAIL, packet));
 	}
 
 	public static void removeSignalS2C(Level world, long id, DyeColor dyeColor, UUID rail) {
@@ -154,7 +154,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		packet.writeLong(id);
 		packet.writeInt(dyeColor.ordinal());
 		packet.writeUUID(rail);
-		world.players().forEach(worldPlayer -> Registry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_REMOVE_SIGNALS, packet));
+		world.players().forEach(worldPlayer -> MTRRegistry.sendToPlayer((ServerPlayer) worldPlayer, Networking.PACKET_REMOVE_SIGNALS, packet));
 	}
 
 	public static void sendAllInChunks(ServerPlayer player, Set<Station> stations, Set<Platform> platforms, Set<Siding> sidings, Set<Route> routes, Set<Depot> depots, Set<LiftServer> lifts, SignalBlocks signalBlocks) {
@@ -189,7 +189,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		final PacketCallback packetCallback = (updatePacket, fullPacket) -> {
 			world.players().forEach(worldPlayer -> {
 				if (!worldPlayer.getUUID().equals(player.getUUID())) {
-					Registry.sendToPlayer((ServerPlayer) worldPlayer, packetId, fullPacket);
+					MTRRegistry.sendToPlayer((ServerPlayer) worldPlayer, packetId, fullPacket);
 				}
 				railwayData.dataCache.sync();
 			});
@@ -223,7 +223,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 		packet.writeLong(depotId);
 		packet.writeInt(successfulSegments);
-		world.players().forEach(player -> Registry.sendToPlayer((ServerPlayer) player, Networking.PACKET_GENERATE_PATH, packet));
+		world.players().forEach(player -> MTRRegistry.sendToPlayer((ServerPlayer) player, Networking.PACKET_GENERATE_PATH, packet));
 	}
 
 	public static void generatePathC2S(MinecraftServer minecraftServer, ServerPlayer player, FriendlyByteBuf packet) {
@@ -440,7 +440,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		final FriendlyByteBuf packetFullCopy = new FriendlyByteBuf(packet.copy());
 		minecraftServer.execute(() -> player.level().players().forEach(sendPlayer -> {
 			if (sendPlayer != player) {
-				Registry.sendToPlayer((ServerPlayer) sendPlayer, Networking.PACKET_UPDATE_TRAIN_PASSENGER_POSITION, packetFullCopy);
+				MTRRegistry.sendToPlayer((ServerPlayer) sendPlayer, Networking.PACKET_UPDATE_TRAIN_PASSENGER_POSITION, packetFullCopy);
 			}
 		}));
 	}
@@ -449,7 +449,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		final FriendlyByteBuf packetFullCopy = new FriendlyByteBuf(packet.copy());
 		minecraftServer.execute(() -> player.level().players().forEach(sendPlayer -> {
 			if (sendPlayer != player) {
-				Registry.sendToPlayer((ServerPlayer) sendPlayer, Networking.PACKET_UPDATE_LIFT_PASSENGER_POSITION, packetFullCopy);
+				MTRRegistry.sendToPlayer((ServerPlayer) sendPlayer, Networking.PACKET_UPDATE_LIFT_PASSENGER_POSITION, packetFullCopy);
 			}
 		}));
 	}
@@ -481,7 +481,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 		}
 
 		try {
-			Registry.sendToPlayer(player, Networking.PACKET_CHUNK_S2C, packetChunk);
+			MTRRegistry.sendToPlayer(player, Networking.PACKET_CHUNK_S2C, packetChunk);
 		} catch (Exception e) {
 			MTR.LOGGER.error("", e);
 		}

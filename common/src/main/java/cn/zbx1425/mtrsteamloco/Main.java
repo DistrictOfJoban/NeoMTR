@@ -4,8 +4,8 @@ import cn.zbx1425.mtrsteamloco.block.BlockEyeCandy;
 import cn.zbx1425.mtrsteamloco.block.BlockOneWayGate;
 import cn.zbx1425.mtrsteamloco.network.*;
 import com.google.gson.JsonParser;
+import mtr.loader.MTRRegistry;
 import mtr.registry.CreativeModeTabs;
-import mtr.Registry;
 import mtr.registry.MTRAddonRegistry;
 import mtr.registry.RegistryObject;
 import mtr.item.ItemBridgeCreator;
@@ -46,7 +46,7 @@ public class Main {
 	public static final RegistryObject<Block> BLOCK_EYE_CANDY = new RegistryObject<>(BlockEyeCandy::new);
 	public static final RegistryObject<BlockEntityType<BlockEyeCandy.BlockEntityEyeCandy>>
 			BLOCK_ENTITY_TYPE_EYE_CANDY = new RegistryObject<>(() ->
-			Registry.getBlockEntityType(
+			MTRRegistry.getBlockEntityType(
 					BlockEyeCandy.BlockEntityEyeCandy::new,
 					BLOCK_EYE_CANDY.get()
 			));
@@ -74,23 +74,23 @@ public class Main {
 			PARTICLE_STEAM_SMOKE = registries.createParticleType(true);
 			registries.registerParticleType("steam_smoke", PARTICLE_STEAM_SMOKE);
 
-			Registry.registerNetworkReceiver(PacketUpdateBlockEntity.PACKET_UPDATE_BLOCK_ENTITY,
+			MTRRegistry.registerNetworkReceiver(PacketUpdateBlockEntity.PACKET_UPDATE_BLOCK_ENTITY,
 					PacketUpdateBlockEntity::receiveUpdateC2S);
-			Registry.registerNetworkReceiver(PacketUpdateRail.PACKET_UPDATE_RAIL,
+			MTRRegistry.registerNetworkReceiver(PacketUpdateRail.PACKET_UPDATE_RAIL,
 					PacketUpdateRail::receiveUpdateC2S);
-			Registry.registerNetworkReceiver(PacketUpdateHoldingItem.PACKET_UPDATE_HOLDING_ITEM,
+			MTRRegistry.registerNetworkReceiver(PacketUpdateHoldingItem.PACKET_UPDATE_HOLDING_ITEM,
 					PacketUpdateHoldingItem::receiveUpdateC2S);
-			Registry.registerNetworkReceiver(PacketVirtualDrive.PACKET_VIRTUAL_DRIVE,
+			MTRRegistry.registerNetworkReceiver(PacketVirtualDrive.PACKET_VIRTUAL_DRIVE,
 					PacketVirtualDrive::receiveVirtualDriveC2S);
 
-			Registry.registerNetworkPacket(PacketVersionCheck.PACKET_VERSION_CHECK);
-			Registry.registerNetworkPacket(PacketScreen.PACKET_SHOW_SCREEN);
-			Registry.registerNetworkPacket(PacketVirtualDrivingPlayers.PACKET_VIRTUAL_DRIVING_PLAYERS);
+			MTRRegistry.registerNetworkPacket(PacketVersionCheck.PACKET_VERSION_CHECK);
+			MTRRegistry.registerNetworkPacket(PacketScreen.PACKET_SHOW_SCREEN);
+			MTRRegistry.registerNetworkPacket(PacketVirtualDrivingPlayers.PACKET_VIRTUAL_DRIVING_PLAYERS);
 
-			Registry.registerPlayerJoinEvent(PacketVersionCheck::sendVersionCheckS2C);
+			MTRRegistry.registerPlayerJoinEvent(PacketVersionCheck::sendVersionCheckS2C);
 		}
 
-		Registry.registerPlayerJoinEvent(PacketVirtualDrivingPlayers::sendVirtualDrivingPlayersS2C);
+		MTRRegistry.registerPlayerJoinEvent(PacketVirtualDrivingPlayers::sendVirtualDrivingPlayersS2C);
 		MTRAddonRegistry.registerAddon(ADDON);
 	}
 

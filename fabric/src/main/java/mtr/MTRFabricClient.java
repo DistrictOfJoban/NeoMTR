@@ -6,10 +6,10 @@ import cn.zbx1425.mtrsteamloco.NTEClientCommand;
 import cn.zbx1425.mtrsteamloco.gui.ScriptDebugOverlay;
 import cn.zbx1425.mtrsteamloco.render.train.SteamSmokeParticle;
 import cn.zbx1425.sowcerext.model.integration.BufferSourceProxy;
-import com.lx862.jcm.mod.JCMClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mtr.client.CustomResources;
 import mtr.client.ICustomResources;
+import mtr.loader.fabric.MTRRegistryImpl;
 import mtr.registry.Items;
 import mtr.render.RenderDrivingOverlay;
 import mtr.render.RenderTrains;
@@ -27,7 +27,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.phys.Vec3;
-import top.mcmtr.MSDMainClient;
 
 public class MTRFabricClient implements ClientModInitializer, ICustomResources {
 
@@ -36,9 +35,6 @@ public class MTRFabricClient implements ClientModInitializer, ICustomResources {
 		MTRClient.init();
 		Items.initItemModelPredicate();
 		MainClient.init();
-		JCMClient.initializeClient();
-		MSDMainClient.init();
-		MSDMainClient.registerItemModelPredicates();
 
 		WorldRenderEvents.AFTER_ENTITIES.register(context -> {
 			final PoseStack matrices = context.matrixStack();
@@ -61,7 +57,7 @@ public class MTRFabricClient implements ClientModInitializer, ICustomResources {
 		});
 		HudRenderCallback.EVENT.register((guiGraphics, tickDelta) -> RenderDrivingOverlay.render(guiGraphics));
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new CustomResourcesWrapper());
-		MTRFabric.PACKET_REGISTRY.commitClient();
+		MTRRegistryImpl.PACKET_REGISTRY.commitClient();
 
 		ParticleFactoryRegistry.getInstance().register(Main.PARTICLE_STEAM_SMOKE, SteamSmokeParticle.Provider::new);
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {

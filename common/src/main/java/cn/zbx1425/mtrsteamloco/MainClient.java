@@ -14,7 +14,7 @@ import cn.zbx1425.sowcerext.reuse.AtlasManager;
 import cn.zbx1425.sowcerext.reuse.DrawScheduler;
 import cn.zbx1425.sowcerext.reuse.ModelManager;
 import mtr.MTRClient;
-import mtr.RegistryClient;
+import mtr.loader.MTRRegistryClient;
 import mtr.item.ItemBlockClickingBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -36,18 +36,18 @@ public class MainClient {
 		mtr.client.CustomResources.registerReloadListener(CustomResources::init);
 
 		if (Main.enableRegistry) {
-			RegistryClient.registerTileEntityRenderer(Main.BLOCK_ENTITY_TYPE_EYE_CANDY.get(), BlockEntityEyeCandyRenderer::new);
-			RegistryClient.registerBlockRenderType(RenderType.cutout(), Main.BLOCK_ONE_WAY_GATE.get());
+			MTRRegistryClient.registerTileEntityRenderer(Main.BLOCK_ENTITY_TYPE_EYE_CANDY.get(), BlockEntityEyeCandyRenderer::new);
+			MTRRegistryClient.registerBlockRenderType(RenderType.cutout(), Main.BLOCK_ONE_WAY_GATE.get());
 
-			RegistryClient.registerNetworkReceiver(PacketVersionCheck.PACKET_VERSION_CHECK, PacketVersionCheck::receiveVersionCheckS2C);
-			RegistryClient.registerNetworkReceiver(PacketScreen.PACKET_SHOW_SCREEN, PacketScreen::receiveScreenS2C);
-			RegistryClient.registerNetworkReceiver(PacketVirtualDrivingPlayers.PACKET_VIRTUAL_DRIVING_PLAYERS,
+			MTRRegistryClient.registerNetworkReceiver(PacketVersionCheck.PACKET_VERSION_CHECK, PacketVersionCheck::receiveVersionCheckS2C);
+			MTRRegistryClient.registerNetworkReceiver(PacketScreen.PACKET_SHOW_SCREEN, PacketScreen::receiveScreenS2C);
+			MTRRegistryClient.registerNetworkReceiver(PacketVirtualDrivingPlayers.PACKET_VIRTUAL_DRIVING_PLAYERS,
 					PacketVirtualDrivingPlayers.Client::receiveVirtualDrivingPlayersS2C);
 
-			RegistryClient.registerItemModelPredicate("mtr:selected", Main.BRIDGE_CREATOR_1.get(), ItemBlockClickingBase.TAG_POS);
+			MTRRegistryClient.registerItemModelPredicate("mtr:selected", Main.BRIDGE_CREATOR_1.get(), ItemBlockClickingBase.TAG_POS);
 		}
 
-		RegistryClient.registerPlayerJoinEvent(localPlayer -> {
+		MTRRegistryClient.registerPlayerJoinEvent(localPlayer -> {
 			railRenderDispatcher.clearRail();
 
 			VirtualDriveClientData.drivingPlayers.clear();

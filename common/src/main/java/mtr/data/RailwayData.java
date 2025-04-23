@@ -2,7 +2,7 @@ package mtr.data;
 
 import io.netty.buffer.Unpooled;
 import mtr.MTR;
-import mtr.Registry;
+import mtr.loader.MTRRegistry;
 import mtr.block.BlockNode;
 import mtr.client.ClientData;
 import mtr.mappings.PersistentStateMapper;
@@ -298,7 +298,7 @@ public class RailwayData extends PersistentStateMapper {
 				});
 
 				if (packet.readableBytes() <= Networking.MAX_PACKET_BYTES) {
-					Registry.sendToPlayer((ServerPlayer) player, Networking.PACKET_WRITE_RAILS, packet);
+					MTRRegistry.sendToPlayer((ServerPlayer) player, Networking.PACKET_WRITE_RAILS, packet);
 				}
 				playerLastUpdatedPositions.put(player, playerBlockPos);
 			}
@@ -386,7 +386,7 @@ public class RailwayData extends PersistentStateMapper {
 				});
 
 				if (packet.readableBytes() <= Networking.MAX_PACKET_BYTES) {
-					Registry.sendToPlayer((ServerPlayer) player, Networking.PACKET_UPDATE_SCHEDULE, packet);
+					MTRRegistry.sendToPlayer((ServerPlayer) player, Networking.PACKET_UPDATE_SCHEDULE, packet);
 				}
 			}
 		}
@@ -444,7 +444,7 @@ public class RailwayData extends PersistentStateMapper {
 		validateData();
 		final FriendlyByteBuf packet = signalBlocks.getValidationPacket(rails);
 		if (packet != null) {
-			level.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
+			level.players().forEach(player2 -> MTRRegistry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
 		}
 	}
 
@@ -463,7 +463,7 @@ public class RailwayData extends PersistentStateMapper {
 		validateData();
 		final FriendlyByteBuf packet = signalBlocks.getValidationPacket(rails);
 		if (packet != null) {
-			level.players().forEach(player2 -> Registry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
+			level.players().forEach(player2 -> MTRRegistry.sendToPlayer((ServerPlayer) player2, Networking.PACKET_REMOVE_SIGNALS, packet));
 		}
 	}
 
@@ -758,7 +758,7 @@ public class RailwayData extends PersistentStateMapper {
 			if (delete) {
 				final FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 				packet.writeLong(savedRailBase.id);
-				world.players().forEach(player -> Registry.sendToPlayer((ServerPlayer) player, packetId, packet));
+				world.players().forEach(player -> MTRRegistry.sendToPlayer((ServerPlayer) player, packetId, packet));
 			}
 			return delete;
 		});

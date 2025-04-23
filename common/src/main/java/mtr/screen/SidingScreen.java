@@ -2,7 +2,7 @@ package mtr.screen;
 
 import com.google.gson.JsonObject;
 import mtr.Icons;
-import mtr.Patreon;
+import mtr.client.Patreon;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.client.TrainClientRegistry;
