@@ -2,10 +2,10 @@ package top.mcmtr.loader.neoforge;
 
 import mtr.loader.MTRRegistry;
 import mtr.item.ItemWithCreativeTabBase;
-import mtr.loader.neoforge.MTRRegistryImpl;
 import mtr.mappings.NetworkUtilities;
 import mtr.neoforge.CompatPacketRegistry;
 import mtr.neoforge.DeferredRegisterHolder;
+import mtr.neoforge.mappings.ArchitecturyUtilities;
 import mtr.neoforge.mappings.ForgeUtilities;
 import mtr.registry.CreativeModeTabs;
 import mtr.registry.RegistryObject;
@@ -13,6 +13,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -94,12 +95,16 @@ public class MSDRegistryImpl {
     }
 
     public static void registerPlayerJoinEvent(Consumer<ServerPlayer> consumer) {
-        MTRRegistryImpl.RegistryUtilities.registerPlayerJoinEvent(consumer);
-        MTRRegistryImpl.RegistryUtilities.registerPlayerChangeDimensionEvent(consumer);
+        ArchitecturyUtilities.registerPlayerJoinEvent(consumer);
+        ArchitecturyUtilities.registerPlayerChangeDimensionEvent(consumer);
     }
 
     public static void registerPlayerQuitEvent(Consumer<ServerPlayer> consumer) {
-        MTRRegistryImpl.RegistryUtilities.registerPlayerQuitEvent(consumer);
+        ArchitecturyUtilities.registerPlayerQuitEvent(consumer);
+    }
+
+    public static void registerTickEvent(Consumer<MinecraftServer> consumer) {
+        ArchitecturyUtilities.registerTickEvent(consumer);
     }
 
     public static void registerAllDeferred(IEventBus eventBus) {

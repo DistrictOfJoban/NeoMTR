@@ -1,4 +1,4 @@
-package mtr.mixin;
+package mtr.neoforge.mixin;
 
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.BlockEntityRendererMapper;

@@ -6,6 +6,7 @@ import mtr.item.ItemWithCreativeTabBase;
 import mtr.mappings.NetworkUtilities;
 import mtr.neoforge.CompatPacketRegistry;
 import mtr.neoforge.DeferredRegisterHolder;
+import mtr.neoforge.mappings.ArchitecturyUtilities;
 import mtr.neoforge.mappings.ForgeUtilities;
 import mtr.registry.CreativeModeTabs;
 import mtr.registry.RegistryObject;
@@ -13,6 +14,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -23,6 +25,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
+
+import java.util.function.Consumer;
 
 public class JCMRegistryImpl {
     public static CompatPacketRegistry PACKET_REGISTRY = new CompatPacketRegistry();
@@ -88,6 +92,10 @@ public class JCMRegistryImpl {
 
     public static void sendToPlayer(ServerPlayer player, ResourceLocation id, FriendlyByteBuf packet) {
         PACKET_REGISTRY.sendS2C(player, id, packet);
+    }
+
+    public static void registerTickEvent(Consumer<MinecraftServer> consumer) {
+        ArchitecturyUtilities.registerTickEvent(consumer);
     }
 
     public static void registerAllDeferred(IEventBus eventBus) {

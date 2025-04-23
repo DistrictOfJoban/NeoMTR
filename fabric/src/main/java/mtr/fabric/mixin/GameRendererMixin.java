@@ -1,4 +1,4 @@
-package mtr.mixin;
+package mtr.fabric.mixin;
 
 import mtr.MTRClient;
 import mtr.render.RenderTrains;

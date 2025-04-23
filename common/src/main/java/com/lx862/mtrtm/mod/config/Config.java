@@ -2,15 +2,14 @@ package com.lx862.mtrtm.mod.config;
 
 import com.google.gson.*;
 import com.lx862.mtrtm.mod.TransitManager;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 
 public class Config {
-    private static final Path CONFIG_PATH = Paths.get(FabricLoader.getInstance().getConfigDir().toString(), "transitmanager");
+    private static final Path CONFIG_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("config").resolve("transitmanager");
     public static int mtrJourneyPlannerTickTime = 0;
     public static int shearPSDOpLevel = 0;
 

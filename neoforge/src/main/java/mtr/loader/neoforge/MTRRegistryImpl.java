@@ -1,10 +1,5 @@
 package mtr.loader.neoforge;
 
-import com.mojang.brigadier.CommandDispatcher;
-import dev.architectury.event.events.common.CommandRegistrationEvent;
-import dev.architectury.event.events.common.LifecycleEvent;
-import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.utils.Env;
 import mtr.MTR;
@@ -13,6 +8,7 @@ import mtr.item.ItemWithCreativeTabBase;
 import mtr.loader.MTRRegistry;
 import mtr.neoforge.CompatPacketRegistry;
 import mtr.neoforge.DeferredRegisterHolder;
+import mtr.neoforge.mappings.ArchitecturyUtilities;
 import mtr.neoforge.mappings.ForgeUtilities;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.NetworkUtilities;
@@ -20,7 +16,6 @@ import mtr.mappings.Utilities;
 import mtr.mixin.PlayerTeleportationStateAccessor;
 import mtr.registry.CreativeModeTabs;
 import mtr.registry.RegistryObject;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -132,24 +127,24 @@ public class MTRRegistryImpl {
 	}
 
 	public static void registerPlayerJoinEvent(Consumer<ServerPlayer> consumer) {
-		RegistryUtilities.registerPlayerJoinEvent(consumer);
-		RegistryUtilities.registerPlayerChangeDimensionEvent(consumer);
+		ArchitecturyUtilities.registerPlayerJoinEvent(consumer);
+		ArchitecturyUtilities.registerPlayerChangeDimensionEvent(consumer);
 	}
 
 	public static void registerPlayerQuitEvent(Consumer<ServerPlayer> consumer) {
-		RegistryUtilities.registerPlayerQuitEvent(consumer);
+		ArchitecturyUtilities.registerPlayerQuitEvent(consumer);
 	}
 
 	public static void registerServerStartingEvent(Consumer<MinecraftServer> consumer) {
-		RegistryUtilities.registerServerStartingEvent(consumer);
+		ArchitecturyUtilities.registerServerStartingEvent(consumer);
 	}
 
 	public static void registerServerStoppingEvent(Consumer<MinecraftServer> consumer) {
-		RegistryUtilities.registerServerStoppingEvent(consumer);
+		ArchitecturyUtilities.registerServerStoppingEvent(consumer);
 	}
 
 	public static void registerTickEvent(Consumer<MinecraftServer> consumer) {
-		RegistryUtilities.registerTickEvent(consumer);
+		ArchitecturyUtilities.registerTickEvent(consumer);
 	}
 
 	public static void sendToPlayer(ServerPlayer player, ResourceLocation id, FriendlyByteBuf packet) {
@@ -170,38 +165,6 @@ public class MTRRegistryImpl {
 
 		ForgeUtilities.registerCreativeModeTabsToDeferredRegistry(CREATIVE_MODE_TABS);
 		CREATIVE_MODE_TABS.register(eventBus);
-	}
-
-
-	public interface RegistryUtilities {
-
-		static void registerCommand(Consumer<CommandDispatcher<CommandSourceStack>> callback) {
-			CommandRegistrationEvent.EVENT.register((dispatcher, dedicated, commandSelection) -> callback.accept(dispatcher));
-		}
-
-		static void registerPlayerJoinEvent(Consumer<ServerPlayer> consumer) {
-			PlayerEvent.PLAYER_JOIN.register(consumer::accept);
-		}
-
-		static void registerPlayerQuitEvent(Consumer<ServerPlayer> consumer) {
-			PlayerEvent.PLAYER_QUIT.register(consumer::accept);
-		}
-
-		static void registerPlayerChangeDimensionEvent(Consumer<ServerPlayer> consumer) {
-			PlayerEvent.CHANGE_DIMENSION.register(((player, oldWorld, newWorld) -> consumer.accept(player)));
-		}
-
-		static void registerServerStartingEvent(Consumer<MinecraftServer> consumer) {
-			LifecycleEvent.SERVER_STARTING.register(consumer::accept);
-		}
-
-		static void registerServerStoppingEvent(Consumer<MinecraftServer> consumer) {
-			LifecycleEvent.SERVER_STOPPING.register(consumer::accept);
-		}
-
-		static void registerTickEvent(Consumer<MinecraftServer> consumer) {
-			TickEvent.SERVER_PRE.register(consumer::accept);
-		}
 	}
 }
 

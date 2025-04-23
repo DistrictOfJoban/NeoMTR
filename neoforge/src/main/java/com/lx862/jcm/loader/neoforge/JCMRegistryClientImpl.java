@@ -11,7 +11,6 @@ import mtr.data.RailwayData;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.BlockEntityRendererMapper;
 import mtr.mappings.EntityRendererMapper;
-import mtr.neoforge.MTRForge;
 import mtr.neoforge.mappings.ForgeUtilities;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;

@@ -29,6 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -42,6 +43,7 @@ public class ForgeUtilities {
 	};
 	private static Consumer<Object> textureStitchEvent = atlas -> {
 	};
+	private static final List<Consumer<RegisterCommandsEvent>> commandsEventListeners = new ArrayList<>();
 	private static final List<ResourceLocation> CREATIVE_TAB_ORDER = new ArrayList<>();
 	private static final Map<ResourceLocation, CreativeModeTabWrapper> CREATIVE_TABS = new HashMap<>();
 	private static final Set<EntityRendererPair<?>> ENTITY_RENDERER_PAIRS = new HashSet<>();
@@ -108,6 +110,10 @@ public class ForgeUtilities {
 		ENTITY_RENDERER_PAIRS.add(new EntityRendererPair<>(entityType, entityRendererProvider));
 	}
 
+	public static void registerCommandListener(Consumer<RegisterCommandsEvent> event) {
+		commandsEventListeners.add(event);
+	}
+
 	public static class Events {
 
 		@SubscribeEvent
@@ -141,6 +147,13 @@ public class ForgeUtilities {
 				PoseStack matrices = event.getPoseStack();
 				ResourcePackCreatorScreen.render(matrices);
 				MainClient.drawContext.resetFrameProfiler();
+			}
+		}
+
+		@SubscribeEvent
+		public static void registerCommand(RegisterCommandsEvent registerCommandsEvent) {
+			for(Consumer<RegisterCommandsEvent> listener : commandsEventListeners) {
+				listener.accept(registerCommandsEvent);
 			}
 		}
 

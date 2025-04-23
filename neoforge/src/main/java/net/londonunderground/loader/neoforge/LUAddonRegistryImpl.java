@@ -27,7 +27,6 @@ public class LUAddonRegistryImpl {
     private static final DeferredRegisterHolder<BlockEntityType<?>> BLOCK_ENTITY_TYPES = new DeferredRegisterHolder<>(LUAddon.MOD_ID, ForgeUtilities.registryGetBlockEntityType());
     private static final DeferredRegisterHolder<EntityType<?>> ENTITY_TYPES = new DeferredRegisterHolder<>(LUAddon.MOD_ID, ForgeUtilities.registryGetEntityType());
     private static final DeferredRegisterHolder<SoundEvent> SOUND_EVENTS = new DeferredRegisterHolder<>(LUAddon.MOD_ID, ForgeUtilities.registryGetSoundEvent());
-    private static Consumer<CommandDispatcher<CommandSourceStack>> commandRegistrationCallback;
 
     public static RegistryObject<Block> registerBlock(String id, RegistryObject<Block> block) {
         BLOCKS.register(id, block::get);
@@ -87,12 +86,6 @@ public class LUAddonRegistryImpl {
     }
 
     public static void onRegisterCommands(Consumer<CommandDispatcher<CommandSourceStack>> commandRegisterCallback) {
-        commandRegistrationCallback = commandRegisterCallback;
-    }
-
-    public static void invokeRegisterCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
-        if(commandRegistrationCallback != null) {
-            commandRegistrationCallback.accept(dispatcher);
-        }
+        ForgeUtilities.registerCommandListener((event) -> commandRegisterCallback.accept(event.getDispatcher()));
     }
 }

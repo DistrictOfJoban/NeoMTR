@@ -6,7 +6,6 @@ import com.lx862.jcm.loader.neoforge.JCMRegistryImpl;
 import com.lx862.jcm.mod.JCM;
 import com.lx862.jcm.mod.JCMClient;
 import com.lx862.mtrtm.mod.TransitManager;
-import com.lx862.mtrtm.loader.neoforge.LoaderImpl;
 import mtr.*;
 import mtr.client.CustomResources;
 import mtr.loader.neoforge.MTRRegistryImpl;
@@ -89,12 +88,6 @@ public class MTRForge {
 					CustomResources.reload(Minecraft.getInstance().getResourceManager());
 				}
 			});
-		}
-
-		@SubscribeEvent
-		public static void registerCommand(RegisterCommandsEvent registerCommandsEvent) {
-			LoaderImpl.invokeRegisterCommands(registerCommandsEvent.getDispatcher());
-			LUAddonRegistryImpl.invokeRegisterCommands(registerCommandsEvent.getDispatcher());
 		}
 
 		@SubscribeEvent
