@@ -1,4 +1,14 @@
-# Minecraft Transit Railway 3.0
+# NeoMTR Pro Max
+
+This is a fork of [NeoMTR](https://github.com/zbx1425/Minecraft-Transit-Railway) which ports and bundles major MTR addon mods, along with some misc changes.  
+
+## FAQ
+**Q: Should I use this?**  
+A: It's not a very serious project to fit with everyone's demand, just sort of my own spin on NeoMTR & MTR. If you like you can use it, but I might change things any second!
+
+Original description of MTR as below:
+
+<hr>
 
 _Minecraft Transit Railway_ is a [Minecraft mod](https://minecraft.gamepedia.com/Mods) based on Hong Kong's MTR, the London Underground, and the New York Subway. It adds trains into the game along with other miscellaneous blocks and items. With this mod, it is possible to build a fully functional railway system in your world!
 
@@ -38,13 +48,13 @@ Crowdin is a cloud-based platform for translators to contribute to a project. Wi
 To build the mod, run the following command in the root directory of the project:
 
 ```
-gradlew build -PbuildVersion=<minecraft version>
+gradlew build
 ```
 
 The mod jar file should be generated in the following directory:
 
 ```
-<root>/build/release/MTR-<fabric|forge>-<minecraft version>-<mod version>.jar
+<root>/build/release/NeoMTR-<fabric|forge>-<minecraft version>-<mod version>.jar
 ```
 
 ## License
