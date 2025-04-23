@@ -1,18 +1,18 @@
 {
   "variants": {
-    "facing=north,type=0": {
+    "facing=north": {
       "model": "msd:block/floor",
       "y": 0
     },
-    "facing=east,type=0": {
+    "facing=east": {
       "model": "msd:block/floor",
       "y": 90
     },
-    "facing=south,type=0": {
+    "facing=south": {
       "model": "msd:block/floor",
       "y": 180
     },
-    "facing=west,type=0": {
+    "facing=west": {
       "model": "msd:block/floor",
       "y": 270
     }

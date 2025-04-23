@@ -4,7 +4,7 @@ import java.time.Instant;
 
 public interface BuildConfig {
 
-    String MOD_VERSION = "0.5.1+1.20.1";
+    String MOD_VERSION = "0.5.1+1.21.1";
 
     int MOD_PROTOCOL_VERSION = 2;
 

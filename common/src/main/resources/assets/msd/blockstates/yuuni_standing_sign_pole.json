@@ -29,6 +29,19 @@
     "facing=west,type=1": {
       "model": "msd:block/yuuni_sign_pole_top",
       "y": 270
+    },
+
+    "type=2": {
+      "model": "msd:block/yuuni_sign_pole_top"
+    },
+    "type=3": {
+      "model": "msd:block/yuuni_sign_pole_top"
+    },
+    "type=4": {
+      "model": "msd:block/yuuni_sign_pole_top"
+    },
+    "type=5": {
+      "model": "msd:block/yuuni_sign_pole_top"
     }
   }
 }

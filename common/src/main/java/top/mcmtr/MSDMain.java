@@ -24,7 +24,7 @@ import static top.mcmtr.packet.MSDPacket.*;
 
 public class MSDMain {
     public static final String MOD_ID = "msd";
-    public static final MTRAddonRegistry.MTRAddon ADDON = new MTRAddonRegistry.MTRAddon(MOD_ID, "Station Decoration", "3.2.2-1.3.4-enhancement-1");
+    public static final MTRAddonRegistry.MTRAddon ADDON = new MTRAddonRegistry.MTRAddon(MOD_ID, "Station Decoration", "1.3.4-enhancement-1");
 
     public static void init(
             BiConsumer<String, RegistryObject<Item>> registerItem,

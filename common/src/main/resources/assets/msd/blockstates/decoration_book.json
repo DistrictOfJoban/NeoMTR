@@ -31,6 +31,20 @@
     "facing=west,type=1": {
       "model": "msd:block/book_2",
       "y": 270
+    },
+
+
+    "type=2": {
+      "model": "msd:block/book_1"
+    },
+    "type=3": {
+      "model": "msd:block/book_1"
+    },
+    "type=4": {
+      "model": "msd:block/book_1"
+    },
+    "type=5": {
+      "model": "msd:block/book_1"
     }
   }
 }
