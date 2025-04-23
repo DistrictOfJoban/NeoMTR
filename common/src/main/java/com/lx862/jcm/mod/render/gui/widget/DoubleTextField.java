@@ -80,15 +80,15 @@ public class DoubleTextField extends WidgetBetterTextField implements RenderHelp
         guiGraphics.drawString(font, prefix, prefixX, prefixY, 0xFFFFFFFF, true);
     }
 
-    protected void drawUpDownButton(GuiGraphics graphicsHolder, Font font) {
+    protected void drawUpDownButton(GuiGraphics guiGraphics, Font font) {
         MutableComponent upArrow = TextUtil.translatable(TextCategory.GUI, "widget.numeric_text_field.increment");
         MutableComponent dnArrow = TextUtil.translatable(TextCategory.GUI, "widget.numeric_text_field.decrement");
         int fontHeight = 9;
         int startY = (height - (fontHeight * 2));
         int upWidth = font.width(upArrow);
         int dnWidth = font.width(dnArrow);
-        graphicsHolder.drawString(font, upArrow, getX() + width - upWidth - 2, getY() + startY, 0xFFFFFFFF, false);
-        graphicsHolder.drawString(font, dnArrow, getX() + width - dnWidth - 2, getY() + startY + fontHeight, 0xFFFFFFFF, false);
+        guiGraphics.drawString(font, upArrow, getX() + width - upWidth - 2, getY() + startY, 0xFFFFFFFF, false);
+        guiGraphics.drawString(font, dnArrow, getX() + width - dnWidth - 2, getY() + startY + fontHeight, 0xFFFFFFFF, false);
     }
 
     @Override

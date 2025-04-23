@@ -24,7 +24,6 @@ public class VanillaTextRenderer implements RenderHelper {
         } else {
             MutableComponent finalText = text.toMutableComponent();
             font.drawInBatch(finalText, (int)finalX, (int)y, text.getTextColor(), false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL,  0, MAX_RENDER_LIGHT);
-//            graphicsHolder.drawText(finalText, (int)finalX, (int)y, text.getTextColor(), false, MAX_RENDER_LIGHT);
         }
     }
 

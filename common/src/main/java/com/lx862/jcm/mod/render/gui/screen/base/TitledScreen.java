@@ -7,6 +7,7 @@ import com.lx862.jcm.mod.util.TextUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.network.chat.MutableComponent;
@@ -50,7 +51,7 @@ public abstract class TitledScreen extends AnimatedScreen {
             guiGraphics.drawString(font, TextUtil.literal("Report issues here!").setStyle(Style.EMPTY.withUnderlined(true)), width - font.width("Report issues here!") - 6, 18, 0xFFFFFFFF, true);
         }
 
-        elapsed += tickDelta / Constants.MC_TICK_PER_SECOND;
+        elapsed += Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() / Constants.MC_TICK_PER_SECOND;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.lx862.jcm.mod.render.gui.widget;
 import com.lx862.jcm.mod.Constants;
 import com.lx862.jcm.mod.render.gui.GuiHelper;
 import com.lx862.jcm.mod.render.RenderHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -90,7 +91,7 @@ public class ListViewWidget extends AbstractScrollViewWidget implements RenderHe
 
     @Override
     public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
-        elapsed += (tickDelta / Constants.MC_TICK_PER_SECOND);
+        elapsed += (Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() / Constants.MC_TICK_PER_SECOND);
 
         int incY = 0;
         for (AbstractListItem abstractListItem : displayedEntryList) {

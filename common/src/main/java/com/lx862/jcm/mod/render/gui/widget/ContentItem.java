@@ -35,7 +35,7 @@ public class ContentItem extends AbstractListItem {
     }
 
     public ContentItem setIcon(ResourceLocation textureId) {
-        this.drawIconCallback = (guiDrawing, startX, startY, width, height) -> GuiHelper.drawTexture(guiDrawing, textureId, startX, startY, width, height);
+        this.drawIconCallback = (guiGraphics, startX, startY, width, height) -> GuiHelper.drawTexture(guiGraphics, textureId, startX, startY, width, height);
         return this;
     }
 

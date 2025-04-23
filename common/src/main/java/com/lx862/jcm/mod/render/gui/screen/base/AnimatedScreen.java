@@ -1,6 +1,7 @@
 package com.lx862.jcm.mod.render.gui.screen.base;
 
 import com.lx862.jcm.mod.Constants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
 public abstract class AnimatedScreen extends ScreenBase {
@@ -8,6 +9,7 @@ public abstract class AnimatedScreen extends ScreenBase {
     protected double animationProgress;
     protected boolean closing = false;
     protected final boolean shouldAnimate;
+
     public AnimatedScreen(boolean animatable) {
         super();
         this.shouldAnimate = animatable;
@@ -17,7 +19,7 @@ public abstract class AnimatedScreen extends ScreenBase {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
         super.render(guiGraphics, mouseX, mouseY, tickDelta);
-        double frameDelta = (tickDelta / Constants.MC_TICK_PER_SECOND);
+        double frameDelta = Minecraft.getInstance().getTimer().getGameTimeDeltaTicks() / Constants.MC_TICK_PER_SECOND;
         if(!shouldAnimate) {
             linearAnimationProgress = 1;
         } else {

@@ -94,8 +94,8 @@ public class PIDSScreen extends BlockConfigScreen {
         // Preset button
         addWidget(choosePresetButton);
         ContentItem presetEntry = new ContentItem(TextUtil.translatable(TextCategory.GUI, "pids.listview.title.pids_preset"), choosePresetButton, 26);
-        presetEntry.setIconCallback((guiDrawing, startX, startY, width, height) -> {
-            PIDSPresetScreen.drawPIDSPreview(PIDSManager.getPreset(presetId), guiDrawing, startX, startY, width, height, true);
+        presetEntry.setIconCallback((guiGraphics, startX, startY, width, height) -> {
+            PIDSPresetScreen.drawPIDSPreview(PIDSManager.getPreset(presetId), guiGraphics, startX, startY, width, height, true);
         });
         listViewWidget.add(presetEntry);
 

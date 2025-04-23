@@ -96,20 +96,20 @@ public class PIDSPresetScreen extends TitledScreen implements RenderHelper, GuiH
         addWidget(selectBtn);
         ContentItem contentItem = new ContentItem(TextUtil.literal(preset.getName()), selectBtn, 26);
 
-        contentItem.setIconCallback((guiDrawing, startX, startY, width, height) -> {
-            drawPIDSPreview(preset, guiDrawing, startX, startY, width, height, false);
+        contentItem.setIconCallback((guiGraphics, startX, startY, width, height) -> {
+            drawPIDSPreview(preset, guiGraphics, startX, startY, width, height, false);
         });
         listViewWidget.add(contentItem);
     }
 
-    public static void drawPIDSPreview(PIDSPresetBase preset, GuiGraphics guiDrawing, int startX, int startY, int width, int height, boolean backgroundOnly) {
+    public static void drawPIDSPreview(PIDSPresetBase preset, GuiGraphics guiGraphics, int startX, int startY, int width, int height, boolean backgroundOnly) {
         final int offset = 6;
 
         // Background
-        GuiHelper.drawTexture(guiDrawing, PIDS_PREVIEW_BASE, startX, startY, width, height);
+        GuiHelper.drawTexture(guiGraphics, PIDS_PREVIEW_BASE, startX, startY, width, height);
         if(preset == null) return;
 
-        GuiHelper.drawTexture(guiDrawing, preset.getThumbnail(), startX+0.5, startY+offset+0.5, width-1, height-offset-4);
+        GuiHelper.drawTexture(guiGraphics, preset.getThumbnail(), startX+0.5, startY+offset+0.5, width-1, height-offset-4);
 
         if(!backgroundOnly) {
             double perRow = height / 8.5;
@@ -117,9 +117,9 @@ public class PIDSPresetScreen extends TitledScreen implements RenderHelper, GuiH
             for(int i = 0; i < 4; i++) {
                 if(preset.isRowHidden(i)) continue;
                 double curY = startY + offset + ((i+1) * perRow);
-                GuiHelper.drawRectangle(guiDrawing, startX+1.5, curY, width * 0.55, rowHeight, preset.getTextColor());
-                GuiHelper.drawRectangle(guiDrawing, startX + (width * 0.65), curY, rowHeight, rowHeight, preset.getTextColor());
-                GuiHelper.drawRectangle(guiDrawing, startX + (width * 0.75), curY, (width * 0.2)-0.5, rowHeight, preset.getTextColor());
+                GuiHelper.drawRectangle(guiGraphics, startX+1.5, curY, width * 0.55, rowHeight, preset.getTextColor());
+                GuiHelper.drawRectangle(guiGraphics, startX + (width * 0.65), curY, rowHeight, rowHeight, preset.getTextColor());
+                GuiHelper.drawRectangle(guiGraphics, startX + (width * 0.75), curY, (width * 0.2)-0.5, rowHeight, preset.getTextColor());
             }
         }
     }

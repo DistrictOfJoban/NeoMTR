@@ -19,12 +19,12 @@ public interface GuiHelper {
     int BOTTOM_ROW_MARGIN = 6;
     int MAX_BUTTON_WIDTH = 375;
 
-    static void drawTexture(GuiGraphics guiDrawing, ResourceLocation identifier, double x, double y, double width, double height) {
+    static void drawTexture(GuiGraphics guiGraphics, ResourceLocation identifier, double x, double y, double width, double height) {
         Pair<Float, Float> uv = JCMClient.getMcMetaManager().getUV(identifier);
-        drawTexture(guiDrawing, identifier, x, y, width, height, 0, uv.getLeft(), 1, uv.getRight());
+        drawTexture(guiGraphics, identifier, x, y, width, height, 0, uv.getLeft(), 1, uv.getRight());
     }
 
-    static void drawTexture(GuiGraphics guiDrawing, ResourceLocation location, double x, double y, double width, double height, float u1, float v1, float u2, float v2) {
+    static void drawTexture(GuiGraphics guiGraphics, ResourceLocation location, double x, double y, double width, double height, float u1, float v1, float u2, float v2) {
         float x1 = (float)x;
         float x2 = (float)x + (float)width;
         float y1 = (float)y;
@@ -32,7 +32,7 @@ public interface GuiHelper {
 
         RenderSystem.setShaderTexture(0, location);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        Matrix4f matrix4f = guiDrawing.pose().last().pose();
+        Matrix4f matrix4f = guiGraphics.pose().last().pose();
         BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferBuilder.addVertex(matrix4f, x1, y1, 0).setUv(u1, v1);
         bufferBuilder.addVertex(matrix4f, x1, y2, 0).setUv(u1, v2);
@@ -64,7 +64,7 @@ public interface GuiHelper {
         PoseStack ps = guiGraphics.pose();
 
         if(textWidth > maxWidth) {
-            double slideProgress = ((Math.sin(elapsed / 4)) / 2) + 0.5;
+            double slideProgress = ((Math.sin(elapsed / 2)) / 2) + 0.5;
             ps.translate(-slideProgress * (textWidth - maxWidth), 0, 0);
             guiGraphics.enableScissor(startX, 0, startX + maxWidth, guiGraphics.guiHeight());
             guiGraphics.drawString(font, text, textX, textY, color, shadow);

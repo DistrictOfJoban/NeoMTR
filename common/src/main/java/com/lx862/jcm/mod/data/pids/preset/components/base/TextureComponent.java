@@ -19,11 +19,7 @@ public abstract class TextureComponent extends PIDSComponent {
         double finalY = this.y + offsetY;
         poseStack.pushPose();
         VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.text(identifier));
-        //if(bufferSource != null) { // TODO: GuiGraphics
-            //GuiHelper.drawTexture(guiDrawing, identifier, finalX, finalY, width, height);
-        //} else {
-            RenderHelper.drawTexture(poseStack, vertexConsumer, (float)(finalX), (float)(finalY), 0, (float)width, (float)height, facing, color, RenderHelper.MAX_RENDER_LIGHT);
-        //}
+        RenderHelper.drawTexture(poseStack, vertexConsumer, (float)(finalX), (float)(finalY), 0, (float)width, (float)height, facing, color, RenderHelper.MAX_RENDER_LIGHT);
         poseStack.popPose();
     }
 }

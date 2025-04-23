@@ -21,9 +21,9 @@ public interface RenderHelper {
     int ARGB_RED = 0xFF0000FF;
     int lineHeight = 9;
 
-    static void drawText(GuiGraphics graphicsHolder, MutableComponent text, int x, int y, int textColor) {
+    static void drawText(GuiGraphics guiGraphics, MutableComponent text, int x, int y, int textColor) {
         final Font font = Minecraft.getInstance().font;
-        graphicsHolder.drawString(font, text, x, y, textColor, false);
+        guiGraphics.drawString(font, text, x, y, textColor, false);
     }
 
     static void drawCenteredText(GuiGraphics guiGraphics, MutableComponent text, int x, int y, int textColor) {

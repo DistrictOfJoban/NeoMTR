@@ -94,7 +94,7 @@ public abstract class AbstractScrollViewWidget extends AbstractWidget {
         }
     }
 
-    private void renderScrollbar(GuiGraphics guiDrawing, boolean isMouseOverScrollbar) {
+    private void renderScrollbar(GuiGraphics guiGraphics, boolean isMouseOverScrollbar) {
         if(!contentOverflowed()) return;
 
         int fullHeight = getContentHeight();
@@ -102,11 +102,11 @@ public abstract class AbstractScrollViewWidget extends AbstractWidget {
         double scrollbarHeight = visibleHeight * ((double)visibleHeight / fullHeight);
         double bottomOffset = currentScroll / (fullHeight - visibleHeight);
         double yOffset = bottomOffset * (visibleHeight - scrollbarHeight);
-        GuiHelper.drawRectangle(guiDrawing, getX() + getWidth() - SCROLLBAR_WIDTH, getY() + yOffset, SCROLLBAR_WIDTH, scrollbarHeight, isMouseOverScrollbar ? ARGB_WHITE : 0xFFC0C0C0);
+        GuiHelper.drawRectangle(guiGraphics, getX() + getWidth() - SCROLLBAR_WIDTH, getY() + yOffset, SCROLLBAR_WIDTH, scrollbarHeight, isMouseOverScrollbar ? ARGB_WHITE : 0xFFC0C0C0);
 
         // Border
-        GuiHelper.drawRectangle(guiDrawing, getX() + getWidth() - 1, getY() + yOffset, 1, scrollbarHeight, 0xFF808080);
-        GuiHelper.drawRectangle(guiDrawing, getX() + getWidth() - SCROLLBAR_WIDTH, getY() + yOffset + scrollbarHeight - 1, SCROLLBAR_WIDTH, 1, 0xFF808080);
+        GuiHelper.drawRectangle(guiGraphics, getX() + getWidth() - 1, getY() + yOffset, 1, scrollbarHeight, 0xFF808080);
+        GuiHelper.drawRectangle(guiGraphics, getX() + getWidth() - SCROLLBAR_WIDTH, getY() + yOffset + scrollbarHeight - 1, SCROLLBAR_WIDTH, 1, 0xFF808080);
     }
 
     @Override
@@ -126,6 +126,6 @@ public abstract class AbstractScrollViewWidget extends AbstractWidget {
         return mouseX >= scrollbarStartX && mouseX <= scrollbarEndX && mouseY >= getY() && mouseY <= getY() + getHeight();
     }
 
-    public abstract void renderContent(GuiGraphics graphicsHolder, int mouseX, int mouseY, float tickDelta);
+    public abstract void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta);
     protected abstract int getContentHeight();
 }
