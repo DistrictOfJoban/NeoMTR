@@ -209,6 +209,7 @@
 	"gui.mtr.door_animation_type_standard_slow": "Doors: Slow",
 	"gui.mtr.drag_file_to_upload": "Drag File to Upload",
 	"gui.mtr.dwell_time": "Vehicle Dwell Time",
+	"gui.mtr.dashboard_status": "%s stations | %s routes | %s depots",
 	"gui.mtr.edit_area": "Click and drag to draw area.",
 	"gui.mtr.edit_instructions": "Edit Instructions",
 	"gui.mtr.edit_route": "Click on a platform to add it to the route.",

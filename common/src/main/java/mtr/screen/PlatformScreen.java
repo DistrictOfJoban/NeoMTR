@@ -7,6 +7,7 @@ import mtr.mappings.UtilitiesClient;
 import mtr.packet.PacketTrainDataGuiClient;
 import mtr.registry.Networking;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -14,7 +15,7 @@ public class PlatformScreen extends SavedRailScreenBase<Platform> {
 
 	private static final Component DWELL_TIME_TEXT = Text.translatable("gui.mtr.dwell_time");
 
-	public PlatformScreen(Platform savedRailBase, TransportMode transportMode, DashboardScreen dashboardScreen) {
+	public PlatformScreen(Platform savedRailBase, TransportMode transportMode, Screen dashboardScreen) {
 		super(savedRailBase, transportMode, dashboardScreen, DWELL_TIME_TEXT);
 	}
 

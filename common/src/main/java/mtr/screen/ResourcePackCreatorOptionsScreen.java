@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class ResourcePackCreatorOptionsScreen extends ScreenMapper implements IResourcePackCreatorProperties, ICustomResources, IGui {
+public class ResourcePackCreatorOptionsScreen extends MTRScreenBase implements IResourcePackCreatorProperties, ICustomResources, IGui {
 
 	private final ResourcePackCreatorScreen resourcePackCreatorScreen;
 
@@ -118,18 +118,18 @@ public class ResourcePackCreatorOptionsScreen extends ScreenMapper implements IR
 
 		updateControls(true);
 
-		addDrawableChild(buttonChooseModelFile);
-		addDrawableChild(buttonChoosePropertiesFile);
-		addDrawableChild(buttonChooseTextureFile);
+		addRenderableWidget(buttonChooseModelFile);
+		addRenderableWidget(buttonChoosePropertiesFile);
+		addRenderableWidget(buttonChooseTextureFile);
 
-		addDrawableChild(textFieldId);
-		addDrawableChild(colorSelector);
-		addDrawableChild(textFieldName);
-		addDrawableChild(textFieldGangwayConnectionId);
-		addDrawableChild(textFieldTrainBarrierId);
-		addDrawableChild(sliderRiderOffset);
-		addDrawableChild(buttonDone);
-		addDrawableChild(buttonExport);
+		addRenderableWidget(textFieldId);
+		addRenderableWidget(colorSelector);
+		addRenderableWidget(textFieldName);
+		addRenderableWidget(textFieldGangwayConnectionId);
+		addRenderableWidget(textFieldTrainBarrierId);
+		addRenderableWidget(sliderRiderOffset);
+		addRenderableWidget(buttonDone);
+		addRenderableWidget(buttonExport);
 	}
 
 	@Override
@@ -199,7 +199,7 @@ public class ResourcePackCreatorOptionsScreen extends ScreenMapper implements IR
 
 	private void buttonCallback(Consumer<Path> callback) {
 		if (minecraft != null) {
-			UtilitiesClient.setScreen(minecraft, new FileUploaderScreen(this, paths -> {
+			UtilitiesClient.setScreen(minecraft, new FileUploaderScreen(paths -> {
 				if (!paths.isEmpty()) {
 					try {
 						callback.accept(paths.get(0));
@@ -207,7 +207,7 @@ public class ResourcePackCreatorOptionsScreen extends ScreenMapper implements IR
 						MTR.LOGGER.error("", e);
 					}
 				}
-			}));
+			}).withPreviousScreen(this));
 		}
 	}
 

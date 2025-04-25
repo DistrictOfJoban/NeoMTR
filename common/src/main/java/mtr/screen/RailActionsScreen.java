@@ -12,7 +12,7 @@ import mtr.registry.Networking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class RailActionsScreen extends ScreenMapper implements IGui {
+public class RailActionsScreen extends MTRScreenBase implements IGui {
 
 	final DashboardList railActionsList;
 
@@ -20,7 +20,6 @@ public class RailActionsScreen extends ScreenMapper implements IGui {
 		super(Text.literal(""));
 		railActionsList = new DashboardList(null, null, null, null, null, this::onDelete, null, () -> "", text -> {
 		});
-
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class RailActionsScreen extends ScreenMapper implements IGui {
 		railActionsList.y = SQUARE_SIZE * 2;
 		railActionsList.width = width - SQUARE_SIZE * 2;
 		railActionsList.height = height - SQUARE_SIZE * 2;
-		railActionsList.init(this::addDrawableChild);
+		railActionsList.init(this::addRenderableWidget);
 	}
 
 	@Override

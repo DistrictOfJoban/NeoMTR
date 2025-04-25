@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
-public class ResourcePackCreatorScreen extends ScreenMapper implements IResourcePackCreatorProperties, IGui, Icons {
+public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourcePackCreatorProperties, IGui, Icons {
 
 	private int editingPartIndex = -1;
 
@@ -329,43 +329,43 @@ public class ResourcePackCreatorScreen extends ScreenMapper implements IResource
 
 		updateControls(true);
 
-		addDrawableChild(buttonOptions);
-		availableModelPartsList.init(this::addDrawableChild);
-		usedModelPartsList.init(this::addDrawableChild);
+		addRenderableWidget(buttonOptions);
+		availableModelPartsList.init(this::addRenderableWidget);
+		usedModelPartsList.init(this::addRenderableWidget);
 
-		addDrawableChild(sliderCars);
-		addDrawableChild(sliderBrightness);
-		addDrawableChild(buttonToggleTrainDirection);
-		addDrawableChild(buttonDoorLeft);
-		addDrawableChild(buttonDoorRight);
+		addRenderableWidget(sliderCars);
+		addRenderableWidget(sliderBrightness);
+		addRenderableWidget(buttonToggleTrainDirection);
+		addRenderableWidget(buttonDoorLeft);
+		addRenderableWidget(buttonDoorRight);
 
-		addDrawableChild(buttonTransportMode);
-		addDrawableChild(sliderLength);
-		addDrawableChild(sliderWidth);
-		addDrawableChild(sliderDoorMax);
-		addDrawableChild(buttonDoorAnimationType);
+		addRenderableWidget(buttonTransportMode);
+		addRenderableWidget(sliderLength);
+		addRenderableWidget(sliderWidth);
+		addRenderableWidget(sliderDoorMax);
+		addRenderableWidget(buttonDoorAnimationType);
 
-		addDrawableChild(checkboxPartMirror);
-		addDrawableChild(checkboxPartSkipRenderingIfTooFar);
-		addDrawableChild(checkboxIsDisplay);
-		addDrawableChild(sliderDisplayXPadding);
-		addDrawableChild(sliderDisplayYPadding);
-		addDrawableChild(sliderDisplayCjkSizeRatio);
-		addDrawableChild(buttonDisplayType);
-		addDrawableChild(colorSelectorDisplayCjk);
-		addDrawableChild(colorSelectorDisplay);
-		addDrawableChild(checkboxShouldScroll);
-		addDrawableChild(checkboxForceUpperCase);
-		addDrawableChild(checkboxForceSingleLine);
-		addDrawableChild(textFieldDisplayTest);
+		addRenderableWidget(checkboxPartMirror);
+		addRenderableWidget(checkboxPartSkipRenderingIfTooFar);
+		addRenderableWidget(checkboxIsDisplay);
+		addRenderableWidget(sliderDisplayXPadding);
+		addRenderableWidget(sliderDisplayYPadding);
+		addRenderableWidget(sliderDisplayCjkSizeRatio);
+		addRenderableWidget(buttonDisplayType);
+		addRenderableWidget(colorSelectorDisplayCjk);
+		addRenderableWidget(colorSelectorDisplay);
+		addRenderableWidget(checkboxShouldScroll);
+		addRenderableWidget(checkboxForceUpperCase);
+		addRenderableWidget(checkboxForceSingleLine);
+		addRenderableWidget(textFieldDisplayTest);
 
-		addDrawableChild(buttonPartStage);
-		addDrawableChild(buttonPartDoorOffset);
-		addDrawableChild(buttonPartRenderCondition);
-		addDrawableChild(textFieldPositions);
-		addDrawableChild(textFieldWhitelistedCars);
-		addDrawableChild(textFieldBlacklistedCars);
-		addDrawableChild(buttonDone);
+		addRenderableWidget(buttonPartStage);
+		addRenderableWidget(buttonPartDoorOffset);
+		addRenderableWidget(buttonPartRenderCondition);
+		addRenderableWidget(textFieldPositions);
+		addRenderableWidget(textFieldWhitelistedCars);
+		addRenderableWidget(textFieldBlacklistedCars);
+		addRenderableWidget(buttonDone);
 	}
 
 	@Override

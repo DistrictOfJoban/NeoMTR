@@ -12,6 +12,7 @@ import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PIDSConfigScreen extends ScreenMapper implements IGui {
+public class PIDSConfigScreen extends MTRScreenBase implements IGui {
 
 	private final BlockPos pos1;
 	private final BlockPos pos2;
@@ -108,34 +109,34 @@ public class PIDSConfigScreen extends ScreenMapper implements IGui {
 
 		IDrawing.setPositionAndWidth(selectAllCheckbox, SQUARE_SIZE, SQUARE_SIZE, PANEL_WIDTH);
 		selectAllCheckbox.setChecked(filterPlatformIds.isEmpty());
-		addDrawableChild(selectAllCheckbox);
+		addRenderableWidget(selectAllCheckbox);
 
 		IDrawing.setPositionAndWidth(filterButton, SQUARE_SIZE, SQUARE_SIZE * 3, PANEL_WIDTH / 2);
 		filterButton.setMessage(Text.translatable("selectWorld.edit"));
-		addDrawableChild(filterButton);
+		addRenderableWidget(filterButton);
 
 		IDrawing.setPositionAndWidth(displayPageInput, SQUARE_SIZE + TEXT_FIELD_PADDING / 2, SQUARE_SIZE * 5 + TEXT_FIELD_PADDING / 2, PANEL_WIDTH / 2 - TEXT_FIELD_PADDING);
 		displayPageInput.setValue(String.valueOf(displayPage + 1));
-		addDrawableChild(displayPageInput);
+		addRenderableWidget(displayPageInput);
 
 		IDrawing.setPositionAndWidth(buttonPrevPage, customMessageWidth, SQUARE_SIZE * 7, SQUARE_SIZE);
-		addDrawableChild(buttonPrevPage);
+		addRenderableWidget(buttonPrevPage);
 
 		IDrawing.setPositionAndWidth(buttonNextPage, customMessageWidth + SQUARE_SIZE * 3, SQUARE_SIZE * 7, SQUARE_SIZE);
-		addDrawableChild(buttonNextPage);
+		addRenderableWidget(buttonNextPage);
 
 		for (int i = 0; i < textFieldMessages.length; i++) {
 			final WidgetBetterTextField textFieldMessage = textFieldMessages[i];
 			final int y = TEXT_FIELDS_Y_OFFSET + (SQUARE_SIZE + TEXT_FIELD_PADDING) * (i % getMaxArrivalsPerPage());
 			IDrawing.setPositionAndWidth(textFieldMessage, SQUARE_SIZE + TEXT_FIELD_PADDING / 2, y, width - SQUARE_SIZE * 2 - TEXT_FIELD_PADDING - hideArrivalWidth);
 			textFieldMessage.setValue(messages[i]);
-			addDrawableChild(textFieldMessage);
+			addRenderableWidget(textFieldMessage);
 			if (i % linesPerArrival == 0) {
 				final int index = i / linesPerArrival;
 				final WidgetBetterCheckbox buttonHideArrival = buttonsHideArrival[index];
 				IDrawing.setPositionAndWidth(buttonHideArrival, width - SQUARE_SIZE - hideArrivalWidth + TEXT_PADDING, y, hideArrivalWidth);
 				buttonHideArrival.setChecked(hideArrival[index]);
-				addDrawableChild(buttonHideArrival);
+				addRenderableWidget(buttonHideArrival);
 			}
 		}
 
@@ -212,7 +213,7 @@ public class PIDSConfigScreen extends ScreenMapper implements IGui {
 		return (int) Math.ceil((float) maxArrivals / getMaxArrivalsPerPage());
 	}
 
-	public static Button getPlatformFilterButton(BlockPos pos, WidgetBetterCheckbox selectAllCheckbox, Set<Long> filterPlatformIds, ScreenMapper thisScreen) {
+	public static Button getPlatformFilterButton(BlockPos pos, WidgetBetterCheckbox selectAllCheckbox, Set<Long> filterPlatformIds, Screen thisScreen) {
 		return UtilitiesClient.newButton(button -> {
 			final Station station = RailwayData.getStation(ClientData.STATIONS, ClientData.DATA_CACHE, pos);
 			if (station != null) {

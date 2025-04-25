@@ -5,23 +5,22 @@ import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.IGui;
 import mtr.data.NameColorDataBase;
-import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class DashboardListSelectorScreen extends ScreenMapper implements IGui {
+public class DashboardListSelectorScreen extends MTRScreenBase implements IGui {
 
 	private final DashboardList availableList;
 	private final DashboardList selectedList;
 	private final Button buttonDone;
 
-	private final ScreenMapper previousScreen;
 	private final Runnable onClose;
 	private final List<NameColorDataBase> allData;
 	private final Collection<Long> selectedIds;
@@ -32,11 +31,11 @@ public class DashboardListSelectorScreen extends ScreenMapper implements IGui {
 		this(null, onClose, allData, selectedIds, isSingleSelect, canRepeat);
 	}
 
-	public DashboardListSelectorScreen(ScreenMapper previousScreen, List<NameColorDataBase> allData, Collection<Long> selectedIds, boolean isSingleSelect, boolean canRepeat) {
+	public DashboardListSelectorScreen(Screen previousScreen, List<NameColorDataBase> allData, Collection<Long> selectedIds, boolean isSingleSelect, boolean canRepeat) {
 		this(previousScreen, null, allData, selectedIds, isSingleSelect, canRepeat);
 	}
 
-	private DashboardListSelectorScreen(ScreenMapper previousScreen, Runnable onClose, List<NameColorDataBase> allData, Collection<Long> selectedIds, boolean isSingleSelect, boolean canRepeat) {
+	private DashboardListSelectorScreen(Screen previousScreen, Runnable onClose, List<NameColorDataBase> allData, Collection<Long> selectedIds, boolean isSingleSelect, boolean canRepeat) {
 		super(Text.literal(""));
 		this.previousScreen = previousScreen;
 		this.onClose = onClose;
@@ -58,10 +57,10 @@ public class DashboardListSelectorScreen extends ScreenMapper implements IGui {
 		availableList.y = selectedList.y = SQUARE_SIZE * 2;
 		availableList.height = selectedList.height = height - SQUARE_SIZE * 5;
 		availableList.width = selectedList.width = PANEL_WIDTH;
-		availableList.init(this::addDrawableChild);
-		selectedList.init(this::addDrawableChild);
+		availableList.init(this::addRenderableWidget);
+		selectedList.init(this::addRenderableWidget);
 		IDrawing.setPositionAndWidth(buttonDone, (width - PANEL_WIDTH) / 2, height - SQUARE_SIZE * 2, PANEL_WIDTH);
-		addDrawableChild(buttonDone);
+		addRenderableWidget(buttonDone);
 		updateList();
 	}
 

@@ -15,6 +15,7 @@ import mtr.packet.PacketTrainDataGuiClient;
 import mtr.util.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -56,7 +57,7 @@ public class SidingScreen extends SavedRailScreenBase<Siding> implements Icons {
 	private static final float ACCELERATION_UNIT_CONVERSION_2 = ACCELERATION_UNIT_CONVERSION_1 * 3.6F; // m/tick^2 to km/h/s
 	private static final Map<String, String> WIKIPEDIA_ARTICLES = new HashMap<>();
 
-	public SidingScreen(Siding siding, TransportMode transportMode, DashboardScreen dashboardScreen) {
+	public SidingScreen(Siding siding, TransportMode transportMode, Screen dashboardScreen) {
 		super(siding, transportMode, dashboardScreen, SELECTED_TRAIN_TEXT, MAX_TRAINS_TEXT, ACCELERATION_CONSTANT_TEXT, MANUAL_TO_AUTOMATIC_TIME, MAX_MANUAL_SPEED);
 		this.transportMode = transportMode;
 		buttonSelectTrain = UtilitiesClient.newButton(button -> onSelectingTrain());

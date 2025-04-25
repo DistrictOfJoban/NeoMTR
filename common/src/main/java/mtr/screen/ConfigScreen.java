@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
-public class ConfigScreen extends ScreenMapper implements IGui {
+public class ConfigScreen extends MTRScreenBase implements IGui {
 
 	private boolean useMTRFont;
 	private boolean showAnnouncementMessages;
@@ -131,24 +131,21 @@ public class ConfigScreen extends ScreenMapper implements IGui {
 		sliderTrainRenderDistanceRatio.setValue(Config.trainRenderDistanceRatio());
 		buttonSupportPatreon.setMessage(Text.translatable("gui.mtr.support"));
 
-		addDrawableChild(buttonUseMTRFont);
+		addRenderableWidget(buttonUseMTRFont);
 		if (!Keys.LIFTS_ONLY) {
-			addDrawableChild(buttonShowAnnouncementMessages);
-			addDrawableChild(buttonUseTTSAnnouncements);
-			addDrawableChild(buttonHideSpecialRailColors);
-			addDrawableChild(buttonHideTranslucentParts);
-			addDrawableChild(buttonShiftToToggleSitting);
-			addDrawableChild(buttonLanguageOptions);
-			addDrawableChild(buttonUseDynamicFPS);
-			addDrawableChild(sliderTrackTextureOffset);
-			addDrawableChild(sliderDynamicTextureResolution);
-			addDrawableChild(sliderTrainRenderDistanceRatio);
+			addRenderableWidget(buttonShowAnnouncementMessages);
+			addRenderableWidget(buttonUseTTSAnnouncements);
+			addRenderableWidget(buttonHideSpecialRailColors);
+			addRenderableWidget(buttonHideTranslucentParts);
+			addRenderableWidget(buttonShiftToToggleSitting);
+			addRenderableWidget(buttonLanguageOptions);
+			addRenderableWidget(buttonUseDynamicFPS);
+			addRenderableWidget(sliderTrackTextureOffset);
+			addRenderableWidget(sliderDynamicTextureResolution);
+			addRenderableWidget(sliderTrainRenderDistanceRatio);
 		}
 
-		addDrawableChild(
-			Button.builder(Component.literal("NeoJCM Config"), (btn) -> Minecraft.getInstance().setScreen(new ClientConfigScreen().withPreviousScreen(this))).size(100, 20).build()
-		);
-		addDrawableChild(buttonSupportPatreon);
+		addRenderableWidget(buttonSupportPatreon);
 	}
 
 	@Override

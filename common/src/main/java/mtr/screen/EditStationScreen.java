@@ -12,6 +12,7 @@ import mtr.packet.PacketTrainDataGuiClient;
 import mtr.registry.Networking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class EditStationScreen extends EditNameColorScreenBase<Station> {
 
 	private static final int EXIT_PANELS_START = SQUARE_SIZE * 3 + TEXT_FIELD_PADDING + TEXT_PADDING;
 
-	public EditStationScreen(Station station, DashboardScreen dashboardScreen) {
+	public EditStationScreen(Station station, Screen dashboardScreen) {
 		super(station, dashboardScreen, "gui.mtr.station_name", "gui.mtr.station_color");
 		textFieldZone = new WidgetBetterTextField(WidgetBetterTextField.TextFieldFilter.INTEGER, "", DashboardScreen.MAX_COLOR_ZONE_LENGTH);
 		textFieldExitParentLetter = new WidgetBetterTextField(WidgetBetterTextField.TextFieldFilter.LETTER, "A", 1);

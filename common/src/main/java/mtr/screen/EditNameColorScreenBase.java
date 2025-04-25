@@ -8,6 +8,7 @@ import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.registry.Networking;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public abstract class EditNameColorScreenBase<T extends NameColorDataBase> extends ScreenMapper implements IGui {
@@ -17,14 +18,14 @@ public abstract class EditNameColorScreenBase<T extends NameColorDataBase> exten
 	private int colorEnd;
 
 	protected final T data;
-	private final DashboardScreen dashboardScreen;
+	private final Screen dashboardScreen;
 	private final Component nameText;
 	private final Component colorText;
 
 	private final WidgetBetterTextField textFieldName;
 	private final WidgetColorSelector colorSelector;
 
-	public EditNameColorScreenBase(T data, DashboardScreen dashboardScreen, String nameKey, String colorKey) {
+	public EditNameColorScreenBase(T data, Screen dashboardScreen, String nameKey, String colorKey) {
 		super(Text.literal(""));
 		this.data = data;
 		this.dashboardScreen = dashboardScreen;
@@ -44,10 +45,8 @@ public abstract class EditNameColorScreenBase<T extends NameColorDataBase> exten
 	@Override
 	public void onClose() {
 		super.onClose();
-		if (minecraft != null) {
-			UtilitiesClient.setScreen(minecraft, dashboardScreen);
-		}
 		saveData();
+		minecraft.setScreen(dashboardScreen);
 	}
 
 	@Override

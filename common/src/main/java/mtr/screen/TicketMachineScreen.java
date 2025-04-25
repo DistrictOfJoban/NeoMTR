@@ -14,7 +14,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 
-public class TicketMachineScreen extends ScreenMapper implements IGui {
+public class TicketMachineScreen extends MTRScreenBase implements IGui {
 
 	private final Button[] buttons = new Button[BUTTON_COUNT];
 	private final Component balanceText;
@@ -48,7 +48,7 @@ public class TicketMachineScreen extends ScreenMapper implements IGui {
 		}
 
 		for (final Button button : buttons) {
-			addDrawableChild(button);
+			addRenderableWidget(button);
 		}
 	}
 

@@ -70,7 +70,7 @@ public class TrainAnnouncerScreen extends TrainSensorScreenBase {
 		availableSoundsList.y = SQUARE_SIZE * 2 + TEXT_HEIGHT + TEXT_PADDING + TEXT_FIELD_PADDING;
 		availableSoundsList.height = height - availableSoundsList.y - SQUARE_SIZE;
 		availableSoundsList.width = width / 2 - SQUARE_SIZE;
-		availableSoundsList.init(this::addDrawableChild);
+		availableSoundsList.init(this::addRenderableWidget);
 	}
 
 	@Override

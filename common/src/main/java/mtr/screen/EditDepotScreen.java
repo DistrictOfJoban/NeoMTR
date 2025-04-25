@@ -12,6 +12,7 @@ import mtr.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,7 +48,7 @@ public class EditDepotScreen extends EditNameColorScreenBase<Depot> {
 	private static final int MAX_TRAINS_PER_HOUR = 5;
 	private static final int SECONDS_PER_MC_HOUR = Depot.TICKS_PER_HOUR / 20;
 
-	public EditDepotScreen(Depot depot, TransportMode transportMode, DashboardScreen dashboardScreen) {
+	public EditDepotScreen(Depot depot, TransportMode transportMode, Screen dashboardScreen) {
 		super(depot, dashboardScreen, "gui.mtr.depot_name", "gui.mtr.depot_color");
 
 		sidingsInDepot = ClientData.DATA_CACHE.requestDepotIdToSidings(depot.id);

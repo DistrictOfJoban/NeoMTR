@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RailwaySignScreen extends ScreenMapper implements IGui {
+public class RailwaySignScreen extends MTRScreenBase implements IGui {
 
 	private int editingIndex;
 	private int page;
@@ -138,7 +138,7 @@ public class RailwaySignScreen extends ScreenMapper implements IGui {
 
 		for (int i = 0; i < buttonsEdit.length; i++) {
 			IDrawing.setPositionAndWidth(buttonsEdit[i], (width - SIGN_SIZE * length) / 2 + i * SIGN_SIZE, SIGN_SIZE, SIGN_SIZE);
-			addDrawableChild(buttonsEdit[i]);
+			addRenderableWidget(buttonsEdit[i]);
 		}
 
 		columns = Math.max((width - SIGN_BUTTON_SIZE * 3) / (SIGN_BUTTON_SIZE * 8) * 2, 1);
@@ -150,7 +150,7 @@ public class RailwaySignScreen extends ScreenMapper implements IGui {
 		totalPages = loopSigns((index, x, y, isBig) -> {
 			IDrawing.setPositionAndWidth(buttonsSelection[index], (isBig ? xOffsetBig : xOffsetSmall) + x, BUTTON_Y_START + y, isBig ? SIGN_BUTTON_SIZE * 3 : SIGN_BUTTON_SIZE);
 			buttonsSelection[index].visible = false;
-			addDrawableChild(buttonsSelection[index]);
+			addRenderableWidget(buttonsSelection[index]);
 		}, true);
 
 		final int buttonClearX = (width - PANEL_WIDTH - SQUARE_SIZE * 4) / 2;
@@ -158,14 +158,14 @@ public class RailwaySignScreen extends ScreenMapper implements IGui {
 
 		IDrawing.setPositionAndWidth(buttonClear, buttonClearX, buttonY, PANEL_WIDTH);
 		buttonClear.visible = false;
-		addDrawableChild(buttonClear);
+		addRenderableWidget(buttonClear);
 
 		IDrawing.setPositionAndWidth(buttonPrevPage, buttonClearX + PANEL_WIDTH, buttonY, SQUARE_SIZE);
 		buttonPrevPage.visible = false;
-		addDrawableChild(buttonPrevPage);
+		addRenderableWidget(buttonPrevPage);
 		IDrawing.setPositionAndWidth(buttonNextPage, buttonClearX + PANEL_WIDTH + SQUARE_SIZE * 3, buttonY, SQUARE_SIZE);
 		buttonNextPage.visible = false;
-		addDrawableChild(buttonNextPage);
+		addRenderableWidget(buttonNextPage);
 
 		if (!isRailwaySign && minecraft != null) {
 			UtilitiesClient.setScreen(minecraft, new DashboardListSelectorScreen(this::onClose, platformsForList, selectedIds, true, false));

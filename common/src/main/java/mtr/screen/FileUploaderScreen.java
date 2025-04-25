@@ -11,14 +11,12 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class FileUploaderScreen extends ScreenMapper implements IGui {
+public class FileUploaderScreen extends MTRScreenBase implements IGui {
 
-	private final ScreenMapper screen;
 	private final Consumer<List<Path>> filesCallback;
 
-	public FileUploaderScreen(ScreenMapper screen, Consumer<List<Path>> filesCallback) {
+	public FileUploaderScreen(Consumer<List<Path>> filesCallback) {
 		super(Text.literal(""));
-		this.screen = screen;
 		this.filesCallback = filesCallback;
 	}
 
@@ -37,12 +35,5 @@ public class FileUploaderScreen extends ScreenMapper implements IGui {
 	public void onFilesDrop(List<Path> paths) {
 		filesCallback.accept(paths);
 		onClose();
-	}
-
-	@Override
-	public void onClose() {
-		if (minecraft != null) {
-			UtilitiesClient.setScreen(minecraft, screen);
-		}
 	}
 }

@@ -10,9 +10,12 @@ import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Tuple;
 
 import java.util.ArrayList;
@@ -21,7 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class DashboardScreen extends ScreenMapper implements IGui {
+public class DashboardScreen extends MTRScreenBase implements IGui {
 
 	private SelectedTab selectedTab;
 	private AreaBase editingArea;
@@ -54,6 +57,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 
 	public static final int MAX_COLOR_ZONE_LENGTH = 6;
 	private static final int COLOR_WIDTH = 48;
+	private static final int HEADER_HEIGHT = 20;
 
 	public DashboardScreen(TransportMode transportMode) {
 		super(Text.literal(""));
@@ -62,7 +66,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 		textFieldName = new WidgetBetterTextField(Text.translatable("gui.mtr.name").getString());
 		textFieldCustomDestination = new WidgetBetterTextField(Text.translatable("gui.mtr.custom_destination_suggestion").getString());
 		colorSelector = new WidgetColorSelector(this, true, this::toggleButtons);
-		widgetMap = new WidgetMap(transportMode, this::onDrawCorners, this::onDrawCornersMouseRelease, this::onClickAddPlatformToRoute, this::onClickEditSavedRail, colorSelector::isMouseOver);
+		widgetMap = new WidgetMap(transportMode, this::onDrawCorners, this::onDrawCornersMouseRelease, this::onClickAddPlatformToRoute, this::onClickEditSavedRail, colorSelector::isMouseOver, this);
 
 		buttonTabStations = UtilitiesClient.newButton(Text.translatable("gui.mtr.stations"), button -> onSelectTab(SelectedTab.STATIONS));
 		buttonTabRoutes = UtilitiesClient.newButton(Text.translatable("gui.mtr.routes"), button -> onSelectTab(SelectedTab.ROUTES));
@@ -77,14 +81,10 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 		buttonZoomIn = UtilitiesClient.newButton(Text.literal("+"), button -> widgetMap.scale(1));
 		buttonZoomOut = UtilitiesClient.newButton(Text.literal("-"), button -> widgetMap.scale(-1));
 		buttonRailActions = UtilitiesClient.newButton(Text.translatable("gui.mtr.rail_actions_button"), button -> {
-			if (minecraft != null) {
-				UtilitiesClient.setScreen(minecraft, new RailActionsScreen());
-			}
+			minecraft.setScreen(new RailActionsScreen().withPreviousScreen(this));
 		});
 		buttonOptions = UtilitiesClient.newButton(Text.translatable("menu.options"), button -> {
-			if (minecraft != null) {
-				minecraft.setScreen(MTRClient.getConfigScreen(this));
-			}
+			minecraft.setScreen(MTRClient.getConfigScreen(this));
 		});
 
 		dashboardList = new DashboardList(this::onFind, this::onDrawArea, this::onEdit, this::onSort, null, this::onDelete, this::getList, () -> ClientData.DASHBOARD_SEARCH, text -> ClientData.DASHBOARD_SEARCH = text);
@@ -99,7 +99,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 		final int tabCount = 3;
 		final int bottomRowY = height - SQUARE_SIZE;
 
-		widgetMap.setPositionAndSize(PANEL_WIDTH, 0, width - PANEL_WIDTH, height);
+		widgetMap.setPositionAndSize(PANEL_WIDTH, HEADER_HEIGHT, width - PANEL_WIDTH, height - HEADER_HEIGHT);
 
 		IDrawing.setPositionAndWidth(buttonTabStations, 0, 0, PANEL_WIDTH / tabCount);
 		IDrawing.setPositionAndWidth(buttonTabRoutes, PANEL_WIDTH / tabCount, 0, PANEL_WIDTH / tabCount);
@@ -124,38 +124,57 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 		dashboardList.width = PANEL_WIDTH;
 
 		toggleButtons();
-		dashboardList.init(this::addDrawableChild);
-		addWidget(widgetMap);
+		dashboardList.init(this::addRenderableWidget);
+		addRenderableWidget(widgetMap);
 
-		addDrawableChild(buttonTabStations);
-		addDrawableChild(buttonTabRoutes);
-		addDrawableChild(buttonTabDepots);
-		addDrawableChild(buttonAddStation);
-		addDrawableChild(buttonAddRoute);
-		addDrawableChild(buttonAddDepot);
-		addDrawableChild(buttonDoneEditingStation);
-		addDrawableChild(buttonDoneEditingRoute);
-		addDrawableChild(buttonDoneEditingRouteDestination);
-		addDrawableChild(buttonZoomIn);
-		addDrawableChild(buttonZoomOut);
-		addDrawableChild(buttonRailActions);
-		addDrawableChild(buttonOptions);
+		addRenderableWidget(buttonTabStations);
+		addRenderableWidget(buttonTabRoutes);
+		addRenderableWidget(buttonTabDepots);
+		addRenderableWidget(buttonAddStation);
+		addRenderableWidget(buttonAddRoute);
+		addRenderableWidget(buttonAddDepot);
+		addRenderableWidget(buttonDoneEditingStation);
+		addRenderableWidget(buttonDoneEditingRoute);
+		addRenderableWidget(buttonDoneEditingRouteDestination);
+		addRenderableWidget(buttonZoomIn);
+		addRenderableWidget(buttonZoomOut);
+		addRenderableWidget(buttonRailActions);
+		addRenderableWidget(buttonOptions);
 
-		addDrawableChild(textFieldName);
-		addDrawableChild(textFieldCustomDestination);
-		addDrawableChild(colorSelector);
+		addRenderableWidget(textFieldName);
+		addRenderableWidget(textFieldCustomDestination);
+		addRenderableWidget(colorSelector);
+	}
+
+	private void renderHeader(GuiGraphics guiGraphics, Font font) {
+		final WidgetMap.EditState editState = widgetMap.getEditState();
+		final float startX = PANEL_WIDTH + ((width - PANEL_WIDTH) / 2f);
+		final float startY = (HEADER_HEIGHT - font.lineHeight) / 2f;
+
+		guiGraphics.fill(0, 0, width, HEADER_HEIGHT, 0xFF202020);
+		guiGraphics.fill(0, 1, width, 2, 0xFF606060);
+
+		guiGraphics.pose().pushPose();
+		guiGraphics.pose().translate(startX, startY+1, 0);
+		if(editState == WidgetMap.EditState.DEFAULT) {
+			guiGraphics.drawCenteredString(font, Component.translatable("gui.mtr.dashboard_status", ClientData.STATIONS.size(), ClientData.ROUTES.size(), ClientData.DEPOTS.size()), 0, 0, ARGB_WHITE);
+		} else {
+			int alpha = Math.max(0x20, (int)(0xFF * Math.abs(Math.sin(Util.getMillis() / 400d))));
+			int rgb = 0xFFFF00;
+			int argb = (alpha << 24) | rgb;
+			Component textToRender = editState == WidgetMap.EditState.EDITING_AREA ? Component.translatable("gui.mtr.edit_area") : Component.translatable("gui.mtr.edit_route");
+			guiGraphics.drawCenteredString(font, textToRender, 0, 0, argb);
+		}
+
+		guiGraphics.pose().popPose();
 	}
 
 	@Override
 	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
-		try {
-			widgetMap.render(guiGraphics, mouseX, mouseY, delta);
-			guiGraphics.fill(0, 0, PANEL_WIDTH, height, ARGB_BACKGROUND);
-			dashboardList.render(guiGraphics, font);
-		} catch (Exception e) {
-			MTR.LOGGER.error("", e);
-		}
+		guiGraphics.fill(0, 0, width, height, ARGB_BACKGROUND);
+		dashboardList.render(guiGraphics, font);
+		renderHeader(guiGraphics, font);
 		guiGraphics.pose().translate(0, 0, 100);
 	}
 
@@ -174,48 +193,44 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 	public void tick() {
 		dashboardList.tick();
 
-		try {
-			switch (selectedTab) {
-				case STATIONS:
-					if (editingArea == null) {
-						dashboardList.setData(ClientData.STATIONS, true, true, true, false, false, true);
-					} else {
-						final Map<Long, Platform> platformData = ClientData.DATA_CACHE.requestStationIdToPlatforms(editingArea.id);
-						dashboardList.setData(platformData == null ? new ArrayList<>() : new ArrayList<>(platformData.values()), true, false, true, false, false, false);
-					}
-					break;
-				case ROUTES:
-					if (editingRoute == null) {
-						dashboardList.setData(ClientData.getFilteredDataSet(transportMode, ClientData.ROUTES), false, true, true, false, false, true);
-					} else {
-						final List<DataConverter> routeData = editingRoute.platformIds.stream().map(platformId -> {
-							final Platform platform = ClientData.DATA_CACHE.platformIdMap.get(platformId.platformId);
-							if (platform == null) {
-								return null;
+		switch (selectedTab) {
+			case STATIONS:
+				if (editingArea == null) {
+					dashboardList.setData(ClientData.STATIONS, true, true, true, false, false, true);
+				} else {
+					final Map<Long, Platform> platformData = ClientData.DATA_CACHE.requestStationIdToPlatforms(editingArea.id);
+					dashboardList.setData(platformData == null ? new ArrayList<>() : new ArrayList<>(platformData.values()), true, false, true, false, false, false);
+				}
+				break;
+			case ROUTES:
+				if (editingRoute == null) {
+					dashboardList.setData(ClientData.getFilteredDataSet(transportMode, ClientData.ROUTES), false, true, true, false, false, true);
+				} else {
+					final List<DataConverter> routeData = editingRoute.platformIds.stream().map(platformId -> {
+						final Platform platform = ClientData.DATA_CACHE.platformIdMap.get(platformId.platformId);
+						if (platform == null) {
+							return null;
+						} else {
+							final String customDestinationPrefix = platformId.customDestination.isEmpty() ? "" : "*";
+							final Station station = ClientData.DATA_CACHE.platformIdToStation.get(platform.id);
+							if (station != null) {
+								return new DataConverter(String.format("%s%s (%s)", customDestinationPrefix, station.name, platform.name), station.color);
 							} else {
-								final String customDestinationPrefix = platformId.customDestination.isEmpty() ? "" : "*";
-								final Station station = ClientData.DATA_CACHE.platformIdToStation.get(platform.id);
-								if (station != null) {
-									return new DataConverter(String.format("%s%s (%s)", customDestinationPrefix, station.name, platform.name), station.color);
-								} else {
-									return new DataConverter(String.format("%s(%s)", customDestinationPrefix, platform.name), 0);
-								}
+								return new DataConverter(String.format("%s(%s)", customDestinationPrefix, platform.name), 0);
 							}
-						}).filter(Objects::nonNull).collect(Collectors.toList());
-						dashboardList.setData(routeData, false, false, true, true, false, true);
-					}
-					break;
-				case DEPOTS:
-					if (editingArea == null) {
-						dashboardList.setData(ClientData.getFilteredDataSet(transportMode, ClientData.DEPOTS), true, true, true, false, false, true);
-					} else {
-						final Map<Long, Siding> sidingData = ClientData.DATA_CACHE.requestDepotIdToSidings(editingArea.id);
-						dashboardList.setData(sidingData == null ? new ArrayList<>() : new ArrayList<>(sidingData.values()), true, false, true, false, false, false);
-					}
-					break;
-			}
-		} catch (Exception e) {
-			MTR.LOGGER.error("", e);
+						}
+					}).filter(Objects::nonNull).collect(Collectors.toList());
+					dashboardList.setData(routeData, false, false, true, true, false, true);
+				}
+				break;
+			case DEPOTS:
+				if (editingArea == null) {
+					dashboardList.setData(ClientData.getFilteredDataSet(transportMode, ClientData.DEPOTS), true, true, true, false, false, true);
+				} else {
+					final Map<Long, Siding> sidingData = ClientData.DATA_CACHE.requestDepotIdToSidings(editingArea.id);
+					dashboardList.setData(sidingData == null ? new ArrayList<>() : new ArrayList<>(sidingData.values()), true, false, true, false, false, false);
+				}
+				break;
 		}
 	}
 
@@ -315,7 +330,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 						UtilitiesClient.setScreen(minecraft, new DeleteConfirmationScreen(() -> {
 							PacketTrainDataGuiClient.sendDeleteData(Networking.PACKET_DELETE_STATION, station.id);
 							ClientData.STATIONS.remove(station);
-						}, IGui.formatStationName(station.name), this));
+						}, IGui.formatStationName(station.name)).withPreviousScreen(this));
 					}
 					break;
 				case ROUTES:
@@ -325,7 +340,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 							UtilitiesClient.setScreen(minecraft, new DeleteConfirmationScreen(() -> {
 								PacketTrainDataGuiClient.sendDeleteData(Networking.PACKET_DELETE_ROUTE, route.id);
 								ClientData.ROUTES.remove(route);
-							}, IGui.formatStationName(route.name), this));
+							}, IGui.formatStationName(route.name)).withPreviousScreen(this));
 						}
 					} else {
 						editingRoute.platformIds.remove(index);
@@ -338,7 +353,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 						UtilitiesClient.setScreen(minecraft, new DeleteConfirmationScreen(() -> {
 							PacketTrainDataGuiClient.sendDeleteData(Networking.PACKET_DELETE_DEPOT, depot.id);
 							ClientData.DEPOTS.remove(depot);
-						}, IGui.formatStationName(depot.name), this));
+						}, IGui.formatStationName(depot.name)).withPreviousScreen(this));
 					}
 					break;
 			}
@@ -426,11 +441,7 @@ public class DashboardScreen extends ScreenMapper implements IGui {
 
 	private void onDoneEditingRoute() {
 		if (isNew) {
-			try {
-				ClientData.ROUTES.add(editingRoute);
-			} catch (Exception e) {
-				MTR.LOGGER.error("", e);
-			}
+			ClientData.ROUTES.add(editingRoute);
 		}
 		editingRoute.name = IGui.textOrUntitled(textFieldName.getValue());
 		editingRoute.color = colorSelector.getColor();

@@ -12,6 +12,7 @@ import mtr.mappings.UtilitiesClient;
 import mtr.registry.Networking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -23,7 +24,7 @@ public abstract class SavedRailScreenBase<T extends SavedRailBase> extends Scree
 	protected final WidgetShorterSlider sliderDwellTimeMin;
 	protected final WidgetShorterSlider sliderDwellTimeSec;
 
-	private final DashboardScreen dashboardScreen;
+	private final Screen dashboardScreen;
 	private final WidgetBetterTextField textFieldSavedRailNumber;
 
 	private final Component savedRailNumberText;
@@ -31,7 +32,7 @@ public abstract class SavedRailScreenBase<T extends SavedRailBase> extends Scree
 	protected static final int SECONDS_PER_MINUTE = 60;
 	private static final int MAX_SAVED_RAIL_NUMBER_LENGTH = 10;
 
-	public SavedRailScreenBase(T savedRailBase, TransportMode transportMode, DashboardScreen dashboardScreen, Component... additionalTexts) {
+	public SavedRailScreenBase(T savedRailBase, TransportMode transportMode, Screen dashboardScreen, Component... additionalTexts) {
 		super(Text.literal(""));
 		this.savedRailBase = savedRailBase;
 		showScheduleControls = !transportMode.continuousMovement;
@@ -108,9 +109,7 @@ public abstract class SavedRailScreenBase<T extends SavedRailBase> extends Scree
 	@Override
 	public void onClose() {
 		super.onClose();
-		if (minecraft != null) {
-			UtilitiesClient.setScreen(minecraft, dashboardScreen);
-		}
+		minecraft.setScreen(dashboardScreen);
 	}
 
 	@Override

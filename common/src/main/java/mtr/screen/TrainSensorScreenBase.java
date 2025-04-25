@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.*;
 
-public abstract class TrainSensorScreenBase extends ScreenMapper implements IGui {
+public abstract class TrainSensorScreenBase extends MTRScreenBase implements IGui {
 
 	private boolean stoppedOnly;
 	private boolean movingOnly;
@@ -90,20 +90,20 @@ public abstract class TrainSensorScreenBase extends ScreenMapper implements IGui
 		final int textFieldWidth = textFieldCount == 0 ? 0 : (width - SQUARE_SIZE * 2) / textFieldCount;
 		for (int i = 0; i < textFieldCount; i++) {
 			IDrawing.setPositionAndWidth(textFields[i], SQUARE_SIZE + TEXT_FIELD_PADDING / 2 + textFieldWidth * i, SQUARE_SIZE + TEXT_HEIGHT + TEXT_PADDING + TEXT_FIELD_PADDING / 2, textFieldWidth - TEXT_FIELD_PADDING);
-			addDrawableChild(textFields[i]);
+			addRenderableWidget(textFields[i]);
 		}
 
 		if (hasSpeedCheckboxes) {
 			IDrawing.setPositionAndWidth(stoppedOnlyCheckbox, SQUARE_SIZE, yStart - SQUARE_SIZE * 2, PANEL_WIDTH);
 			IDrawing.setPositionAndWidth(movingOnlyCheckbox, SQUARE_SIZE, yStart - SQUARE_SIZE, PANEL_WIDTH);
-			addDrawableChild(stoppedOnlyCheckbox);
-			addDrawableChild(movingOnlyCheckbox);
+			addRenderableWidget(stoppedOnlyCheckbox);
+			addRenderableWidget(movingOnlyCheckbox);
 			setChecked(stoppedOnly, movingOnly);
 		}
 
 		IDrawing.setPositionAndWidth(filterButton, SQUARE_SIZE, yStart + SQUARE_SIZE * 2, PANEL_WIDTH / 2);
 		filterButton.setMessage(Text.translatable("selectWorld.edit"));
-		addDrawableChild(filterButton);
+		addRenderableWidget(filterButton);
 	}
 
 	@Override
