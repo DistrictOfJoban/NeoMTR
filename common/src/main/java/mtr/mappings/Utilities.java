@@ -81,10 +81,6 @@ public interface Utilities {
 		return CreativeModeTabs.getDefaultTab();
 	}
 
-	static SoundEvent unwrapSoundEvent(Holder.Reference<SoundEvent> soundEvent) {
-		return soundEvent.value();
-	}
-
 	@FunctionalInterface
 	interface TileEntitySupplier<T extends BlockEntityMapper> {
 		T supplier(BlockPos pos, BlockState state);
