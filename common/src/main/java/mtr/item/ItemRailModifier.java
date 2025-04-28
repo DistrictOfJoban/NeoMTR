@@ -7,6 +7,7 @@ import mtr.packet.PacketTrainDataGuiServer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,54 +47,68 @@ public class ItemRailModifier extends ItemNodeModifierBase {
 	protected void onConnect(Level world, ItemStack stack, TransportMode transportMode, BlockState stateStart, BlockState stateEnd, BlockPos posStart, BlockPos posEnd, RailAngle facingStart, RailAngle facingEnd, Player player, RailwayData railwayData) {
 		if (railType.hasSavedRail && (railwayData.hasSavedRail(posStart) || railwayData.hasSavedRail(posEnd))) {
 			if (player != null) {
-				player.displayClientMessage(Text.translatable("gui.mtr.platform_or_siding_exists"), true);
+				player.displayClientMessage(Text.translatable("gui.mtr.platform_or_siding_exists").withStyle(ChatFormatting.RED), true);
 			}
 		} else {
-			final boolean isValidContinuousMovement;
-			final RailType newRailType;
-			if (transportMode.continuousMovement) {
-				final Block blockStart = stateStart.getBlock();
-				final Block blockEnd = stateEnd.getBlock();
-
-				if (blockStart instanceof BlockNode.BlockContinuousMovementNode && blockEnd instanceof BlockNode.BlockContinuousMovementNode) {
-					if (((BlockNode.BlockContinuousMovementNode) blockStart).isStation && ((BlockNode.BlockContinuousMovementNode) blockEnd).isStation) {
-						isValidContinuousMovement = true;
-						newRailType = railType.hasSavedRail ? railType : RailType.CABLE_CAR_STATION;
-					} else {
-						final int differenceX = posEnd.getX() - posStart.getX();
-						final int differenceZ = posEnd.getZ() - posStart.getZ();
-						isValidContinuousMovement = !railType.hasSavedRail && facingStart.isParallel(facingEnd)
-								&& ((facingStart == RailAngle.N || facingStart == RailAngle.S) && differenceX == 0
-								|| (facingStart == RailAngle.E || facingStart == RailAngle.W) && differenceZ == 0
-								|| (facingStart == RailAngle.NE || facingStart == RailAngle.SW) && differenceX == -differenceZ
-								|| (facingStart == RailAngle.SE || facingStart == RailAngle.NW) && differenceX == differenceZ);
-						newRailType = RailType.CABLE_CAR;
-					}
-				} else {
-					isValidContinuousMovement = false;
-					newRailType = railType;
-				}
+			RailConnectionResult railConnectionResult = getRails(transportMode, posStart, posEnd, stateStart, stateEnd, facingStart, facingEnd);
+			if(railConnectionResult.failMessage() != null) {
+				player.displayClientMessage(railConnectionResult.failMessage().withStyle(ChatFormatting.RED), true);
 			} else {
-				isValidContinuousMovement = true;
-				newRailType = railType;
-			}
-
-			final Rail rail1 = new Rail(posStart, facingStart, posEnd, facingEnd, isOneWay ? RailType.NONE : newRailType, transportMode);
-			final Rail rail2 = new Rail(posEnd, facingEnd, posStart, facingStart, newRailType, transportMode);
-
-			final boolean goodRadius = rail1.goodRadius() && rail2.goodRadius();
-			final boolean isValid = rail1.isValid() && rail2.isValid();
-
-			if (goodRadius && isValid && isValidContinuousMovement) {
+				Rail rail1 = railConnectionResult.oppositeRail();
+				Rail rail2 = railConnectionResult.rail();
 				railwayData.addRail(player, transportMode, posStart, posEnd, rail1, false);
 				final long newId = railwayData.addRail(player, transportMode, posEnd, posStart, rail2, true);
 				world.setBlockAndUpdate(posStart, stateStart.setValue(BlockNode.IS_CONNECTED, true));
 				world.setBlockAndUpdate(posEnd, stateEnd.setValue(BlockNode.IS_CONNECTED, true));
 				PacketTrainDataGuiServer.createRailS2C(world, transportMode, posStart, posEnd, rail1, rail2, newId);
-			} else if (player != null) {
-				player.displayClientMessage(Text.translatable(isValidContinuousMovement ? goodRadius ? "gui.mtr.invalid_orientation" : "gui.mtr.radius_too_small" : "gui.mtr.cable_car_invalid_orientation"), true);
 			}
 		}
+	}
+
+	public RailConnectionResult getRails(TransportMode transportMode, BlockPos posStart, BlockPos posEnd, BlockState stateStart, BlockState stateEnd, RailAngle facingStart, RailAngle facingEnd) {
+		final boolean isValidContinuousMovement;
+		final RailType newRailType;
+		if (transportMode.continuousMovement) {
+			final Block blockStart = stateStart.getBlock();
+			final Block blockEnd = stateEnd.getBlock();
+
+			if (blockStart instanceof BlockNode.BlockContinuousMovementNode && blockEnd instanceof BlockNode.BlockContinuousMovementNode) {
+				if (((BlockNode.BlockContinuousMovementNode) blockStart).isStation && ((BlockNode.BlockContinuousMovementNode) blockEnd).isStation) {
+					isValidContinuousMovement = true;
+					newRailType = railType.hasSavedRail ? railType : RailType.CABLE_CAR_STATION;
+				} else {
+					final int differenceX = posEnd.getX() - posStart.getX();
+					final int differenceZ = posEnd.getZ() - posStart.getZ();
+					isValidContinuousMovement = !railType.hasSavedRail && facingStart.isParallel(facingEnd)
+							&& ((facingStart == RailAngle.N || facingStart == RailAngle.S) && differenceX == 0
+							|| (facingStart == RailAngle.E || facingStart == RailAngle.W) && differenceZ == 0
+							|| (facingStart == RailAngle.NE || facingStart == RailAngle.SW) && differenceX == -differenceZ
+							|| (facingStart == RailAngle.SE || facingStart == RailAngle.NW) && differenceX == differenceZ);
+					newRailType = RailType.CABLE_CAR;
+				}
+			} else {
+				isValidContinuousMovement = false;
+				newRailType = railType;
+			}
+		} else {
+			isValidContinuousMovement = true;
+			newRailType = railType;
+		}
+
+		final Rail rail1 = new Rail(posStart, facingStart, posEnd, facingEnd, isOneWay ? RailType.NONE : newRailType, transportMode);
+		final Rail rail2 = new Rail(posEnd, facingEnd, posStart, facingStart, newRailType, transportMode);
+
+		final boolean goodRadius = rail1.goodRadius() && rail2.goodRadius();
+		final boolean isValid = rail1.isValid() && rail2.isValid();
+
+		if (goodRadius && isValid && isValidContinuousMovement) {
+			return new RailConnectionResult(null, rail1, rail2);
+		} else {
+			return new RailConnectionResult(Text.translatable(isValidContinuousMovement ? goodRadius ? "gui.mtr.invalid_orientation" : "gui.mtr.radius_too_small" : "gui.mtr.cable_car_invalid_orientation"), null, null);
+		}
+	}
+
+	public record RailConnectionResult(MutableComponent failMessage, Rail oppositeRail, Rail rail) {
 	}
 
 	@Override

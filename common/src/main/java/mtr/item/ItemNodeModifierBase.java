@@ -91,9 +91,8 @@ public abstract class ItemNodeModifierBase extends ItemBlockClickingBase {
 	protected boolean clickCondition(UseOnContext context) {
 		final Level world = context.getLevel();
 		final Block blockStart = world.getBlockState(context.getClickedPos()).getBlock();
-		if (blockStart instanceof BlockNode) {
-			final BlockNode blockNode = (BlockNode) blockStart;
-			if (blockNode.transportMode == TransportMode.AIRPLANE) {
+		if (blockStart instanceof BlockNode blockNode) {
+            if (blockNode.transportMode == TransportMode.AIRPLANE) {
 				return forAirplaneNode;
 			} else {
 				return blockNode.transportMode.continuousMovement ? forContinuousMovementNode : forNonContinuousMovementNode;

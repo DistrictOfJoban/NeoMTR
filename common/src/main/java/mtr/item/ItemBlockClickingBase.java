@@ -50,13 +50,18 @@ public abstract class ItemBlockClickingBase extends ItemWithCreativeTabBase {
 		}
 	}
 
+	public BlockPos getFirstBlockPos(ItemStack itemStack) {
+		CustomData tag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+		final long posLong = tag.copyTag().getLong(TAG_POS);
+		if(posLong == 0) return null;
+		return BlockPos.of(posLong);
+	}
+
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
-		final CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
-		final CompoundTag compoundTag = customData.copyTag();
-		final long posLong = compoundTag.getLong(TAG_POS);
-		if (posLong != 0) {
-			tooltip.add(Text.translatable("tooltip.mtr.selected_block", BlockPos.of(posLong).toShortString()).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+		BlockPos clickedPos = getFirstBlockPos(stack);
+		if (clickedPos != null) {
+			tooltip.add(Text.translatable("tooltip.mtr.selected_block", clickedPos.toShortString()).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
 		}
 	}
 

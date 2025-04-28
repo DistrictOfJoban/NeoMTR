@@ -11,12 +11,14 @@ import mtr.block.BlockSignalSemaphoreBase;
 import mtr.client.*;
 import mtr.data.*;
 import mtr.item.ItemNodeModifierBase;
+import mtr.item.ItemRailModifier;
 import mtr.mappings.Text;
 import mtr.mappings.Utilities;
 import mtr.mappings.UtilitiesClient;
 import mtr.path.PathData;
 import mtr.util.BlockUtil;
 import mtr.util.Util;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
@@ -30,9 +32,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.StringUtils;
 
@@ -303,6 +309,11 @@ public class RenderTrains implements IGui {
 			}
 		}));
 
+		ItemStack playerHolding = player.getMainHandItem();
+		if(playerHolding.getItem() instanceof ItemRailModifier) {
+			renderRailPreview(world, player, playerHolding);
+		}
+
 		matrices.popPose();
 
 		if (lastSimulatedTick != MTRClient.getGameTick()) {
@@ -347,6 +358,40 @@ public class RenderTrains implements IGui {
 		prevSidingCount = ClientData.SIDINGS.size();
 		ClientData.DATA_CACHE.clearDataIfNeeded();
 		lastSimulatedTick = MTRClient.getGameTick();
+	}
+
+	private static void renderRailPreview(Level level, Player localPlayer, ItemStack playerHolding) {
+		final ItemRailModifier itemRailModifier = (ItemRailModifier) playerHolding.getItem();
+		BlockPos posEnd = itemRailModifier.getFirstBlockPos(playerHolding);
+		HitResult hitResult = Minecraft.getInstance().hitResult;
+
+		if(posEnd != null && hitResult instanceof BlockHitResult blockHitResult) {
+			final BlockPos startPosRaw = blockHitResult.getBlockPos();
+			final BlockState stateStart = level.getBlockState(startPosRaw);
+			final BlockPos posStart = stateStart.getBlock() instanceof BlockNode ? startPosRaw : startPosRaw.above();
+			final BlockState stateEnd = level.getBlockState(posEnd);
+			float angle1 = stateStart.getBlock() instanceof BlockNode ? BlockNode.getAngle(stateStart) : localPlayer.getYRot() + 90;
+			float angle2 = BlockNode.getAngle(stateEnd);
+
+			final float angleDifference = (float) Math.toDegrees(Math.atan2(posEnd.getZ() - posStart.getZ(), posEnd.getX() - posStart.getX()));
+
+			final RailAngle railAngleStart = RailAngle.fromAngle(angle1 + (RailAngle.similarFacing(angleDifference, angle1) ? 0 : 180));
+			final RailAngle railAngleEnd = RailAngle.fromAngle(angle2 + (RailAngle.similarFacing(angleDifference, angle2) ? 180 : 0));
+
+			final ItemRailModifier.RailConnectionResult railConnectionResult = itemRailModifier.getRails(TransportMode.TRAIN, posStart, itemRailModifier.getFirstBlockPos(playerHolding), stateStart, stateEnd, railAngleStart, railAngleEnd);
+			if(railConnectionResult.failMessage() != null) {
+				localPlayer.displayClientMessage(railConnectionResult.failMessage().withStyle(ChatFormatting.RED), true);
+			} else {
+				// TODO: Maybe we should draw our own HUD instead to free up the action bar for something else
+				// Make old error disappear
+				localPlayer.displayClientMessage(Component.empty(), true);
+
+				Rail rail1 = railConnectionResult.oppositeRail();
+				Rail rail2 = railConnectionResult.rail();
+				renderRailStandard(level, rail1, 0, true, 1);
+				renderRailStandard(level, rail2, 0, true, 1);
+			}
+		}
 	}
 
 	public static boolean shouldNotRender(BlockPos pos, int maxDistance, Direction facing) {
