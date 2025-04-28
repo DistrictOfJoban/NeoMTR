@@ -156,9 +156,14 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 		for(AreaBase areaBase : areasToDraw) {
 			boolean isSelected = Screen.hasShiftDown() && areaBase.inArea((int)Math.round(mouseWorldPos.getA()), (int)Math.round(mouseWorldPos.getB()));
 			if(isSelected) {
-				Tuple<Integer, Integer> corner1WithBorder = new Tuple<>(areaBase.corner1.getA() + 2, areaBase.corner1.getB() - 2);
-				Tuple<Integer, Integer> corner2WithBorder = new Tuple<>(areaBase.corner2.getA() - 2, areaBase.corner2.getB() + 2);
-				drawRectangleFromWorldCoords(guiGraphics.pose(), buffer, corner1WithBorder, corner2WithBorder, ARGB_WHITE);
+				Tuple<Double, Double> corner1Screen = worldPosToCoords(areaBase.corner1);
+				Tuple<Double, Double> corner2Screen = worldPosToCoords(areaBase.corner2);
+
+				double x1 = Math.min(corner1Screen.getA(), corner2Screen.getA());
+				double y1 = Math.min(corner1Screen.getB(), corner2Screen.getB());
+				double x2 = Math.max(corner1Screen.getA(), corner2Screen.getA());
+				double y2 = Math.max(corner1Screen.getB(), corner2Screen.getB());
+				drawRectangle(guiGraphics.pose(), buffer, x1 - 1, y1 - 1, x2 + 1, y2 + 1, ARGB_WHITE);
 			}
 
 			drawRectangleFromWorldCoords(guiGraphics.pose(), buffer, areaBase.corner1, areaBase.corner2, (isSelected ? ARGB_BLACK : ARGB_BLACK_TRANSLUCENT) + areaBase.color);
@@ -436,6 +441,14 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 		if (Util.isBetween(coordsX, 0, width) && Util.isBetween(coordsY, 0, height)) {
 			callback.accept(coordsX, coordsY);
 		}
+	}
+
+	private Tuple<Double, Double> worldPosToCoords(Tuple<Integer, Integer> worldPos) {
+		double x = worldPos.getA();
+		double z = worldPos.getB();
+		double screenX = (x - centerX) * scale + width / 2D;
+		double screenZ = (z - centerY) * scale + height / 2D;
+		return new Tuple<>(screenX, screenZ);
 	}
 
 	private void drawRectangleFromWorldCoords(PoseStack matrices, BufferBuilder buffer, Tuple<Integer, Integer> corner1, Tuple<Integer, Integer> corner2, int color) {
