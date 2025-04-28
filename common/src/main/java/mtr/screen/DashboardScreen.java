@@ -5,7 +5,6 @@ import mtr.MTRClient;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
 import mtr.data.*;
-import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.registry.Networking;
@@ -53,7 +52,7 @@ public class DashboardScreen extends MTRScreenBase implements IGui {
 	private final WidgetBetterTextField textFieldCustomDestination;
 	private final WidgetColorSelector colorSelector;
 
-	private final DashboardList dashboardList;
+	private final SideDashboardList dashboardList;
 
 	public static final int MAX_COLOR_ZONE_LENGTH = 6;
 	private static final int COLOR_WIDTH = 48;
@@ -87,7 +86,7 @@ public class DashboardScreen extends MTRScreenBase implements IGui {
 			minecraft.setScreen(MTRClient.getConfigScreen(this));
 		});
 
-		dashboardList = new DashboardList(this::onFind, this::onDrawArea, this::onEdit, this::onSort, null, this::onDelete, this::getList, () -> ClientData.DASHBOARD_SEARCH, text -> ClientData.DASHBOARD_SEARCH = text);
+		dashboardList = new SideDashboardList(this::onFind, this::onDrawArea, this::onEdit, this::onSort, null, this::onDelete, this::getList, () -> ClientData.DASHBOARD_SEARCH, text -> ClientData.DASHBOARD_SEARCH = text);
 
 		onSelectTab(SelectedTab.STATIONS);
 	}
@@ -295,7 +294,7 @@ public class DashboardScreen extends MTRScreenBase implements IGui {
 					break;
 				case ROUTES:
 					if (editingRoute == null && data instanceof Route) {
-						UtilitiesClient.setScreen(minecraft, new EditRouteScreen((Route) data, this));
+						minecraft.setScreen(new EditRouteScreen((Route) data, this));
 					} else {
 						startEditingRouteDestination(index);
 					}
@@ -303,11 +302,11 @@ public class DashboardScreen extends MTRScreenBase implements IGui {
 				case DEPOTS:
 					if (editingArea == null) {
 						if (data instanceof Depot) {
-							UtilitiesClient.setScreen(minecraft, new EditDepotScreen((Depot) data, transportMode, this));
+							minecraft.setScreen(new EditDepotScreen((Depot) data, transportMode, this));
 						}
 					} else {
 						if (data instanceof Siding) {
-							UtilitiesClient.setScreen(minecraft, new SidingScreen((Siding) data, transportMode, this));
+							minecraft.setScreen(new SidingScreen((Siding) data, transportMode, this));
 						}
 					}
 					break;
