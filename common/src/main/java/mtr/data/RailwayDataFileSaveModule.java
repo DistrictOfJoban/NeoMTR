@@ -1,6 +1,7 @@
 package mtr.data;
 
 import mtr.MTR;
+import mtr.api.RailwayDataModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -88,7 +89,8 @@ public class RailwayDataFileSaveModule extends RailwayDataModule {
 		}
 	}
 
-	public void load() {
+	@Override
+	public void earlyInit() {
 		existingFiles.clear();
 		readMessagePackFromFile(stationsPath, Station::new, railwayData.stations::add, false);
 		readMessagePackFromFile(platformsPath, Platform::new, railwayData.platforms::add, true);

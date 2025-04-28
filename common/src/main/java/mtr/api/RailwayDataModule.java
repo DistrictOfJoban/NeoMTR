@@ -1,8 +1,8 @@
-package mtr.data;
+package mtr.api;
 
+import mtr.data.Rail;
+import mtr.data.RailwayData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import java.util.Map;
@@ -21,7 +21,11 @@ public abstract class RailwayDataModule {
 		this.rails = rails;
 	}
 
-	public void load() {
+	public void earlyInit() {
+
+	}
+
+	public void init() {
 
 	}
 
@@ -43,13 +47,6 @@ public abstract class RailwayDataModule {
 
 	public void autoSave() {
 		save();
-	}
-
-	public void onPlayerJoin(ServerPlayer player) {
-
-	}
-
-	public void onPlayerDisconnect(Player player) {
 	}
 
 	public String getName() {

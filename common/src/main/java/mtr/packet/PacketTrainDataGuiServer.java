@@ -195,6 +195,7 @@ public class PacketTrainDataGuiServer extends PacketTrainDataBase {
 			});
 
 			if (packetId.equals(Networking.PACKET_UPDATE_STATION) || packetId.equals(Networking.PACKET_DELETE_STATION) || packetId.equals(Networking.PACKET_UPDATE_DEPOT) || packetId.equals(Networking.PACKET_DELETE_DEPOT)) {
+				railwayData.onAreaUpdated();
 				try {
 					UpdateDynmap.updateDynmap(world, railwayData);
 				} catch (NoClassDefFoundError | Exception ignored) {

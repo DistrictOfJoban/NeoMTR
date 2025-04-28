@@ -2,6 +2,9 @@ package mtr.data;
 
 import io.netty.buffer.Unpooled;
 import mtr.MTR;
+import mtr.api.RailwayDataModule;
+import mtr.api.events.MTRAreaUpdateEvent;
+import mtr.api.events.MTRPlayerConnectionEvent;
 import mtr.loader.MTRRegistry;
 import mtr.block.BlockNode;
 import mtr.client.ClientData;
@@ -221,12 +224,16 @@ public class RailwayData extends PersistentStateMapper {
 		}
 
 		for(RailwayDataModule railwayDataModule : modules.values()) {
-			railwayDataModule.load();
+			railwayDataModule.earlyInit();
 		}
 
 		validateData();
 		dataCache.sync();
 		signalBlocks.writeCache();
+
+		for(RailwayDataModule railwayDataModule : modules.values()) {
+			railwayDataModule.init();
+		}
 
 		try {
 			UpdateDynmap.updateDynmap(level, this);
@@ -406,7 +413,9 @@ public class RailwayData extends PersistentStateMapper {
 		PacketTrainDataGuiServer.sendAllInChunks(serverPlayer, stations, platforms, sidings, routes, depots, lifts, signalBlocks);
 
 		for(RailwayDataModule railwayDataModule : modules.values()) {
-			railwayDataModule.onPlayerJoin(serverPlayer);
+			if(railwayDataModule instanceof MTRPlayerConnectionEvent evt) {
+				evt.onPlayerConnect(serverPlayer);
+			}
 		}
 	}
 
@@ -467,6 +476,14 @@ public class RailwayData extends PersistentStateMapper {
 		}
 	}
 
+	public void onAreaUpdated() {
+		for(RailwayDataModule railwayDataModule : modules.values()) {
+			if(railwayDataModule instanceof MTRAreaUpdateEvent evt) {
+				evt.onUpdate();
+			}
+		}
+	}
+
 	public void removeLiftFloorTrack(BlockPos pos) {
 		removeLiftFloorTrack(level, lifts, pos);
 		dataCache.sync();
@@ -488,7 +505,9 @@ public class RailwayData extends PersistentStateMapper {
 
 	public void disconnectPlayer(Player player) {
 		for(RailwayDataModule railwayDataModule : modules.values()) {
-			railwayDataModule.onPlayerDisconnect(player);
+			if(railwayDataModule instanceof MTRPlayerConnectionEvent evt) {
+				evt.onPlayerDisconnect(player);
+			}
 		}
 		playerLastUpdatedPositions.remove(player);
 	}

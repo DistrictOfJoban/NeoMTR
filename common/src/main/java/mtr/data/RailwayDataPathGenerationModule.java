@@ -1,6 +1,7 @@
 package mtr.data;
 
 import mtr.MTR;
+import mtr.api.RailwayDataModule;
 import mtr.packet.PacketTrainDataGuiServer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;

@@ -1,6 +1,8 @@
 package mtr.data;
 
 import io.netty.buffer.Unpooled;
+import mtr.api.RailwayDataModule;
+import mtr.api.events.MTRPlayerConnectionEvent;
 import mtr.loader.MTRRegistry;
 import mtr.mappings.Utilities;
 import net.minecraft.core.BlockPos;
@@ -16,7 +18,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class RailwayDataMountModule extends RailwayDataModule {
+public class RailwayDataMountModule extends RailwayDataModule implements MTRPlayerConnectionEvent {
 
 	public static final String NAME = "mount";
 	private final Map<Player, Integer> playerRidingCoolDown = new HashMap<>();
@@ -121,11 +123,13 @@ public class RailwayDataMountModule extends RailwayDataModule {
 		});
 	}
 
-	public void onPlayerJoin(ServerPlayer serverPlayer) {
-		playerRidingCoolDown.put(serverPlayer, 2);
-		playerShiftCoolDowns.put(serverPlayer, 0);
+	@Override
+	public void onPlayerConnect(ServerPlayer player) {
+		playerRidingCoolDown.put(player, 2);
+		playerShiftCoolDowns.put(player, 0);
 	}
 
+	@Override
 	public void onPlayerDisconnect(Player player) {
 		playerShiftCoolDowns.remove(player);
 		playerInVirtualDrive.remove(player);

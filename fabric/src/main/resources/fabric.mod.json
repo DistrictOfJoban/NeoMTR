@@ -21,7 +21,8 @@
 			"com.lx862.jcm.JCMFabric",
 			"top.mcmtr.MSDMainFabric",
 			"net.londonunderground.LUAddonFabric",
-			"com.lx862.mtrtm.TransitManagerFabric"
+			"com.lx862.mtrtm.TransitManagerFabric",
+			"com.lx862.mtrsurveyor.MTRSurveyor"
 		],
 		"client": [
 			"mtr.MTRFabricClient",

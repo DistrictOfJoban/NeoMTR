@@ -2,6 +2,7 @@ package mtr.data;
 
 import com.google.gson.JsonParser;
 import mtr.MTR;
+import mtr.api.RailwayDataModule;
 import mtr.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CollectionTag;

@@ -3,6 +3,7 @@ package mtr.data;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongAVLTreeSet;
+import mtr.api.RailwayDataModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
