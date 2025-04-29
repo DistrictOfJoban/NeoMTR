@@ -98,6 +98,7 @@ public class VehicleRidingClient {
 			clientPlayer.setSpeed(0);
 			if (MTRClient.getGameTick() > 40) {
 				clientPlayer.absMoveTo(moveX, moveY, moveZ);
+				clientPlayer.moveTo(moveX, moveY, moveZ);
 			}
 
 			clientPlayerCallback.run();
