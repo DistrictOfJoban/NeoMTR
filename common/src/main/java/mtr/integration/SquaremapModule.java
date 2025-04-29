@@ -1,9 +1,14 @@
-package mtr.packet;
+package mtr.integration;
 
 import mtr.MTR;
+import mtr.api.RailwayDataModule;
+import mtr.api.events.MTRAreaUpdateEvent;
 import mtr.data.AreaBase;
 import mtr.data.IGui;
+import mtr.data.Rail;
 import mtr.data.RailwayData;
+import mtr.packet.IUpdateWebMap;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import xyz.jpenilla.squaremap.api.*;
 import xyz.jpenilla.squaremap.api.marker.Marker;
@@ -12,9 +17,10 @@ import xyz.jpenilla.squaremap.api.marker.MarkerOptions;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
-public class UpdateSquaremap implements IGui, IUpdateWebMap {
+public class SquaremapModule extends RailwayDataModule implements IGui, IUpdateWebMap, MTRAreaUpdateEvent {
 
 	static {
 		try {
@@ -40,18 +46,32 @@ public class UpdateSquaremap implements IGui, IUpdateWebMap {
 		}
 	}
 
-	public static void updateSquaremap(Level world, RailwayData railwayData) {
+	public static final String NAME = "map_squaremap";
+
+	public SquaremapModule(RailwayData railwayData, Level level, Map<BlockPos, Map<BlockPos, Rail>> rails) {
+		super(NAME, railwayData, level, rails);
+	}
+
+	@Override
+	public void onAreaUpdate() {
 		try {
-			updateSquaremap(world, railwayData.stations, MARKER_SET_STATIONS_ID, MARKER_SET_STATIONS_TITLE, MARKER_SET_STATION_AREAS_ID, MARKER_SET_STATION_AREAS_TITLE, STATION_ICON_KEY);
-			updateSquaremap(world, railwayData.depots, MARKER_SET_DEPOTS_ID, MARKER_SET_DEPOTS_TITLE, MARKER_SET_DEPOT_AREAS_ID, MARKER_SET_DEPOT_AREAS_TITLE, DEPOT_ICON_KEY);
+			syncData(level, railwayData);
+		} catch (NoClassDefFoundError | Exception ignored) {
+		}
+	}
+
+	public static void syncData(Level level, RailwayData railwayData) {
+		try {
+			syncData(level, railwayData.stations, MARKER_SET_STATIONS_ID, MARKER_SET_STATIONS_TITLE, MARKER_SET_STATION_AREAS_ID, MARKER_SET_STATION_AREAS_TITLE, STATION_ICON_KEY);
+			syncData(level, railwayData.depots, MARKER_SET_DEPOTS_ID, MARKER_SET_DEPOTS_TITLE, MARKER_SET_DEPOT_AREAS_ID, MARKER_SET_DEPOT_AREAS_TITLE, DEPOT_ICON_KEY);
 		} catch (IllegalStateException ignored) {
 		} catch (Exception e) {
 			MTR.LOGGER.error("", e);
 		}
 	}
 
-	private static <T extends AreaBase> void updateSquaremap(Level world, Set<T> areas, String areasId, String areasTitle, String areaAreasId, String areaAreasTitle, String iconKey) {
-		final MapWorld mapWorld = SquaremapProvider.get().getWorldIfEnabled(WorldIdentifier.parse(world.dimension().location().toString())).orElse(null);
+	private static <T extends AreaBase> void syncData(Level level, Set<T> areas, String areasId, String areasTitle, String areaAreasId, String areaAreasTitle, String iconKey) {
+		final MapWorld mapWorld = SquaremapProvider.get().getWorldIfEnabled(WorldIdentifier.parse(level.dimension().location().toString())).orElse(null);
 		if (mapWorld == null) {
 			return;
 		}

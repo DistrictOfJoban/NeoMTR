@@ -1,9 +1,14 @@
-package mtr.packet;
+package mtr.integration;
 
 import mtr.MTR;
+import mtr.api.RailwayDataModule;
+import mtr.api.events.MTRAreaUpdateEvent;
 import mtr.data.AreaBase;
 import mtr.data.IGui;
+import mtr.data.Rail;
 import mtr.data.RailwayData;
+import mtr.packet.IUpdateWebMap;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import org.dynmap.DynmapCommonAPI;
@@ -12,9 +17,10 @@ import org.dynmap.markers.AreaMarker;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-public class UpdateDynmap implements IGui, IUpdateWebMap {
+public class DynmapModule extends RailwayDataModule implements IGui, IUpdateWebMap, MTRAreaUpdateEvent {
 
 	private static DynmapCommonAPI dynmapCommonAPI;
 
@@ -24,7 +30,7 @@ public class UpdateDynmap implements IGui, IUpdateWebMap {
 
 				@Override
 				public void apiEnabled(DynmapCommonAPI dynmapCommonAPI) {
-					UpdateDynmap.dynmapCommonAPI = dynmapCommonAPI;
+					DynmapModule.dynmapCommonAPI = dynmapCommonAPI;
 					try {
 						final org.dynmap.markers.MarkerAPI markerAPI = dynmapCommonAPI.getMarkerAPI();
 						IUpdateWebMap.readResource(STATION_ICON_PATH, inputStream -> markerAPI.createMarkerIcon(STATION_ICON_KEY, STATION_ICON_KEY, inputStream));
@@ -39,21 +45,35 @@ public class UpdateDynmap implements IGui, IUpdateWebMap {
 		}
 	}
 
-	public static void updateDynmap(Level world, RailwayData railwayData) {
+	public static final String NAME = "map_dynmap";
+
+	public DynmapModule(RailwayData railwayData, Level level, Map<BlockPos, Map<BlockPos, Rail>> rails) {
+		super(NAME, railwayData, level, rails);
+	}
+
+	@Override
+	public void onAreaUpdate() {
 		try {
-			updateDynmap(world, railwayData.stations, MARKER_SET_STATIONS_ID, MARKER_SET_STATIONS_TITLE, MARKER_SET_STATION_AREAS_ID, MARKER_SET_STATION_AREAS_TITLE, STATION_ICON_KEY);
-			updateDynmap(world, railwayData.depots, MARKER_SET_DEPOTS_ID, MARKER_SET_DEPOTS_TITLE, MARKER_SET_DEPOT_AREAS_ID, MARKER_SET_DEPOT_AREAS_TITLE, DEPOT_ICON_KEY);
+			syncData(level, railwayData);
+		} catch (NoClassDefFoundError | Exception ignored) {
+		}
+	}
+
+	public static void syncData(Level level, RailwayData railwayData) {
+		try {
+			syncData(level, railwayData.stations, MARKER_SET_STATIONS_ID, MARKER_SET_STATIONS_TITLE, MARKER_SET_STATION_AREAS_ID, MARKER_SET_STATION_AREAS_TITLE, STATION_ICON_KEY);
+			syncData(level, railwayData.depots, MARKER_SET_DEPOTS_ID, MARKER_SET_DEPOTS_TITLE, MARKER_SET_DEPOT_AREAS_ID, MARKER_SET_DEPOT_AREAS_TITLE, DEPOT_ICON_KEY);
 		} catch (Exception e) {
 			MTR.LOGGER.error("", e);
 		}
 	}
 
-	private static <T extends AreaBase> void updateDynmap(Level world, Set<T> areas, String areasId, String areasTitle, String areaAreasId, String areaAreasTitle, String iconKey) {
+	private static <T extends AreaBase> void syncData(Level level, Set<T> areas, String areasId, String areasTitle, String areaAreasId, String areaAreasTitle, String iconKey) {
 		if (dynmapCommonAPI != null) {
 			final String worldId;
-			switch (world.dimension().location().toString()) {
+			switch (level.dimension().location().toString()) {
 				case "minecraft:overworld":
-					final MinecraftServer minecraftServer = world.getServer();
+					final MinecraftServer minecraftServer = level.getServer();
 					worldId = minecraftServer == null ? "world" : minecraftServer.getWorldData().getLevelName();
 					break;
 				case "minecraft:the_nether":
@@ -63,11 +83,11 @@ public class UpdateDynmap implements IGui, IUpdateWebMap {
 					worldId = "DIM1";
 					break;
 				default:
-					worldId = world.dimension().location().getPath();
+					worldId = level.dimension().location().getPath();
 					break;
 			}
 
-			final int areaY = world.getSeaLevel();
+			final int areaY = level.getSeaLevel();
 			final org.dynmap.markers.MarkerAPI markerAPI = dynmapCommonAPI.getMarkerAPI();
 
 			final org.dynmap.markers.MarkerSet markerSetAreas;

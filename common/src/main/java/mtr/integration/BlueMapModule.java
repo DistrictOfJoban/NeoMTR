@@ -1,4 +1,4 @@
-package mtr.packet;
+package mtr.integration;
 
 import de.bluecolored.bluemap.api.BlueMapAPI;
 import de.bluecolored.bluemap.api.BlueMapMap;
@@ -8,37 +8,56 @@ import de.bluecolored.bluemap.api.markers.ShapeMarker;
 import de.bluecolored.bluemap.api.math.Color;
 import de.bluecolored.bluemap.api.math.Shape;
 import mtr.MTR;
+import mtr.api.RailwayDataModule;
+import mtr.api.events.MTRAreaUpdateEvent;
 import mtr.data.AreaBase;
 import mtr.data.IGui;
+import mtr.data.Rail;
 import mtr.data.RailwayData;
+import mtr.packet.IUpdateWebMap;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
+import java.util.Map;
 import java.util.Set;
 
-public class UpdateBlueMap implements IGui, IUpdateWebMap {
+public class BlueMapModule extends RailwayDataModule implements IGui, IUpdateWebMap, MTRAreaUpdateEvent {
+	public static final String NAME = "map_bluemap";
 
-	public static void updateBlueMap(Level world, RailwayData railwayData) {
+	public BlueMapModule(RailwayData railwayData, Level level, Map<BlockPos, Map<BlockPos, Rail>> rails) {
+		super(NAME, railwayData, level, rails);
+	}
+
+	@Override
+	public void onAreaUpdate() {
 		try {
-			updateBlueMap(world, railwayData.stations, MARKER_SET_STATIONS_ID, MARKER_SET_STATIONS_TITLE, MARKER_SET_STATION_AREAS_ID, MARKER_SET_STATION_AREAS_TITLE, STATION_ICON_PATH);
-			updateBlueMap(world, railwayData.depots, MARKER_SET_DEPOTS_ID, MARKER_SET_DEPOTS_TITLE, MARKER_SET_DEPOT_AREAS_ID, MARKER_SET_DEPOT_AREAS_TITLE, DEPOT_ICON_PATH);
+			syncData(level, railwayData);
+		} catch (NoClassDefFoundError | Exception ignored) {
+		}
+	}
+
+	public static void syncData(Level level, RailwayData railwayData) {
+		try {
+			syncData(level, railwayData.stations, MARKER_SET_STATIONS_ID, MARKER_SET_STATIONS_TITLE, MARKER_SET_STATION_AREAS_ID, MARKER_SET_STATION_AREAS_TITLE, STATION_ICON_PATH);
+			syncData(level, railwayData.depots, MARKER_SET_DEPOTS_ID, MARKER_SET_DEPOTS_TITLE, MARKER_SET_DEPOT_AREAS_ID, MARKER_SET_DEPOT_AREAS_TITLE, DEPOT_ICON_PATH);
 		} catch (Exception e) {
 			MTR.LOGGER.error("", e);
 		}
 	}
 
-	private static <T extends AreaBase> void updateBlueMap(Level world, Set<T> areas, String areasId, String areasTitle, String areaAreasId, String areaAreasTitle, String iconKey) {
+	private static <T extends AreaBase> void syncData(Level level, Set<T> areas, String areasId, String areasTitle, String areaAreasId, String areaAreasTitle, String iconKey) {
 		final BlueMapAPI api = BlueMapAPI.getInstance().orElse(null);
 		if (api == null) {
 			return;
 		}
 
-		final String worldId = world.dimension().location().getPath();
+		final String worldId = level.dimension().location().getPath();
 		final BlueMapMap map = api.getMaps().stream().filter(map1 -> worldId.contains(map1.getId())).findFirst().orElse(null);
 		if (map == null) {
 			return;
 		}
 
-		final int areaY = world.getSeaLevel();
+		final int areaY = level.getSeaLevel();
 
 		final MarkerSet markerSetAreas = MarkerSet.builder().label(areasTitle).build();
 		markerSetAreas.getMarkers().clear();

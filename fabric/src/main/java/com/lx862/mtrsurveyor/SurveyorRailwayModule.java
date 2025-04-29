@@ -89,7 +89,7 @@ public class SurveyorRailwayModule extends RailwayDataModule implements MTRAreaU
     }
 
     @Override
-    public void onUpdate() {
+    public void onAreaUpdate() {
         syncLandmarks();
     }
 }

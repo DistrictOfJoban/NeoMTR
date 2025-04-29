@@ -7,9 +7,12 @@ import mtr.client.IDrawing;
 import mtr.data.IGui;
 import mtr.data.RailwayData;
 import mtr.data.Station;
+import mtr.integration.SquaremapModule;
 import mtr.loader.MTRRegistry;
 import mtr.loader.MTRRegistryClient;
 import mtr.packet.PacketTrainDataGuiServer;
+import mtr.integration.BlueMapModule;
+import mtr.integration.DynmapModule;
 import mtr.servlet.Webserver;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerLevel;
@@ -21,6 +24,10 @@ import static mtr.MTRClient.TACTILE_MAP_SOUND_INSTANCE;
 
 public class Events {
     public static void register() {
+        RailwayData.registerRailwayModule(DynmapModule::new);
+        RailwayData.registerRailwayModule(BlueMapModule::new);
+        RailwayData.registerRailwayModule(SquaremapModule::new);
+
         MTRRegistry.registerTickEvent(minecraftServer -> {
             for(ServerLevel serverLevel : minecraftServer.getAllLevels()) {
                 final RailwayData railwayData = RailwayData.getInstance(serverLevel);

@@ -5,6 +5,9 @@ import mtr.MTR;
 import mtr.api.RailwayDataModule;
 import mtr.api.events.MTRAreaUpdateEvent;
 import mtr.api.events.MTRPlayerConnectionEvent;
+import mtr.integration.BlueMapModule;
+import mtr.integration.DynmapModule;
+import mtr.integration.SquaremapModule;
 import mtr.loader.MTRRegistry;
 import mtr.block.BlockNode;
 import mtr.client.ClientData;
@@ -236,17 +239,17 @@ public class RailwayData extends PersistentStateMapper {
 		}
 
 		try {
-			UpdateDynmap.updateDynmap(level, this);
+			DynmapModule.syncData(level, this);
 			MTR.LOGGER.info("[NeoMTR] Dynmap is detected");
 		} catch (NoClassDefFoundError | Exception ignored) {
 		}
         try {
-			UpdateBlueMap.updateBlueMap(level, this);
+			BlueMapModule.syncData(level, this);
 			MTR.LOGGER.info("[NeoMTR] BlueMap is detected");
 		} catch (NoClassDefFoundError | Exception ignored) {
 		}
         try {
-			UpdateSquaremap.updateSquaremap(level, this);
+			SquaremapModule.syncData(level, this);
 			MTR.LOGGER.info("[NeoMTR] Squaremap is detected");
 		} catch (NoClassDefFoundError | Exception ignored) {
 		}
@@ -479,7 +482,7 @@ public class RailwayData extends PersistentStateMapper {
 	public void onAreaUpdated() {
 		for(RailwayDataModule railwayDataModule : modules.values()) {
 			if(railwayDataModule instanceof MTRAreaUpdateEvent evt) {
-				evt.onUpdate();
+				evt.onAreaUpdate();
 			}
 		}
 	}
