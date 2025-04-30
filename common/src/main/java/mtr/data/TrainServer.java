@@ -5,6 +5,7 @@ import mtr.path.PathData;
 import mtr.registry.Networking;
 import mtr.util.BlockUtil;
 import mtr.util.Util;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -211,7 +212,9 @@ public class TrainServer extends Train {
 		if (lastSimulateTrainMillis == 0) {
 			realTicksElapsed = 1;
 		} else {
-			realTicksElapsed = (t - lastSimulateTrainMillis) / 50f;
+			float serverTickRate = world.tickRateManager().tickrate();
+			float defaultTickRate = SharedConstants.TICKS_PER_SECOND;
+			realTicksElapsed = ((t - lastSimulateTrainMillis) / 50f) * (serverTickRate / defaultTickRate);
 		}
 		lastSimulateTrainMillis = t;
 		ticksElapsed = realTicksElapsed > 100 ? 0 : realTicksElapsed; // Maybe paused, TODO better impl

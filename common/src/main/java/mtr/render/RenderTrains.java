@@ -114,7 +114,7 @@ public class RenderTrains implements IGui {
 					}
 				} else {
 					final Component text;
-					switch ((int) ((System.currentTimeMillis() / 1000) % 3)) {
+					switch ((int) ((net.minecraft.Util.getMillis() / 1000) % 3)) {
 						default:
 							text = getStationText(thisStation, "this");
 							break;
