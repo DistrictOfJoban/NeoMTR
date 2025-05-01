@@ -11,40 +11,29 @@ import java.nio.file.Path;
 import java.util.Collections;
 
 public abstract class Config {
-    private final Path configPath;
-
-    public Config(Path configPath) {
-        this.configPath = configPath;
-    }
-
-    public void read() {
-        if(!Files.exists(configPath)) {
-            write();
-            read();
+    public void read(Path path) {
+        if(!Files.exists(path)) {
+            write(path);
+            read(path);
         } else {
             try {
-                JsonObject jsonObject = JsonParser.parseString(String.join("", Files.readAllLines(configPath))).getAsJsonObject();
+                JsonObject jsonObject = JsonParser.parseString(String.join("", Files.readAllLines(path))).getAsJsonObject();
                 fromJson(jsonObject);
             } catch (Exception e) {
                 JCMLogger.error("Error reading the config file: ", e);
-                write();
+                write(path);
                 JCMLogger.warn("Failed to read config file, config may be left at it's default state.");
             }
         }
     }
 
-    public void write() {
+    public void write(Path path) {
         try {
-            Files.createDirectories(configPath.getParent());
-            Files.write(configPath, Collections.singleton(new GsonBuilder().setPrettyPrinting().create().toJson(toJson())));
+            Files.createDirectories(path.getParent());
+            Files.write(path, Collections.singleton(new GsonBuilder().setPrettyPrinting().create().toJson(toJson())));
         } catch (IOException e) {
             JCMLogger.error("", e);
         }
-    }
-
-    public final void reset() {
-        fromJson(new JsonObject());
-        write();
     }
 
     protected abstract void fromJson(JsonObject jsonObject);

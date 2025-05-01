@@ -1,6 +1,7 @@
 package com.lx862.jcm.mod;
 
 import com.lx862.jcm.mod.config.JCMClientConfig;
+import com.lx862.jcm.mod.config.JCMConfig;
 import com.lx862.jcm.mod.registry.BlockEntityRenderers;
 import com.lx862.jcm.mod.registry.Blocks;
 import com.lx862.jcm.mod.registry.Events;

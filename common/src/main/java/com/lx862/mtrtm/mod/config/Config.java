@@ -9,20 +9,19 @@ import java.nio.file.Path;
 import java.util.Collections;
 
 public class Config {
-    private static final Path CONFIG_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("config").resolve("transitmanager");
     public static int mtrJourneyPlannerTickTime = 0;
     public static int shearPSDOpLevel = 0;
 
-    public static boolean load() {
-        if(!Files.exists(CONFIG_PATH.resolve("config.json"))) {
+    public static boolean load(Path path) {
+        if(!Files.exists(path.resolve("config.json"))) {
             TransitManager.LOGGER.info("[TransitManager] Config not found, generating one...");
-            writeConfig();
+            writeConfig(path);
             return true;
         }
 
         TransitManager.LOGGER.info("[TransitManager] Reading Train Config...");
         try {
-            final JsonObject jsonConfig = JsonParser.parseString(String.join("", Files.readAllLines(CONFIG_PATH.resolve("config.json")))).getAsJsonObject();
+            final JsonObject jsonConfig = JsonParser.parseString(String.join("", Files.readAllLines(path.resolve("config.json")))).getAsJsonObject();
             try {
                 mtrJourneyPlannerTickTime = jsonConfig.get("mtrJourneyPlannerTickTime").getAsInt();
             } catch (Exception ignored) {}
@@ -38,15 +37,15 @@ public class Config {
         return true;
     }
 
-    public static void writeConfig() {
+    public static void writeConfig(Path path) {
         TransitManager.LOGGER.info("[TransitManager] Writing Config...");
         final JsonObject jsonConfig = new JsonObject();
         jsonConfig.addProperty("mtrJourneyPlannerTickTime", mtrJourneyPlannerTickTime);
         jsonConfig.addProperty("shearPSDOpLevel", shearPSDOpLevel);
 
         try {
-            Files.createDirectories(CONFIG_PATH);
-            Files.write(CONFIG_PATH.resolve("config.json"), Collections.singleton(new GsonBuilder().setPrettyPrinting().create().toJson(jsonConfig)));
+            Files.createDirectories(path);
+            Files.write(path.resolve("config.json"), Collections.singleton(new GsonBuilder().setPrettyPrinting().create().toJson(jsonConfig)));
         } catch (Exception e) {
             TransitManager.LOGGER.error("[TransitManager] Failed to write config!", e);
         }

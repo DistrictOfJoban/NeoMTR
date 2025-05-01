@@ -11,8 +11,17 @@ public class JCMClientConfig extends Config {
     private static final Path CONFIG_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("config").resolve("jsblock_client.json");
     public boolean disableRendering;
 
-    public JCMClientConfig() {
-        super(CONFIG_PATH);
+    public void read() {
+        read(CONFIG_PATH);
+    }
+
+    public void write() {
+        write(CONFIG_PATH);
+    }
+
+    public final void reset() {
+        fromJson(new JsonObject());
+        write(CONFIG_PATH);
     }
 
     @Override

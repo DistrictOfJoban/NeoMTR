@@ -161,12 +161,12 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
     public void onClose() {
         if(!closing) {
             if (!discardConfig) {
-                JCM.getConfig().write();
+                JCMClient.getConfig().write();
                 JCMClient.getConfig().write();
             } else {
                 // Don't save our change to disk, and re-read it from disk, effectively discarding the config
                 JCMClient.getConfig().read();
-                JCM.getConfig().read();
+                JCMClient.getConfig().read();
             }
         }
 

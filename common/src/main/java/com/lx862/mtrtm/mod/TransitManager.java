@@ -4,6 +4,7 @@ import com.lx862.mtrtm.mod.config.Config;
 import com.lx862.mtrtm.mod.data.TrainState;
 import com.lx862.mtrtm.loader.Loader;
 import it.unimi.dsi.fastutil.longs.*;
+import mtr.loader.MTRRegistry;
 import mtr.registry.MTRAddonRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +18,11 @@ public class TransitManager {
 
     public static void init() {
         LOGGER.info("[TransitManager] TransitManager initialized \\(＾▽＾)/");
-        Config.load();
+
+        MTRRegistry.registerServerStartingEvent(minecraftServer -> {
+            Config.load(minecraftServer.getServerDirectory().resolve("config").resolve("transitmanager"));
+        });
+
         Loader.registerCommands(TransitManagerCommands::registerCommands);
         MTRAddonRegistry.registerAddon(ADDON);
     }

@@ -29,10 +29,10 @@ public class MTRClient {
 
 	public static void init() {
 		Blocks.registerClient();
-		BlockEntityTypes.registerClient();
+		BlockEntityRenderers.registerClient();
 		Networking.registerClient();
 		KeyMappings.registerClient();
-		Events.registerClient();
+		EventsClient.registerClient();
 
 		Config.readConfig();
 		Patreon.getPatreonList(Config.PATREON_LIST);

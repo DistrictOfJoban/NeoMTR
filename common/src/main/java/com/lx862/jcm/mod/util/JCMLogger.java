@@ -33,8 +33,7 @@ public final class JCMLogger {
 
     public static void debug(String s, Object... o) {
         if(JCM.getConfig().debug) {
-
-        LOGGER.info(Constants.LOGGING_PREFIX + "[DEBUG] " + s, o);
+            LOGGER.info(Constants.LOGGING_PREFIX + "[DEBUG] " + s, o);
         }
     }
 }

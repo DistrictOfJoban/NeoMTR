@@ -2,18 +2,9 @@ package com.lx862.jcm.mod.config;
 
 import com.google.gson.JsonObject;
 import com.lx862.jcm.mod.util.JCMLogger;
-import net.minecraft.client.Minecraft;
-
-import java.nio.file.Path;
 
 public class JCMConfig extends Config {
-
-    private static final Path CONFIG_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("config").resolve("jsblock.json");
     public boolean debug;
-
-    public JCMConfig() {
-        super(CONFIG_PATH);
-    }
 
     @Override
     public void fromJson(JsonObject jsonConfig) {
