@@ -94,9 +94,9 @@ public class RenderDrivingOverlay implements IGui {
 		final Station thisStation = trainClient.getThisStation();
 		final Station nextStation = trainClient.getNextStation();
 		final Station lastStation = trainClient.getLastStation();
-		RenderDrivingOverlay.thisStation = thisStation == null ? null : IGui.formatStationName(thisStation.name);
-		RenderDrivingOverlay.nextStation = nextStation == null ? nextRoute == null ? null : IGui.formatStationName(nextRoute.name) : IGui.formatStationName(nextStation.name);
-		RenderDrivingOverlay.thisRoute = thisRoute == null ? null : IGui.formatStationName(thisRoute.name);
-		RenderDrivingOverlay.lastStation = lastStation == null ? null : IGui.formatStationName(lastStation.name);
+		RenderDrivingOverlay.thisStation = thisStation == null ? null : IGui.formatMTRLanguageName(thisStation.name);
+		RenderDrivingOverlay.nextStation = nextStation == null ? nextRoute == null ? null : IGui.formatMTRLanguageName(nextRoute.name) : IGui.formatMTRLanguageName(nextStation.name);
+		RenderDrivingOverlay.thisRoute = thisRoute == null ? null : IGui.formatMTRLanguageName(thisRoute.name);
+		RenderDrivingOverlay.lastStation = lastStation == null ? null : IGui.formatMTRLanguageName(lastStation.name);
 	}
 }

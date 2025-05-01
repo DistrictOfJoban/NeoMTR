@@ -90,7 +90,7 @@ public class mtr {
             }
 
             int finalClearedCounter = clearedCounter;
-            context.getSource().sendSuccess(() -> Component.literal("Cleared " + finalClearedCounter + " train(s) in depot " + IGui.formatStationName(depot.name)).withStyle(ChatFormatting.GREEN), false);
+            context.getSource().sendSuccess(() -> Component.literal("Cleared " + finalClearedCounter + " train(s) in depot " + IGui.formatMTRLanguageName(depot.name)).withStyle(ChatFormatting.GREEN), false);
         });
     }
 

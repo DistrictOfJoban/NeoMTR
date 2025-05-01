@@ -3,7 +3,6 @@ package mtr.screen;
 import mtr.MTR;
 import mtr.client.IDrawing;
 import mtr.data.IGui;
-import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,7 +41,7 @@ public class DeleteConfirmationScreen extends MTRScreenBase implements IGui {
 	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		super.renderBackground(guiGraphics, mouseX, mouseY, delta);
 		try {
-			guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.delete_confirmation", IGui.formatStationName(name)), width / 2, height / 2 - SQUARE_SIZE * 2 + TEXT_PADDING, ARGB_WHITE);
+			guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.delete_confirmation", IGui.formatMTRLanguageName(name)), width / 2, height / 2 - SQUARE_SIZE * 2 + TEXT_PADDING, ARGB_WHITE);
 		} catch (Exception e) {
 			MTR.LOGGER.error("", e);
 		}

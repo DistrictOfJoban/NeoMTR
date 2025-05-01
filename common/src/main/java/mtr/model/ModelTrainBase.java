@@ -1,7 +1,6 @@
 package mtr.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mtr.MTRClient;
 import mtr.client.DoorAnimationType;
@@ -248,7 +247,7 @@ public abstract class ModelTrainBase extends EntityModel<Entity> implements IGui
 				messages.add(IGui.insertTranslation("gui.mtr.london_train_terminating_announcement_cjk", "gui.mtr.london_train_terminating_announcement", 1, IGui.textOrUntitled(station.name)));
 			}
 
-			return IGui.formatStationName(IGui.mergeStations(messages, "", " "));
+			return IGui.formatMTRLanguageName(IGui.mergeStations(messages, "", " "));
 		}
 	}
 

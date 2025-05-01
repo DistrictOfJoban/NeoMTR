@@ -80,7 +80,7 @@ public abstract class BlockConfigScreen extends TitledScreen implements GuiHelpe
             return TextUtil.translatable(TextCategory.GUI,
                     "block_config.subtitle_with_station",
                     blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-                    IGui.formatStationName(atStation.name)
+                    IGui.formatMTRLanguageName(atStation.name)
             );
         } else {
             return TextUtil.translatable(TextCategory.GUI,

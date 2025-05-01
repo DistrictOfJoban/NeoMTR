@@ -232,7 +232,7 @@ public class DynamicTrainModel extends ModelTrainBase implements IResourcePackCr
 				}
 
 				final String tempText2 = displayObject.get(KEY_PROPERTIES_DISPLAY_FORCE_UPPER_CASE).getAsBoolean() ? tempText1.toUpperCase(Locale.ENGLISH) : tempText1;
-				final String text = displayObject.get(KEY_PROPERTIES_DISPLAY_FORCE_SINGLE_LINE).getAsBoolean() ? IGui.formatStationName(tempText2) : tempText2;
+				final String text = displayObject.get(KEY_PROPERTIES_DISPLAY_FORCE_SINGLE_LINE).getAsBoolean() ? IGui.formatMTRLanguageName(tempText2) : tempText2;
 
 				partsInfo.get(partName).forEach(partInfo -> {
 					final float width = partInfo.width - displayObject.get(KEY_PROPERTIES_DISPLAY_X_PADDING).getAsFloat();

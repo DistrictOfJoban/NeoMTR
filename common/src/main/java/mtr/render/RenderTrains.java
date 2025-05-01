@@ -551,7 +551,7 @@ public class RenderTrains implements IGui {
 
 	private static Component getStationText(Station station, String textKey) {
 		if (station != null) {
-			return Text.literal(IGui.formatStationName(IGui.insertTranslation("gui.mtr." + textKey + "_station_cjk", "gui.mtr." + textKey + "_station", 1, IGui.textOrUntitled(station.name))));
+			return Text.literal(IGui.formatMTRLanguageName(IGui.insertTranslation("gui.mtr." + textKey + "_station_cjk", "gui.mtr." + textKey + "_station", 1, IGui.textOrUntitled(station.name))));
 		} else {
 			return Text.literal("");
 		}

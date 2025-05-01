@@ -320,7 +320,6 @@ public class WidgetMap implements WidgetMapper, SelectableMapper, GuiEventListen
 			for (final Station station : ClientData.STATIONS) {
 				if (AreaBase.nonNullCorners(station)) {
 					areas.add(station);
-
 				}
 			}
 		} else {

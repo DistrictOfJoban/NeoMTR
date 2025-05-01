@@ -1,6 +1,9 @@
 package com.lx862.mtrsurveyor.util;
 
+import mtr.data.TransportMode;
+import mtr.registry.Items;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 import java.util.Locale;
@@ -17,6 +20,24 @@ public class Util {
 
     public static String getCamelCase(String s) {
         return String.valueOf(s.charAt(0)).toUpperCase(Locale.ROOT) + s.substring(1).toLowerCase(Locale.ROOT);
+    }
+
+    public static ItemStack getItemStackForTransportMode(TransportMode transportMode, boolean isDepot) {
+        switch(transportMode) {
+            case TRAIN -> {
+                return new ItemStack(Items.RAILWAY_DASHBOARD.get());
+            }
+            case BOAT -> {
+                return new ItemStack(Items.BOAT_DASHBOARD.get());
+            }
+            case CABLE_CAR -> {
+                return new ItemStack(Items.CABLE_CAR_DASHBOARD.get());
+            }
+            case AIRPLANE -> {
+                return new ItemStack(Items.AIRPLANE_DASHBOARD.get());
+            }
+        }
+        throw new IllegalArgumentException("Unknown transport mode " + transportMode);
     }
 }
 

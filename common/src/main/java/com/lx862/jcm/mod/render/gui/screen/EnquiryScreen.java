@@ -73,7 +73,7 @@ public class EnquiryScreen extends AnimatedScreen {
             TransactionEntry entry = entries.get(i);
 
             guiGraphics.drawString(font, TextUtil.withFont(TextUtil.literal(entry.getFormattedDate()), fontId), startX, startY + (i * 14), RenderHelper.ARGB_WHITE, false);
-            guiGraphics.drawString(font, TextUtil.withFont(TextUtil.literal(IGui.formatStationName(entry.source)), fontId), startX + 90, startY + (i * 14), RenderHelper.ARGB_WHITE, false);
+            guiGraphics.drawString(font, TextUtil.withFont(TextUtil.literal(IGui.formatMTRLanguageName(entry.source)), fontId), startX + 90, startY + (i * 14), RenderHelper.ARGB_WHITE, false);
 
             MutableComponent balText = TextUtil.withFont(entry.amount < 0 ? TextUtil.literal("-$" + (double)-entry.amount) : entry.amount == 0 ?  TextUtil.literal("$" + (double)entry.amount) : TextUtil.literal("+$" + (double)entry.amount), fontId);
             int balTextWidth = font.width(balText);

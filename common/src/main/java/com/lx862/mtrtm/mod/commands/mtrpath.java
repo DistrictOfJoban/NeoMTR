@@ -36,7 +36,7 @@ public class mtrpath {
                         for(Map.Entry<Long, Thread> entry : generatingPathThreads.entrySet()) {
                             Depot depot = railwayData.dataCache.depotIdMap.get(entry.getKey());
                             if(depot != null) {
-                                MutableComponent text = Component.literal("- " + IGui.formatStationName(depot.name)).withStyle(ChatFormatting.GREEN);
+                                MutableComponent text = Component.literal("- " + IGui.formatMTRLanguageName(depot.name)).withStyle(ChatFormatting.GREEN);
                                 MutableComponent time = Component.literal(" (" + Util.getReadableTimeMs(System.currentTimeMillis() - TransitManager.pathGenerationTimer.get(depot.id)) + " elapsed)").withStyle(ChatFormatting.YELLOW);
                                 context.getSource().sendSuccess(() -> text.append(time), false);
                             }

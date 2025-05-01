@@ -15,6 +15,7 @@ import net.minecraft.network.FriendlyByteBuf;
 public class RailActionsScreen extends MTRScreenBase implements IGui {
 
 	final DashboardList railActionsList;
+	final int MAX_WIDTH = 360;
 
 	public RailActionsScreen() {
 		super(Text.literal(""));
@@ -25,10 +26,11 @@ public class RailActionsScreen extends MTRScreenBase implements IGui {
 	@Override
 	protected void init() {
 		super.init();
-		railActionsList.x = SQUARE_SIZE;
 		railActionsList.y = SQUARE_SIZE * 2;
-		railActionsList.width = width - SQUARE_SIZE * 2;
+		railActionsList.width = Math.min(MAX_WIDTH, width - SQUARE_SIZE * 2);
 		railActionsList.height = height - SQUARE_SIZE * 2;
+		railActionsList.x = (width - railActionsList.width) / 2;
+
 		railActionsList.init(this::addRenderableWidget);
 	}
 

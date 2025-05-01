@@ -52,6 +52,15 @@ public class DynmapModule extends RailwayDataModule implements IGui, IUpdateWebM
 	}
 
 	@Override
+	public void init() {
+		try {
+			syncData(level, railwayData);
+			MTR.LOGGER.info("[NeoMTR] Dynmap is detected");
+		} catch (NoClassDefFoundError | Exception ignored) {
+		}
+	}
+
+	@Override
 	public void onAreaUpdate() {
 		try {
 			syncData(level, railwayData);

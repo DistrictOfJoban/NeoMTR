@@ -364,12 +364,12 @@ public class EditDepotScreen extends EditNameColorScreenBase<Depot> {
 		} else {
 			final List<String> stationNames = new ArrayList<>();
 			final List<String> routeNames = new ArrayList<>();
-			final String depotName = IGui.textOrUntitled(IGui.formatStationName(data.name));
+			final String depotName = IGui.textOrUntitled(IGui.formatMTRLanguageName(data.name));
 
 			if (successfulSegments == 1) {
 				RailwayData.useRoutesAndStationsFromIndex(0, data.routeIds, ClientData.DATA_CACHE, (currentStationIndex, thisRoute, nextRoute, thisStation, nextStation, lastStation) -> {
-					stationNames.add(IGui.textOrUntitled(thisStation == null ? "" : IGui.formatStationName(thisStation.name)));
-					routeNames.add(IGui.textOrUntitled(thisRoute == null ? "" : IGui.formatStationName(thisRoute.name)));
+					stationNames.add(IGui.textOrUntitled(thisStation == null ? "" : IGui.formatMTRLanguageName(thisStation.name)));
+					routeNames.add(IGui.textOrUntitled(thisRoute == null ? "" : IGui.formatMTRLanguageName(thisRoute.name)));
 				});
 				stationNames.add("-");
 				routeNames.add("-");
@@ -392,13 +392,13 @@ public class EditDepotScreen extends EditNameColorScreenBase<Depot> {
 					return Text.translatable("gui.mtr.path_found");
 				} else {
 					RailwayData.useRoutesAndStationsFromIndex(successfulSegments - 2, data.routeIds, ClientData.DATA_CACHE, (currentStationIndex, thisRoute, nextRoute, thisStation, nextStation, lastStation) -> {
-						stationNames.add(IGui.textOrUntitled(thisStation == null ? "" : IGui.formatStationName(thisStation.name)));
+						stationNames.add(IGui.textOrUntitled(thisStation == null ? "" : IGui.formatMTRLanguageName(thisStation.name)));
 						if (nextStation == null) {
-							RailwayData.useRoutesAndStationsFromIndex(successfulSegments - 1, data.routeIds, ClientData.DATA_CACHE, (currentStationIndex1, thisRoute1, nextRoute1, thisStation1, nextStation1, lastStation1) -> stationNames.add(IGui.textOrUntitled(thisStation1 == null ? "" : IGui.formatStationName(thisStation1.name))));
+							RailwayData.useRoutesAndStationsFromIndex(successfulSegments - 1, data.routeIds, ClientData.DATA_CACHE, (currentStationIndex1, thisRoute1, nextRoute1, thisStation1, nextStation1, lastStation1) -> stationNames.add(IGui.textOrUntitled(thisStation1 == null ? "" : IGui.formatMTRLanguageName(thisStation1.name))));
 						} else {
-							stationNames.add(IGui.textOrUntitled(IGui.formatStationName(nextStation.name)));
+							stationNames.add(IGui.textOrUntitled(IGui.formatMTRLanguageName(nextStation.name)));
 						}
-						routeNames.add(IGui.textOrUntitled(IGui.formatStationName(thisRoute.name)));
+						routeNames.add(IGui.textOrUntitled(IGui.formatMTRLanguageName(thisRoute.name)));
 					});
 					stationNames.add("-");
 					stationNames.add("-");

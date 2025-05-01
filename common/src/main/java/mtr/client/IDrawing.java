@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -179,7 +178,7 @@ public interface IDrawing {
 	}
 
 	static void narrateOrAnnounce(String message) {
-		String newMessage = IGui.formatStationName(message).replace("  ", " ");
+		String newMessage = IGui.formatMTRLanguageName(message).replace("  ", " ");
 		if (!newMessage.isEmpty()) {
 			if (Config.useTTSAnnouncements()) {
 				Narrator.getNarrator().say(newMessage, true);

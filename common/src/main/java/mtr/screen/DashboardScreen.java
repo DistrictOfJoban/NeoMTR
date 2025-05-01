@@ -329,7 +329,7 @@ public class DashboardScreen extends MTRScreenBase implements IGui {
 						UtilitiesClient.setScreen(minecraft, new DeleteConfirmationScreen(() -> {
 							PacketTrainDataGuiClient.sendDeleteData(Networking.PACKET_DELETE_STATION, station.id);
 							ClientData.STATIONS.remove(station);
-						}, IGui.formatStationName(station.name)).withPreviousScreen(this));
+						}, IGui.formatMTRLanguageName(station.name)).withPreviousScreen(this));
 					}
 					break;
 				case ROUTES:
@@ -339,7 +339,7 @@ public class DashboardScreen extends MTRScreenBase implements IGui {
 							UtilitiesClient.setScreen(minecraft, new DeleteConfirmationScreen(() -> {
 								PacketTrainDataGuiClient.sendDeleteData(Networking.PACKET_DELETE_ROUTE, route.id);
 								ClientData.ROUTES.remove(route);
-							}, IGui.formatStationName(route.name)).withPreviousScreen(this));
+							}, IGui.formatMTRLanguageName(route.name)).withPreviousScreen(this));
 						}
 					} else {
 						editingRoute.platformIds.remove(index);
@@ -352,7 +352,7 @@ public class DashboardScreen extends MTRScreenBase implements IGui {
 						UtilitiesClient.setScreen(minecraft, new DeleteConfirmationScreen(() -> {
 							PacketTrainDataGuiClient.sendDeleteData(Networking.PACKET_DELETE_DEPOT, depot.id);
 							ClientData.DEPOTS.remove(depot);
-						}, IGui.formatStationName(depot.name)).withPreviousScreen(this));
+						}, IGui.formatMTRLanguageName(depot.name)).withPreviousScreen(this));
 					}
 					break;
 			}

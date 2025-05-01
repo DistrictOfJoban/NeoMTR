@@ -29,7 +29,7 @@ public class LiftSelectionScreen extends ScreenMapper implements IGui {
 		this.lift = lift;
 		lift.iterateFloors(floor -> {
 			floorLevels.add(floor);
-			floorDescriptions.add(IGui.formatStationName(String.join("|", ClientData.DATA_CACHE.requestLiftFloorText(floor))));
+			floorDescriptions.add(IGui.formatMTRLanguageName(String.join("|", ClientData.DATA_CACHE.requestLiftFloorText(floor))));
 			floorCallEnabled.add(!ClientData.DATA_CACHE.requestLiftFloorDisableCarCall(floor));
 		});
 		selectionList = new DashboardList(this::onPress, null, null, null, null, null, null, () -> "", text -> {

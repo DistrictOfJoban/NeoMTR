@@ -239,22 +239,6 @@ public class RailwayData extends PersistentStateMapper {
 		for(RailwayDataModule railwayDataModule : modules.values()) {
 			railwayDataModule.init();
 		}
-
-		try {
-			DynmapModule.syncData(level, this);
-			MTR.LOGGER.info("[NeoMTR] Dynmap is detected");
-		} catch (NoClassDefFoundError | Exception ignored) {
-		}
-        try {
-			BlueMapModule.syncData(level, this);
-			MTR.LOGGER.info("[NeoMTR] BlueMap is detected");
-		} catch (NoClassDefFoundError | Exception ignored) {
-		}
-        try {
-			SquaremapModule.syncData(level, this);
-			MTR.LOGGER.info("[NeoMTR] Squaremap is detected");
-		} catch (NoClassDefFoundError | Exception ignored) {
-		}
     }
 
 	@Override

@@ -161,7 +161,7 @@ public class SideDashboardList implements IGui {
                 IDrawing.drawRectangle(guiGraphics.pose(), buffer, x + TEXT_PADDING, y + drawY, x + TEXT_PADDING + TEXT_HEIGHT, y + drawY + TEXT_HEIGHT, ARGB_BLACK | data.color);
                 BufferUploader.drawWithShader(buffer.buildOrThrow());
 
-                final String drawString = IGui.formatStationName(data.name);
+                final String drawString = IGui.formatMTRLanguageName(data.name);
                 final int textStart = TEXT_PADDING * 2 + TEXT_HEIGHT;
                 final int textWidth = font.width(drawString);
                 final int availableSpace = width - textStart;

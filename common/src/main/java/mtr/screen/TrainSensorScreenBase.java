@@ -7,10 +7,8 @@ import mtr.client.IDrawing;
 import mtr.data.IGui;
 import mtr.data.NameColorDataBase;
 import mtr.data.Route;
-import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.registry.Networking;
 import mtr.packet.PacketTrainDataGuiClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -124,7 +122,7 @@ public abstract class TrainSensorScreenBase extends MTRScreenBase implements IGu
 			for (final long routeId : filterRouteIds) {
 				final Route route = ClientData.DATA_CACHE.routeIdMap.get(routeId);
 				if (route != null) {
-					guiGraphics.drawString(font, Text.literal(IGui.formatStationName(route.name)), SQUARE_SIZE, yStart + SQUARE_SIZE * 3 + TEXT_PADDING + i, ARGB_WHITE);
+					guiGraphics.drawString(font, Text.literal(IGui.formatMTRLanguageName(route.name)), SQUARE_SIZE, yStart + SQUARE_SIZE * 3 + TEXT_PADDING + i, ARGB_WHITE);
 				}
 				i += TEXT_HEIGHT;
 			}

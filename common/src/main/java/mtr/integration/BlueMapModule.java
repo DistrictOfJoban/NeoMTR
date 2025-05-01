@@ -29,6 +29,15 @@ public class BlueMapModule extends RailwayDataModule implements IGui, IUpdateWeb
 	}
 
 	@Override
+	public void init() {
+		try {
+			syncData(level, railwayData);
+			MTR.LOGGER.info("[NeoMTR] BlueMap is detected");
+		} catch (NoClassDefFoundError | Exception ignored) {
+		}
+	}
+
+	@Override
 	public void onAreaUpdate() {
 		try {
 			syncData(level, railwayData);

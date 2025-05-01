@@ -312,7 +312,7 @@ public class train {
         if(!trainRoutes.isEmpty()) {
             Route runningRoute = trainRoutes.get(0);
             currentRouteColor = runningRoute.color;
-            currentRouteName = IGui.formatStationName(runningRoute.name);
+            currentRouteName = IGui.formatMTRLanguageName(runningRoute.name);
 
             long lastPlatformId = runningRoute.getLastPlatformId();
             Station lastStation = data.dataCache.platformIdToStation.get(lastPlatformId);
@@ -321,19 +321,19 @@ public class train {
                 BlockPos midPos = lastPlatformInRoute.getMidPos();
                 currentRouteDestination = "Platform " + lastPlatformInRoute.name + " (" + midPos.getX() + ", " + midPos.getY() + ", " + midPos.getZ()  + ")";
             } else {
-                currentRouteDestination = IGui.formatStationName(lastStation.name) + " (" + lastPlatformInRoute.name + ")";
+                currentRouteDestination = IGui.formatMTRLanguageName(lastStation.name) + " (" + lastPlatformInRoute.name + ")";
             }
         } else {
             currentRouteColor = 0;
         }
 
         final int depotColor = sidingDepot.color;
-        final String depotSidingName = IGui.formatStationName(sidingDepot.name)  + " (Siding " + siding.name + ")";
+        final String depotSidingName = IGui.formatMTRLanguageName(sidingDepot.name)  + " (Siding " + siding.name + ")";
 
         MutableComponent depotName = Component.literal(depotSidingName).withStyle(style -> style.withColor(depotColor));
         MutableComponent routeName = Component.literal(currentRouteName).withStyle(style -> style.withColor(currentRouteColor));
         MutableComponent destinationName = currentRouteDestination == null ? null : Component.literal(currentRouteDestination).withStyle(ChatFormatting.GREEN);
-        String title = IGui.formatStationName(trainData.train.trainId) + " (" + trainData.train.trainCars + "-cars)";
+        String title = IGui.formatMTRLanguageName(trainData.train.trainId) + " (" + trainData.train.trainCars + "-cars)";
         MutableComponent pos = Component.literal(String.format("%d, %d, %d", Math.round(trainData.positions[0].x()), Math.round(trainData.positions[0].y()), Math.round(trainData.positions[0].z()))).withStyle(ChatFormatting.GREEN);
         MutableComponent dwell = Component.literal(dwellString).withStyle(ChatFormatting.GREEN);
         MutableComponent isManual = Component.literal(trainData.isManual ? trainData.isCurrentlyManual ? "Manual (Currently Manual)" : "Manual (Current ATO)" : "ATO").withStyle(ChatFormatting.GREEN);

@@ -119,11 +119,11 @@ public class RVEnquiryScreen extends AnimatedScreen {
         TransactionEntry transactionEntry = entries.get(i);
         String renderTextString;
         if (transactionEntry.amount < 0) {
-            renderTextString = String.format("%s     %s     -$%.2f", transactionEntry.getFormattedDate(), IGui.formatStationName(transactionEntry.source), Math.abs((double) transactionEntry.amount));
+            renderTextString = String.format("%s     %s     -$%.2f", transactionEntry.getFormattedDate(), IGui.formatMTRLanguageName(transactionEntry.source), Math.abs((double) transactionEntry.amount));
         } else if (transactionEntry.amount > 0) {
-            renderTextString = String.format("%s     %s     +$%.2f", transactionEntry.getFormattedDate(), IGui.formatStationName(transactionEntry.source), (double) transactionEntry.amount);
+            renderTextString = String.format("%s     %s     +$%.2f", transactionEntry.getFormattedDate(), IGui.formatMTRLanguageName(transactionEntry.source), (double) transactionEntry.amount);
         } else {
-            renderTextString = String.format("%s     %s     $%.2f", transactionEntry.getFormattedDate(), IGui.formatStationName(transactionEntry.source), (double) transactionEntry.amount);
+            renderTextString = String.format("%s     %s     $%.2f", transactionEntry.getFormattedDate(), IGui.formatMTRLanguageName(transactionEntry.source), (double) transactionEntry.amount);
         }
         return TextUtil.literal(renderTextString);
     }

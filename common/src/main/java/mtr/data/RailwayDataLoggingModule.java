@@ -110,7 +110,7 @@ public class RailwayDataLoggingModule extends RailwayDataModule {
 					formatString(player.getUUID().toString()),
 					formatString(dataClass.getName()),
 					formatString(id == 0 ? "" : String.format("[%s]", id)),
-					formatString(IGui.formatStationName(name)),
+					formatString(IGui.formatMTRLanguageName(name)),
 					formatString(String.join("\n", positionsList)),
 					formatString((oldDataDiff.isEmpty() ? LoggingEditType.CREATE : newDataDiff.isEmpty() ? LoggingEditType.DELETE : LoggingEditType.EDIT).toString()),
 					formatString(Util.prettyPrintJson(JsonParser.parseString(String.format("{%s}", String.join(",", oldDataDiff))))),

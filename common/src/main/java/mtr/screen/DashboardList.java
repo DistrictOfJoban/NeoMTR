@@ -164,7 +164,7 @@ public class DashboardList implements IGui {
 				BufferUploader.drawWithShader(buffer.buildOrThrow());
 				UtilitiesClient.finishDrawingRectangle();
 
-				final String drawString = IGui.formatStationName(data.name);
+				final String drawString = IGui.formatMTRLanguageName(data.name);
 				final int textStart = TEXT_PADDING * 2 + TEXT_HEIGHT;
 				final int textWidth = textRenderer.width(drawString);
 				final int availableSpace = width - textStart;

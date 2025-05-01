@@ -53,6 +53,15 @@ public class SquaremapModule extends RailwayDataModule implements IGui, IUpdateW
 	}
 
 	@Override
+	public void init() {
+		try {
+			syncData(level, railwayData);
+			MTR.LOGGER.info("[NeoMTR] Squaremap is detected");
+		} catch (NoClassDefFoundError | Exception ignored) {
+		}
+	}
+
+	@Override
 	public void onAreaUpdate() {
 		try {
 			syncData(level, railwayData);

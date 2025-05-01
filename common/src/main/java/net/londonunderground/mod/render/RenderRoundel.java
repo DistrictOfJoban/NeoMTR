@@ -82,7 +82,7 @@ public class RenderRoundel<T extends BlockRoundelBase.TileEntityBlockRoundelBase
 		final Direction facing = IBlock.getStatePropertySafe(state, BlockRoundelBase.FACING);
 
 		final Station station = RailwayData.getStation(ClientData.STATIONS, ClientData.DATA_CACHE, pos);
-		final MutableComponent roundelText = Text.literal(IGui.textOrUntitled(IGui.formatStationName(station == null ? "" : station.name)).toUpperCase(Locale.ROOT)).setStyle(style);
+		final MutableComponent roundelText = Text.literal(IGui.textOrUntitled(IGui.formatMTRLanguageName(station == null ? "" : station.name)).toUpperCase(Locale.ROOT)).setStyle(style);
 		final int textWidth = Minecraft.getInstance().font.width(roundelText);
 
 		poseStack.pushPose();

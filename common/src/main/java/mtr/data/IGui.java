@@ -31,7 +31,7 @@ public interface IGui {
 	int MAX_LIGHT_INTERIOR = 0xF000B0; // LightmapTextureManager.pack(0xFF,0xFF); doesn't work with shaders
 	int MAX_LIGHT_GLOWING = 0xF000F0;
 
-	static String formatStationName(String name) {
+	static String formatMTRLanguageName(String name) {
 		return name.replace('|', ' ');
 	}
 
