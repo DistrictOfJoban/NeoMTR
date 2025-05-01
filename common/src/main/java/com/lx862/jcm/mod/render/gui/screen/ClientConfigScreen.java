@@ -4,7 +4,7 @@ import com.lx862.jcm.mod.Constants;
 import com.lx862.jcm.mod.JCM;
 import com.lx862.jcm.mod.JCMClient;
 import com.lx862.jcm.mod.render.gui.GuiHelper;
-import com.lx862.jcm.mod.render.gui.screen.base.TitledScreen;
+import com.lx862.jcm.mod.render.gui.screen.base.TitledScreenJCM;
 import com.lx862.jcm.mod.render.gui.widget.ListViewWidget;
 import com.lx862.jcm.mod.render.gui.widget.WidgetSet;
 import com.lx862.jcm.mod.util.JCMLogger;
@@ -17,7 +17,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.File;
@@ -26,7 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
-public class ClientConfigScreen extends TitledScreen implements GuiHelper {
+public class ClientConfigScreen extends TitledScreenJCM implements GuiHelper {
     private static final ResourceLocation TEXTURE_BACKGROUND = Constants.id("textures/gui/config_screen/bg.png");
     private static final ResourceLocation TEXTURE_STAR = Constants.id("textures/gui/config_screen/stars.png");
     private static final ResourceLocation TEXTURE_TERRAIN = Constants.id("textures/gui/config_screen/terrain.png");
@@ -39,9 +38,8 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
 
     private boolean discardConfig = false;
 
-
     public ClientConfigScreen() {
-        super(true);
+        super(TextUtil.translatable(TextCategory.GUI, "brand"), true);
         bottomRowWidget = new WidgetSet(20);
         listViewWidget = new ListViewWidget();
 
@@ -55,12 +53,7 @@ public class ClientConfigScreen extends TitledScreen implements GuiHelper {
     }
 
     @Override
-    public MutableComponent getScreenTitle() {
-        return TextUtil.translatable(TextCategory.GUI, "brand");
-    }
-
-    @Override
-    public MutableComponent getScreenSubtitle() {
+    public Component getScreenSubtitle() {
         return TextUtil.translatable(TextCategory.GUI, "config.version", Constants.MOD_VERSION);
     }
 

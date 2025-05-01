@@ -3,6 +3,7 @@ package com.lx862.jcm.mod.render.gui.screen.base;
 import com.lx862.jcm.mod.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 
 public abstract class AnimatedScreen extends ScreenBase {
     protected double linearAnimationProgress = 0;
@@ -10,8 +11,8 @@ public abstract class AnimatedScreen extends ScreenBase {
     protected boolean closing = false;
     protected final boolean shouldAnimate;
 
-    public AnimatedScreen(boolean animatable) {
-        super();
+    public AnimatedScreen(Component title, boolean animatable) {
+        super(title == null ? Component.literal("") : title);
         this.shouldAnimate = animatable;
         this.animationProgress = animatable ? 0 : 1;
     }

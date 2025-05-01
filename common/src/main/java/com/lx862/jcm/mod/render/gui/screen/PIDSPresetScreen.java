@@ -5,7 +5,7 @@ import com.lx862.jcm.mod.data.pids.PIDSManager;
 import com.lx862.jcm.mod.data.pids.preset.PIDSPresetBase;
 import com.lx862.jcm.mod.render.gui.GuiHelper;
 import com.lx862.jcm.mod.render.RenderHelper;
-import com.lx862.jcm.mod.render.gui.screen.base.TitledScreen;
+import com.lx862.jcm.mod.render.gui.screen.base.TitledScreenJCM;
 import com.lx862.jcm.mod.render.gui.widget.ContentItem;
 import com.lx862.jcm.mod.render.gui.widget.ListViewWidget;
 import com.lx862.jcm.mod.util.TextCategory;
@@ -13,20 +13,21 @@ import com.lx862.jcm.mod.util.TextUtil;
 import mtr.screen.WidgetBetterTextField;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 
-public class PIDSPresetScreen extends TitledScreen implements RenderHelper, GuiHelper {
+public class PIDSPresetScreen extends TitledScreenJCM implements RenderHelper, GuiHelper {
     private static final ResourceLocation PIDS_PREVIEW_BASE = ResourceLocation.parse("jsblock:textures/gui/pids_preview.png");
     private final WidgetBetterTextField searchBox;
     private final ListViewWidget listViewWidget;
     private final Consumer<String> callback;
     private final String selectedPreset;
     private final String pidsType;
+
     public PIDSPresetScreen(PIDSBlockEntity be, String selectedPreset, Consumer<String> callback) {
-        super(false);
+        super(TextUtil.translatable(TextCategory.GUI, "pids_preset.title"), false);
         this.pidsType = be.getPIDSType();
         this.selectedPreset = selectedPreset;
         this.callback = callback;
@@ -58,12 +59,7 @@ public class PIDSPresetScreen extends TitledScreen implements RenderHelper, GuiH
     }
 
     @Override
-    public MutableComponent getScreenTitle() {
-        return TextUtil.translatable(TextCategory.GUI, "pids_preset.title");
-    }
-
-    @Override
-    public MutableComponent getScreenSubtitle() {
+    public Component getScreenSubtitle() {
         return TextUtil.translatable(TextCategory.GUI, "pids_preset.subtitle", selectedPreset);
     }
 

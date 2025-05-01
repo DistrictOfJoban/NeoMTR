@@ -28,7 +28,7 @@ public class RVEnquiryScreen extends AnimatedScreen {
     private boolean showBalance;
 
     public RVEnquiryScreen(BlockPos pos, List<TransactionEntry> entries, int remainingBalance) {
-        super(false);
+        super(null, false);
         this.pos = pos;
         this.entries = entries;
         this.remainingBalance = remainingBalance;

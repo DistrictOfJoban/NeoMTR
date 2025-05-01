@@ -2,29 +2,24 @@ package com.lx862.jcm.mod.render.gui.screen;
 
 import com.lx862.jcm.mod.Constants;
 import com.lx862.jcm.mod.render.gui.GuiHelper;
-import com.lx862.jcm.mod.render.gui.screen.base.TitledScreen;
+import com.lx862.jcm.mod.render.gui.screen.base.TitledScreenJCM;
 import com.lx862.jcm.mod.util.TextUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mtr.mappings.UtilitiesClient;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class TestScreen extends TitledScreen implements GuiHelper {
+public class TestScreen extends TitledScreenJCM implements GuiHelper {
     private static final ResourceLocation TEXTURE_BACKGROUND = Constants.id("textures/gui/config_screen/bg.png");
     private static final ResourceLocation TEXTURE_TERRAIN = Constants.id("textures/gui/config_screen/terrain.png");
 
     public TestScreen() {
-        super(true);
+        super(TextUtil.literal("Demo Screen"), true);
     }
 
     @Override
-    public MutableComponent getScreenTitle() {
-        return TextUtil.literal("Demo Screen");
-    }
-
-    @Override
-    public MutableComponent getScreenSubtitle() {
+    public Component getScreenSubtitle() {
         return TextUtil.literal("Hello World :3");
     }
 

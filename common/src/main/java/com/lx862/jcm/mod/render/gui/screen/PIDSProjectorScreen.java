@@ -8,7 +8,6 @@ import com.lx862.jcm.mod.render.gui.widget.DoubleTextField;
 import com.lx862.jcm.mod.render.gui.widget.WidgetSet;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
-import net.minecraft.network.chat.MutableComponent;
 
 public class PIDSProjectorScreen extends PIDSScreen {
 
@@ -21,7 +20,7 @@ public class PIDSProjectorScreen extends PIDSScreen {
     private final DoubleTextField rotateZField;
 
     public PIDSProjectorScreen(PIDSProjectorBlockEntity blockEntity) {
-        super(blockEntity);
+        super(TextUtil.translatable(TextCategory.BLOCK, "pids_projector"), blockEntity);
 
         this.xField = new DoubleTextField(0, 0, 40, 20, -1000, 1000, 0);
         this.yField = new DoubleTextField(0, 0, 40, 20, -1000, 1000, 0);
@@ -38,11 +37,6 @@ public class PIDSProjectorScreen extends PIDSScreen {
         rotateYField.setValue(String.valueOf(blockEntity.getRotateY()));
         rotateZField.setValue(String.valueOf(blockEntity.getRotateZ()));
         scaleField.setValue(String.valueOf(blockEntity.getScale()));
-    }
-
-    @Override
-    public MutableComponent getScreenTitle() {
-        return TextUtil.translatable(TextCategory.BLOCK, "pids_projector");
     }
 
     @Override

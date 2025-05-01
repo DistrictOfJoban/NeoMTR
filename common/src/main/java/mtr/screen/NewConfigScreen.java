@@ -29,18 +29,13 @@ public class NewConfigScreen extends TitledScreen {
     private WidgetShorterSlider trainRenderDistanceRatioSlider;
 
     public NewConfigScreen() {
-        super(false, false);
+        super(Component.translatable("gui.mtr.mtr_options"), false);
         Config.readConfig();
         registeredAddons = MTRAddonRegistry.getRegisteredAddons();
     }
 
     @Override
-    public MutableComponent getScreenTitle() {
-        return Component.translatable("gui.mtr.mtr_options");
-    }
-
-    @Override
-    public MutableComponent getScreenSubtitle() {
+    public Component getScreenSubtitle() {
         return Component.literal("v" + Keys.MOD_VERSION);
     }
 

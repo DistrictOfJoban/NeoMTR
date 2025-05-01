@@ -26,7 +26,7 @@ public class EnquiryScreen extends AnimatedScreen {
     private final int remainingBalance;
 
     public EnquiryScreen(List<TransactionEntry> entries, int remainingBalance) {
-        super(false);
+        super(null, false);
         this.entries = entries;
         this.remainingBalance = remainingBalance;
         this.doneButton = Button.builder(TextUtil.translatable("gui.done"), btn -> onClose()).size(200, 20).build();

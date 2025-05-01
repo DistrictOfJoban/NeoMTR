@@ -14,15 +14,10 @@ public class ButterflyLightScreen extends BlockConfigScreen {
     private final ButterflyLightBlockEntity blockEntity;
 
     public ButterflyLightScreen(ButterflyLightBlockEntity blockEntity) {
-        super(blockEntity.getBlockPos());
+        super(TextUtil.translatable(TextCategory.BLOCK, "butterfly_light"), blockEntity.getBlockPos());
         this.blockEntity = blockEntity;
         this.startBlinkingSecondsTextField = new IntegerTextField(0, 0, 60, 20, 0, 100000, 10);
         this.startBlinkingSecondsTextField.setValue(blockEntity.getStartBlinkingSeconds());
-    }
-
-    @Override
-    public MutableComponent getScreenTitle() {
-        return TextUtil.translatable(TextCategory.BLOCK, "butterfly_light");
     }
 
     @Override

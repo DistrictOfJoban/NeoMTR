@@ -11,20 +11,21 @@ import mtr.data.RailwayData;
 import mtr.data.Station;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /**
  * GUI Screen for configuring block settings, you should extend this class for your own block config screen
  */
-public abstract class BlockConfigScreen extends TitledScreen implements GuiHelper {
+public abstract class BlockConfigScreen extends TitledScreenJCM implements GuiHelper {
     protected final BlockPos blockPos;
     protected final ListViewWidget listViewWidget;
     protected final WidgetSet bottomEntryWidget;
     private final Button saveButton;
     private final Button discardButton;
     private boolean discardConfig = false;
-    public BlockConfigScreen(BlockPos blockPos) {
-        super(false);
+    public BlockConfigScreen(Component title, BlockPos blockPos) {
+        super(title, false);
         this.blockPos = blockPos;
 
         this.saveButton = Button.builder(TextUtil.translatable(TextCategory.GUI, "block_config.save"), (btn) -> {

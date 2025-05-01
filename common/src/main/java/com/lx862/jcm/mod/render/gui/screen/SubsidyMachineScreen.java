@@ -7,24 +7,18 @@ import com.lx862.jcm.mod.render.gui.screen.base.BlockConfigScreen;
 import com.lx862.jcm.mod.render.gui.widget.IntegerTextField;
 import com.lx862.jcm.mod.util.TextCategory;
 import com.lx862.jcm.mod.util.TextUtil;
-import net.minecraft.network.chat.MutableComponent;
 
 public class SubsidyMachineScreen extends BlockConfigScreen {
     private final IntegerTextField priceTextField;
     private final IntegerTextField cooldownTextField;
 
     public SubsidyMachineScreen(SubsidyMachineBlockEntity blockEntity) {
-        super(blockEntity.getBlockPos());
+        super(TextUtil.translatable(TextCategory.BLOCK, "subsidy_machine"), blockEntity.getBlockPos());
         this.priceTextField = new IntegerTextField(0, 0, 60, 20, 0, 50000, 10, TextUtil.translatable(TextCategory.GUI, "subsidy_machine.currency"));
         this.cooldownTextField = new IntegerTextField(0, 0, 60, 20, 0, 1200, 0);
 
         this.priceTextField.setValue(blockEntity.getSubsidyAmount());
         this.cooldownTextField.setValue(blockEntity.getCooldown());
-    }
-
-    @Override
-    public MutableComponent getScreenTitle() {
-        return TextUtil.translatable(TextCategory.BLOCK, "subsidy_machine");
     }
 
     @Override

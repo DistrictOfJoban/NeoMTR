@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 public class SoundLooperScreen extends BlockConfigScreen {
     private final Button soundCategoryButton;
@@ -27,7 +26,7 @@ public class SoundLooperScreen extends BlockConfigScreen {
     private int soundCategory;
 
     public SoundLooperScreen(SoundLooperBlockEntity blockEntity) {
-        super(blockEntity.getBlockPos());
+        super(TextUtil.translatable(TextCategory.BLOCK, "sound_looper"), blockEntity.getBlockPos());
 
         this.soundCategoryButton = Button.builder(Component.empty(), (btn) -> {
             setSoundCategory((this.soundCategory + 1) % SoundLooperBlockEntity.SOURCE_LIST.length);
@@ -59,11 +58,6 @@ public class SoundLooperScreen extends BlockConfigScreen {
         }).build();
         this.corner1Widget.setActive(blockEntity.rangeLimited());
         this.corner2Widget.setActive(blockEntity.rangeLimited());
-    }
-
-    @Override
-    public MutableComponent getScreenTitle() {
-        return TextUtil.translatable(TextCategory.BLOCK, "sound_looper");
     }
 
     @Override

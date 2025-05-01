@@ -20,7 +20,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,8 +35,9 @@ public class PIDSScreen extends BlockConfigScreen {
 
     protected LongAVLTreeSet filteredPlatforms;
     protected String presetId;
-    public PIDSScreen(PIDSBlockEntity blockEntity) {
-        super(blockEntity.getBlockPos());
+
+    public PIDSScreen(Component title, PIDSBlockEntity blockEntity) {
+        super(title, blockEntity.getBlockPos());
         this.filteredPlatforms = new LongAVLTreeSet();
         this.customMessagesWidgets = new WidgetBetterTextField[blockEntity.getCustomMessages().length];
         this.rowHiddenWidgets = new Checkbox[blockEntity.getRowHidden().length];
@@ -84,9 +84,8 @@ public class PIDSScreen extends BlockConfigScreen {
         this.filteredPlatforms = blockEntity.getPlatformIds();
     }
 
-    @Override
-    public MutableComponent getScreenTitle() {
-        return TextUtil.translatable(TextCategory.BLOCK, "pids_rv");
+    public PIDSScreen(PIDSBlockEntity pidsBlockEntity) {
+        this(TextUtil.translatable(TextCategory.BLOCK, "pids_rv"), pidsBlockEntity);
     }
 
     @Override
