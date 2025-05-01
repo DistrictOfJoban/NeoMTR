@@ -24,9 +24,29 @@ import static mtr.MTRClient.TACTILE_MAP_SOUND_INSTANCE;
 
 public class Events {
     public static void register() {
-        RailwayData.registerRailwayModule(DynmapModule::new);
-        RailwayData.registerRailwayModule(BlueMapModule::new);
-        RailwayData.registerRailwayModule(SquaremapModule::new);
+        RailwayData.registerRailwayModule((railwayData, level, rails) -> {
+            try {
+                return new DynmapModule(railwayData, level, rails);
+            } catch (NoClassDefFoundError e) {
+                return null;
+            }
+        });
+
+        RailwayData.registerRailwayModule((railwayData, level, rails) -> {
+            try {
+                return new BlueMapModule(railwayData, level, rails);
+            } catch (NoClassDefFoundError e) {
+                return null;
+            }
+        });
+
+        RailwayData.registerRailwayModule((railwayData, level, rails) -> {
+            try {
+                return new SquaremapModule(railwayData, level, rails);
+            } catch (NoClassDefFoundError e) {
+                return null;
+            }
+        });
 
         MTRRegistry.registerTickEvent(minecraftServer -> {
             for(ServerLevel serverLevel : minecraftServer.getAllLevels()) {

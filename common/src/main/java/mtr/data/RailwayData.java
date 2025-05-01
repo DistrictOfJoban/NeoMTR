@@ -102,7 +102,9 @@ public class RailwayData extends PersistentStateMapper {
 
 		for(RailwayDataModuleCallback railwayDataModuleCallback : railwayModulesCallbacks) {
 			RailwayDataModule module = railwayDataModuleCallback.getModule(this, level, rails);
-			addModule(module.getName(), module);
+			if(module != null) {
+				addModule(module.getName(), module);
+			}
 		}
 
 		updateNearbyTrains = new UpdateNearbyMovingObjects<>(Networking.PACKET_DELETE_TRAINS, Networking.PACKET_UPDATE_TRAINS);
