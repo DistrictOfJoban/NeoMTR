@@ -103,14 +103,6 @@ public class NewConfigScreen extends TitledScreen {
         addWidget(buttonLanguageOptions);
         listViewWidget.add(Text.translatable("options.mtr.language_options"), buttonLanguageOptions);
 
-
-        Button dynamicFPSButton = Button.builder(getBooleanText(Config.useDynamicFPS()), button -> {
-            boolean useDynamicFPS = Config.setUseDynamicFPS(!Config.useDynamicFPS());
-            button.setMessage(getBooleanText(useDynamicFPS));
-        }).size(60, 18).build();
-        addWidget(dynamicFPSButton);
-        listViewWidget.add(Text.translatable("options.mtr.use_dynamic_fps"), dynamicFPSButton);
-
         trackTextureOffsetSlider = new WidgetShorterSlider(0, 60, Config.TRACK_OFFSET_COUNT - 1, Object::toString, null);
         trackTextureOffsetSlider.setDrawTextCentered(true);
         trackTextureOffsetSlider.setHeight(20);

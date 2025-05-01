@@ -23,7 +23,6 @@ public class Config {
 	private static boolean hideTranslucentParts;
 	private static boolean shiftToToggleSitting;
 	private static int languageOptions;
-	private static boolean useDynamicFPS = false;
 	private static int trackTextureOffset;
 	private static int dynamicTextureResolution = 2;
 	private static int trainRenderDistanceRatio = 15;
@@ -70,10 +69,6 @@ public class Config {
 
 	public static boolean hideSpecialRailColors() {
 		return hideSpecialRailColors;
-	}
-
-	public static boolean useDynamicFPS() {
-		return useDynamicFPS;
 	}
 
 	public static int trackTextureOffset() {
@@ -128,12 +123,6 @@ public class Config {
 		languageOptions = value % 3;
 		writeToFile();
 		return languageOptions;
-	}
-
-	public static boolean setUseDynamicFPS(boolean value) {
-		useDynamicFPS = value;
-		writeToFile();
-		return useDynamicFPS;
 	}
 
 	public static void setTrackTextureOffset(int value) {

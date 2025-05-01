@@ -26,7 +26,6 @@ public class ConfigScreen extends MTRScreenBase implements IGui {
 	private boolean hideTranslucentParts;
 	private boolean shiftToToggleSitting;
 	private int languageOptions;
-	private boolean useDynamicFPS;
 
 	private final Button buttonUseMTRFont;
 	private final Button buttonShowAnnouncementMessages;
@@ -35,7 +34,6 @@ public class ConfigScreen extends MTRScreenBase implements IGui {
 	private final Button buttonHideTranslucentParts;
 	private final Button buttonShiftToToggleSitting;
 	private final Button buttonLanguageOptions;
-	private final Button buttonUseDynamicFPS;
 	private final WidgetShorterSlider sliderTrackTextureOffset;
 	private final WidgetShorterSlider sliderDynamicTextureResolution;
 	private final WidgetShorterSlider sliderTrainRenderDistanceRatio;
@@ -75,10 +73,6 @@ public class ConfigScreen extends MTRScreenBase implements IGui {
 			languageOptions = Config.setLanguageOptions(languageOptions + 1);
 			button.setMessage(Text.translatable("options.mtr.language_options_" + languageOptions));
 		});
-		buttonUseDynamicFPS = UtilitiesClient.newButton(BUTTON_HEIGHT, Text.literal(""), button -> {
-			useDynamicFPS = Config.setUseDynamicFPS(!useDynamicFPS);
-			setButtonText(button, useDynamicFPS);
-		});
 		sliderTrackTextureOffset = new WidgetShorterSlider(0, 0, Config.TRACK_OFFSET_COUNT - 1, Object::toString, null);
 		sliderDynamicTextureResolution = new WidgetShorterSlider(0, 0, Config.DYNAMIC_RESOLUTION_COUNT - 1, Object::toString, null);
 		sliderTrainRenderDistanceRatio = new WidgetShorterSlider(0, 0, Config.TRAIN_RENDER_DISTANCE_RATIO_COUNT - 1, num -> String.format("%d%%", (num + 1) * 100 / Config.TRAIN_RENDER_DISTANCE_RATIO_COUNT), null);
@@ -96,7 +90,6 @@ public class ConfigScreen extends MTRScreenBase implements IGui {
 		hideTranslucentParts = Config.hideTranslucentParts();
 		shiftToToggleSitting = Config.shiftToToggleSitting();
 		languageOptions = Config.languageOptions();
-		useDynamicFPS = Config.useDynamicFPS();
 
 		final int offsetY = 0;
 
@@ -109,7 +102,6 @@ public class ConfigScreen extends MTRScreenBase implements IGui {
 			IDrawing.setPositionAndWidth(buttonHideTranslucentParts, width - SQUARE_SIZE - BUTTON_WIDTH, BUTTON_HEIGHT * (i++) + SQUARE_SIZE + offsetY, BUTTON_WIDTH);
 			IDrawing.setPositionAndWidth(buttonShiftToToggleSitting, width - SQUARE_SIZE - BUTTON_WIDTH, BUTTON_HEIGHT * (i++) + SQUARE_SIZE + offsetY, BUTTON_WIDTH);
 			IDrawing.setPositionAndWidth(buttonLanguageOptions, width - SQUARE_SIZE - BUTTON_WIDTH, BUTTON_HEIGHT * (i++) + SQUARE_SIZE + offsetY, BUTTON_WIDTH);
-			IDrawing.setPositionAndWidth(buttonUseDynamicFPS, width - SQUARE_SIZE - BUTTON_WIDTH, BUTTON_HEIGHT * (i++) + SQUARE_SIZE + offsetY, BUTTON_WIDTH);
 			IDrawing.setPositionAndWidth(sliderTrackTextureOffset, width - SQUARE_SIZE - BUTTON_WIDTH, BUTTON_HEIGHT * (i++) + SQUARE_SIZE + offsetY, BUTTON_WIDTH - TEXT_PADDING - font.width("100%"));
 			IDrawing.setPositionAndWidth(sliderDynamicTextureResolution, width - SQUARE_SIZE - BUTTON_WIDTH, BUTTON_HEIGHT * (i++) + SQUARE_SIZE + offsetY, BUTTON_WIDTH - TEXT_PADDING - font.width("100%"));
 			IDrawing.setPositionAndWidth(sliderTrainRenderDistanceRatio, width - SQUARE_SIZE - BUTTON_WIDTH, BUTTON_HEIGHT * (i++) + SQUARE_SIZE + offsetY, BUTTON_WIDTH - TEXT_PADDING - font.width("100%"));
@@ -122,7 +114,6 @@ public class ConfigScreen extends MTRScreenBase implements IGui {
 		setButtonText(buttonHideTranslucentParts, hideTranslucentParts);
 		setButtonText(buttonShiftToToggleSitting, shiftToToggleSitting);
 		buttonLanguageOptions.setMessage(Text.translatable("options.mtr.language_options_" + languageOptions));
-		setButtonText(buttonUseDynamicFPS, useDynamicFPS);
 		sliderTrackTextureOffset.setHeight(BUTTON_HEIGHT);
 		sliderTrackTextureOffset.setValue(Config.trackTextureOffset());
 		sliderDynamicTextureResolution.setHeight(BUTTON_HEIGHT);
@@ -132,6 +123,7 @@ public class ConfigScreen extends MTRScreenBase implements IGui {
 		buttonSupportPatreon.setMessage(Text.translatable("gui.mtr.support"));
 
 		addRenderableWidget(buttonUseMTRFont);
+		addRenderableWidget(sliderDynamicTextureResolution);
 		if (!Keys.LIFTS_ONLY) {
 			addRenderableWidget(buttonShowAnnouncementMessages);
 			addRenderableWidget(buttonUseTTSAnnouncements);
@@ -139,9 +131,7 @@ public class ConfigScreen extends MTRScreenBase implements IGui {
 			addRenderableWidget(buttonHideTranslucentParts);
 			addRenderableWidget(buttonShiftToToggleSitting);
 			addRenderableWidget(buttonLanguageOptions);
-			addRenderableWidget(buttonUseDynamicFPS);
 			addRenderableWidget(sliderTrackTextureOffset);
-			addRenderableWidget(sliderDynamicTextureResolution);
 			addRenderableWidget(sliderTrainRenderDistanceRatio);
 		}
 
