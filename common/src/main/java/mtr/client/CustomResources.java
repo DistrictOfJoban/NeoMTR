@@ -160,7 +160,7 @@ public class CustomResources implements IResourcePackCreatorProperties, ICustomR
 				try (final InputStream stream = Utilities.getInputStream(resource)) {
 					callback.accept(JsonParser.parseReader(new InputStreamReader(stream, StandardCharsets.UTF_8)).getAsJsonObject());
 				} catch (Exception e) {
-					MTR.LOGGER.error("", e);
+					MTR.LOGGER.error("Failed to parse file {}", path, e);
 				}
 				try {
 					Utilities.closeResource(resource);

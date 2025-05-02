@@ -65,25 +65,26 @@ public class CustomResourcesMixin {
         if (path.toLowerCase(Locale.ROOT).endsWith(".obj") || path.contains("|")) {
             JsonObject dummyBbData = MtrModelRegistryUtil.createDummyBbDataPack(path, capturedTextureId, capturedFlipV, captureBbModelPreload);
             callback.accept(dummyBbData);
-            return;
+        } else {
+            ResourceLocation location = ResourceLocation.parse(path);
+            try {
+                UtilitiesClient.getResources(manager, location).forEach(resource -> {
+                    try (final InputStream stream = Utilities.getInputStream(resource)) {
+                        JsonObject modelObject = new JsonParser().parse(new InputStreamReader(stream, StandardCharsets.UTF_8)).getAsJsonObject();
+                        if (path.toLowerCase(Locale.ROOT).endsWith(".bbmodel")) {
+                            JsonObject dummyBbData = MtrModelRegistryUtil.createDummyBbDataPack(path, capturedTextureId, capturedFlipV, captureBbModelPreload);
+                            modelObject.add("dummyBbData", dummyBbData);
+                        }
+                        callback.accept(modelObject);
+                    } catch (Exception e) { Main.LOGGER.error("On behalf of MTR: Parsing JSON " + path, e); }
+                    try {
+                        Utilities.closeResource(resource);
+                    } catch (IOException e) { Main.LOGGER.error("On behalf of MTR: Closing resource " + path, e); }
+                });
+            } catch (Exception ignored) { }
         }
 
-        ResourceLocation location = ResourceLocation.parse(path);
-        try {
-            UtilitiesClient.getResources(manager, location).forEach(resource -> {
-                try (final InputStream stream = Utilities.getInputStream(resource)) {
-                    JsonObject modelObject = new JsonParser().parse(new InputStreamReader(stream, StandardCharsets.UTF_8)).getAsJsonObject();
-                    if (path.toLowerCase(Locale.ROOT).endsWith(".bbmodel")) {
-                        JsonObject dummyBbData = MtrModelRegistryUtil.createDummyBbDataPack(path, capturedTextureId, capturedFlipV, captureBbModelPreload);
-                        modelObject.add("dummyBbData", dummyBbData);
-                    }
-                    callback.accept(modelObject);
-                } catch (Exception e) { Main.LOGGER.error("On behalf of MTR: Parsing JSON " + path, e); }
-                try {
-                    Utilities.closeResource(resource);
-                } catch (IOException e) { Main.LOGGER.error("On behalf of MTR: Closing resource " + path, e); }
-            });
-        } catch (Exception ignored) { }
+
         ci.cancel();
     }
 
