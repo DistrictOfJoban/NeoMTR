@@ -3,7 +3,6 @@ package mtr.data;
 import mtr.block.BlockLiftTrackFloor;
 import mtr.block.BlockPSDAPGDoorBase;
 import mtr.block.IBlock;
-import mtr.mappings.Utilities;
 import mtr.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
