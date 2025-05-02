@@ -6,6 +6,7 @@ import com.lx862.jcm.loader.neoforge.JCMRegistryImpl;
 import com.lx862.jcm.mod.JCM;
 import com.lx862.jcm.mod.JCMClient;
 import com.lx862.mtrtm.mod.TransitManager;
+import com.lx862.mtrticket.MTRTicket;
 import mtr.*;
 import mtr.client.CustomResources;
 import mtr.loader.neoforge.MTRRegistryImpl;
@@ -23,8 +24,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import top.mcmtr.loader.neoforge.MSDRegistryImpl;
@@ -39,9 +40,15 @@ public class MTRForge {
 		MTR.init();
 		cn.zbx1425.mtrsteamloco.Main.init(nteRegistries);
 		JCM.init();
+		MSDMain.init();
 		LUAddon.init();
 		TransitManager.init();
-		MSDMain.init();
+
+		MTRTicket.initialize(FMLPaths.CONFIGDIR.get(), (cb) -> {
+			ForgeUtilities.registerCommandListener(registerCommandsEvent -> {
+				cb.accept(registerCommandsEvent.getDispatcher());
+			});
+		});
 	}
 
 	public MTRForge(IEventBus eventBus) {
