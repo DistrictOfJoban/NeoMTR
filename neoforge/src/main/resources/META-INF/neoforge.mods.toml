@@ -40,4 +40,7 @@ config = "jsblock-common.mixins.json"
 config = "mtrtm-common.mixins.json"
 
 [[mixins]]
+config = "mtrtdm-common.mixins.json"
+
+[[mixins]]
 config = "msd-common.mixins.json"

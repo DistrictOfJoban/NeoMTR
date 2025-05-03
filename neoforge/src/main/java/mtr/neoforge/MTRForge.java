@@ -5,6 +5,9 @@ import com.lx862.jcm.JCMForge;
 import com.lx862.jcm.loader.neoforge.JCMRegistryImpl;
 import com.lx862.jcm.mod.JCM;
 import com.lx862.jcm.mod.JCMClient;
+import com.lx862.mtrtdm.TDMCommands;
+import com.lx862.mtrtdm.TDMEvents;
+import com.lx862.mtrtdm.TrainDrivingModule;
 import com.lx862.mtrtm.mod.TransitManager;
 import com.lx862.mtrticket.MTRTicket;
 import mtr.*;
@@ -49,6 +52,12 @@ public class MTRForge {
 				cb.accept(registerCommandsEvent.getDispatcher());
 			});
 		});
+
+		TrainDrivingModule.initialize(FMLPaths.CONFIGDIR.get());
+		ForgeUtilities.registerCommandListener((evt) -> {
+			TDMCommands.registerCommands(evt.getDispatcher());
+		});
+		MTRRegistryImpl.registerTickEvent(TDMEvents::onServerTick);
 	}
 
 	public MTRForge(IEventBus eventBus) {

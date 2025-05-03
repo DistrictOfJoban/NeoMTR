@@ -22,6 +22,7 @@
 			"top.mcmtr.MSDMainFabric",
 			"net.londonunderground.LUAddonFabric",
 			"com.lx862.mtrtm.TransitManagerFabric",
+			"com.lx862.mtrtdm.TrainDrivingModuleFabric",
 			"com.lx862.mtrticket.MTRTicketFabric",
 			"com.lx862.mtrsurveyor.MTRSurveyor"
 		],
@@ -41,7 +42,8 @@
 		"jsblock-common.mixins.json",
 		"mtrsteamloco.mixins.json",
 		"mtrtm-common.mixins.json",
-		"msd-common.mixins.json"
+		"msd-common.mixins.json",
+		"mtrtdm-common.mixins.json"
 	],
 	"depends": {
 		"fabric": "*",
