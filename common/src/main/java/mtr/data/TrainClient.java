@@ -160,14 +160,6 @@ public class TrainClient extends Train implements IGui {
 
 		try {
 			final int totalDwellTicks = getTotalDwellTicks();
-			if (path.isEmpty()) {
-				trainSound.stopAll();
-				return;
-			}
-			if (!handlePositions(world, keyPointsPositions, ticksElapsed, true)) {
-				trainSound.stopAll();
-				return;
-			}
 			final double[] prevX = {0};
 			final double[] prevY = {0};
 			final double[] prevZ = {0};
@@ -474,6 +466,15 @@ public class TrainClient extends Train implements IGui {
 		final LocalPlayer player = Minecraft.getInstance().player;
 		if (isManualAllowed && Train.isHoldingKey(player) && isPlayerRiding(player)) {
 			RenderDrivingOverlay.setData(manualNotch, this);
+		}
+
+		if (path.isEmpty()) {
+			trainSound.stopAll();
+			return;
+		}
+		if (!handlePositions(world, keyPointsPositions, ticksElapsed, true)) {
+			trainSound.stopAll();
+			return;
 		}
 
 		this.speedCallback = null;
