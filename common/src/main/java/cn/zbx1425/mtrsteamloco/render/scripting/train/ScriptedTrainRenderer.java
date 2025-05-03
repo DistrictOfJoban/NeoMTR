@@ -2,23 +2,16 @@ package cn.zbx1425.mtrsteamloco.render.scripting.train;
 
 import cn.zbx1425.mtrsteamloco.MainClient;
 import cn.zbx1425.mtrsteamloco.render.RenderUtil;
-import cn.zbx1425.mtrsteamloco.render.scripting.ScriptContextManager;
 import cn.zbx1425.mtrsteamloco.render.scripting.ScriptHolder;
 import cn.zbx1425.sowcer.math.Matrix4f;
-import cn.zbx1425.sowcer.math.PoseStackUtil;
 import cn.zbx1425.sowcer.math.Vector3f;
-import mtr.client.ClientData;
 import mtr.data.TrainClient;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import mtr.render.TrainRendererBase;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class ScriptedTrainRenderer extends TrainRendererBase {
 
@@ -63,7 +56,8 @@ public class ScriptedTrainRenderer extends TrainRendererBase {
         Vector3f carPos = new Vector3f((float)x, (float)y, (float)z);
         final boolean hasPitch = pitch < 0 ? train.transportMode.hasPitchAscending : train.transportMode.hasPitchDescending;
         Matrix4f worldPose = new Matrix4f();
-        worldPose.translate(carPos.x(), carPos.y(), carPos.z());
+        final Vec3 offsetPos = MainRenderer.getOffsetPos(new Vec3(carPos.x(), carPos.y(), carPos.z()));
+        worldPose.translate((float)-offsetPos.x(), (float)-offsetPos.y(), (float)-offsetPos.z());
         worldPose.rotateY((float) Math.PI + yaw);
         worldPose.rotateX(hasPitch ? pitch : 0);
         worldPose.rotateZ(roll);
@@ -73,7 +67,7 @@ public class ScriptedTrainRenderer extends TrainRendererBase {
         trainScripting.trainExtraWriting.lastCarPosition[carIndex] = carPos.copy();
         trainScripting.trainExtraWriting.lastCarRotation[carIndex] = new Vector3f(hasPitch ? pitch : 0, (float) Math.PI + yaw, roll);
         trainScripting.trainExtraWriting.isInDetailDistance |= posAverage != null
-                && posAverage.distSqr(camera.getBlockPosition()) <= RenderTrains.DETAIL_RADIUS_SQUARED;
+                && posAverage.distSqr(camera.getBlockPosition()) <= MainRenderer.DETAIL_RADIUS_SQUARED;
         trainScripting.trainExtraWriting.shouldRender = shouldRender;
 
         if (posAverage == null) {

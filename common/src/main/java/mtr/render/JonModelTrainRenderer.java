@@ -20,7 +20,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -110,7 +109,7 @@ public class JonModelTrainRenderer extends TrainRendererBase implements IGui {
 
 			model.renderToBuffer(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		} else if (!textureId.isEmpty()) {
-			final boolean renderDetails = MTRClient.isReplayMod() || posAverage.distSqr(camera.getBlockPosition()) <= RenderTrains.DETAIL_RADIUS_SQUARED;
+			final boolean renderDetails = MTRClient.isReplayMod() || posAverage.distSqr(camera.getBlockPosition()) <= MainRenderer.DETAIL_RADIUS_SQUARED;
 			model.render(matrices, vertexConsumers, train, resolveTexture(textureId, textureId -> textureId + ".png"), light, doorLeftValue, doorRightValue, train.isDoorOpening(), carIndex, train.trainCars, !train.isReversed(), train.getIsOnRoute(), isTranslucentBatch, renderDetails, atPlatform);
 
 			if (trainProperties.bogiePosition != 0 && !isTranslucentBatch) {
@@ -144,7 +143,7 @@ public class JonModelTrainRenderer extends TrainRendererBase implements IGui {
 
 	@Override
 	public void renderConnection(Vec3 prevPos1, Vec3 prevPos2, Vec3 prevPos3, Vec3 prevPos4, Vec3 thisPos1, Vec3 thisPos2, Vec3 thisPos3, Vec3 thisPos4, double x, double y, double z, float yaw, float pitch, float roll) {
-		final BlockPos posAverage = applyAverageTransform(x, y, z);
+		final BlockPos posAverage = applyAverageTransformLocal(x, y, z);
 		if (posAverage == null) {
 			return;
 		}
@@ -155,18 +154,21 @@ public class JonModelTrainRenderer extends TrainRendererBase implements IGui {
 		final int light = LightTexture.pack(world.getBrightness(LightLayer.BLOCK, posAverage), world.getBrightness(LightLayer.SKY, posAverage));
 
 		if (!gangwayConnectionId.isEmpty()) {
+			matrices.pushPose();
+//			MainRenderer.transformRelativeToCamera(matrices, x, y, z);
 			final VertexConsumer vertexConsumerExterior = vertexConsumers.getBuffer(MoreRenderLayers.getExterior(getConnectorTextureString(true, "exterior")));
 			drawTexture(matrices, vertexConsumerExterior, thisPos2, prevPos3, prevPos4, thisPos1, light);
 			drawTexture(matrices, vertexConsumerExterior, prevPos2, thisPos3, thisPos4, prevPos1, light);
 			drawTexture(matrices, vertexConsumerExterior, prevPos3, thisPos2, thisPos3, prevPos2, light);
 			drawTexture(matrices, vertexConsumerExterior, prevPos1, thisPos4, thisPos1, prevPos4, light);
 
-			final int lightOnLevel = train.getIsOnRoute() ? RenderTrains.MAX_LIGHT_INTERIOR : light;
+			final int lightOnLevel = train.getIsOnRoute() ? MainRenderer.MAX_LIGHT_INTERIOR : light;
 			final VertexConsumer vertexConsumerSide = vertexConsumers.getBuffer(MoreRenderLayers.getInterior(getConnectorTextureString(true, "side")));
 			drawTexture(matrices, vertexConsumerSide, thisPos3, prevPos2, prevPos1, thisPos4, lightOnLevel);
 			drawTexture(matrices, vertexConsumerSide, prevPos3, thisPos2, thisPos1, prevPos4, lightOnLevel);
 			drawTexture(matrices, vertexConsumers.getBuffer(MoreRenderLayers.getInterior(getConnectorTextureString(true, "roof"))), prevPos2, thisPos3, thisPos2, prevPos3, lightOnLevel);
 			drawTexture(matrices, vertexConsumers.getBuffer(MoreRenderLayers.getInterior(getConnectorTextureString(true, "floor"))), prevPos4, thisPos1, thisPos4, prevPos1, lightOnLevel);
+			matrices.popPose();
 		}
 
 		if (trainProperties.isJacobsBogie) {
@@ -185,7 +187,7 @@ public class JonModelTrainRenderer extends TrainRendererBase implements IGui {
 			return;
 		}
 
-		final BlockPos posAverage = applyAverageTransform(x, y, z);
+		final BlockPos posAverage = applyAverageTransformLocal(x, y, z);
 		if (posAverage == null) {
 			return;
 		}
@@ -206,14 +208,14 @@ public class JonModelTrainRenderer extends TrainRendererBase implements IGui {
 		final ResourceLocation id = ResourceLocation.parse(textureString);
 		final boolean available;
 
-		if (!RenderTrains.AVAILABLE_TEXTURES.contains(textureString) && !RenderTrains.UNAVAILABLE_TEXTURES.contains(textureString)) {
+		if (!MainRenderer.AVAILABLE_TEXTURES.contains(textureString) && !MainRenderer.UNAVAILABLE_TEXTURES.contains(textureString)) {
 			available = UtilitiesClient.hasResource(id);
-			(available ? RenderTrains.AVAILABLE_TEXTURES : RenderTrains.UNAVAILABLE_TEXTURES).add(textureString);
+			(available ? MainRenderer.AVAILABLE_TEXTURES : MainRenderer.UNAVAILABLE_TEXTURES).add(textureString);
 			if (!available) {
 				MTR.LOGGER.warn("[NeoMTR] Texture {} not found, using default", textureString);
 			}
 		} else {
-			available = RenderTrains.AVAILABLE_TEXTURES.contains(textureString);
+			available = MainRenderer.AVAILABLE_TEXTURES.contains(textureString);
 		}
 
 		if (available) {

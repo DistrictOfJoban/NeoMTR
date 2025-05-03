@@ -7,10 +7,9 @@ import mtr.client.ICustomResources;
 import mtr.client.IDrawing;
 import mtr.client.IResourcePackCreatorProperties;
 import mtr.data.IGui;
-import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -50,15 +49,15 @@ public class ResourcePackCreatorOptionsScreen extends MTRScreenBase implements I
 		this.resourcePackCreatorScreen = resourcePackCreatorScreen;
 
 		buttonChooseModelFile = UtilitiesClient.newButton(button -> buttonCallback(path -> {
-			RenderTrains.creatorProperties.loadModelFile(path);
+			MainRenderer.creatorProperties.loadModelFile(path);
 			updateControls(false);
 		}));
 		buttonChoosePropertiesFile = UtilitiesClient.newButton(button -> buttonCallback(path -> {
-			RenderTrains.creatorProperties.loadPropertiesFile(path);
+			MainRenderer.creatorProperties.loadPropertiesFile(path);
 			updateControls(false);
 		}));
 		buttonChooseTextureFile = UtilitiesClient.newButton(button -> buttonCallback(path -> {
-			RenderTrains.creatorProperties.loadTextureFile(path);
+			MainRenderer.creatorProperties.loadTextureFile(path);
 			updateControls(false);
 		}));
 
@@ -68,13 +67,13 @@ public class ResourcePackCreatorOptionsScreen extends MTRScreenBase implements I
 		textFieldGangwayConnectionId = new WidgetBetterTextField("mtr:textures/entity/sp1900");
 		textFieldTrainBarrierId = new WidgetBetterTextField("mtr:textures/entity/r211");
 		sliderRiderOffset = new WidgetShorterSlider(0, PANEL_WIDTH, 18, value -> {
-			RenderTrains.creatorProperties.editCustomResourcesRiderOffset((value - 2) / 4F);
+			MainRenderer.creatorProperties.editCustomResourcesRiderOffset((value - 2) / 4F);
 			updateControls(true);
 			return Text.translatable("gui.mtr.custom_resources_rider_offset", (value - 2) / 4F).getString();
 		}, null);
 
 		buttonDone = UtilitiesClient.newButton(Text.translatable("gui.done"), button -> onClose());
-		buttonExport = UtilitiesClient.newButton(Text.translatable("gui.mtr.custom_resources_export_resource_pack"), button -> RenderTrains.creatorProperties.export());
+		buttonExport = UtilitiesClient.newButton(Text.translatable("gui.mtr.custom_resources_export_resource_pack"), button -> MainRenderer.creatorProperties.export());
 	}
 
 	@Override
@@ -95,19 +94,19 @@ public class ResourcePackCreatorOptionsScreen extends MTRScreenBase implements I
 		IDrawing.setPositionAndWidth(textFieldTrainBarrierId, SQUARE_SIZE + textWidth + TEXT_FIELD_PADDING / 2, yStart + SQUARE_SIZE * 13 / 2 + TEXT_FIELD_PADDING * 7 / 2, newWidth - TEXT_FIELD_PADDING - textWidth);
 
 		textFieldId.setResponder(text -> {
-			RenderTrains.creatorProperties.editCustomResourcesId(formatText(textFieldId, text, false));
+			MainRenderer.creatorProperties.editCustomResourcesId(formatText(textFieldId, text, false));
 			updateControls(false);
 		});
 		textFieldName.setResponder(text -> {
-			RenderTrains.creatorProperties.editCustomResourcesName(text);
+			MainRenderer.creatorProperties.editCustomResourcesName(text);
 			updateControls(false);
 		});
 		textFieldGangwayConnectionId.setResponder(text -> {
-			RenderTrains.creatorProperties.editCustomResourcesGangwayConnectionId(formatText(textFieldGangwayConnectionId, text, true));
+			MainRenderer.creatorProperties.editCustomResourcesGangwayConnectionId(formatText(textFieldGangwayConnectionId, text, true));
 			updateControls(false);
 		});
 		textFieldTrainBarrierId.setResponder(text -> {
-			RenderTrains.creatorProperties.editCustomResourcesTrainBarrierId(formatText(textFieldTrainBarrierId, text, true));
+			MainRenderer.creatorProperties.editCustomResourcesTrainBarrierId(formatText(textFieldTrainBarrierId, text, true));
 			updateControls(false);
 		});
 
@@ -164,36 +163,36 @@ public class ResourcePackCreatorOptionsScreen extends MTRScreenBase implements I
 	}
 
 	private void updateControls(boolean formatTextFields) {
-		final String modelFileName = RenderTrains.creatorProperties.getModelFileName();
+		final String modelFileName = MainRenderer.creatorProperties.getModelFileName();
 		buttonChooseModelFile.setMessage(modelFileName.isEmpty() ? Text.translatable("gui.mtr.file_upload") : Text.literal(modelFileName));
-		final String propertiesFileName = RenderTrains.creatorProperties.getPropertiesFileName();
+		final String propertiesFileName = MainRenderer.creatorProperties.getPropertiesFileName();
 		buttonChoosePropertiesFile.setMessage(propertiesFileName.isEmpty() ? Text.translatable("gui.mtr.file_upload") : Text.literal(propertiesFileName));
-		final String textureFileName = RenderTrains.creatorProperties.getTextureFileName();
+		final String textureFileName = MainRenderer.creatorProperties.getTextureFileName();
 		buttonChooseTextureFile.setMessage(textureFileName.isEmpty() ? Text.translatable("gui.mtr.file_upload") : Text.literal(textureFileName));
 
-		final JsonObject customTrainObject = RenderTrains.creatorProperties.getCustomTrainObject();
+		final JsonObject customTrainObject = MainRenderer.creatorProperties.getCustomTrainObject();
 		final int sliderRiderOffsetValue = Math.round(customTrainObject.get(CUSTOM_TRAINS_RIDER_OFFSET).getAsFloat() * 4 + 2);
 		if (sliderRiderOffsetValue != sliderRiderOffset.getIntValue()) {
 			sliderRiderOffset.setValue(sliderRiderOffsetValue);
 		}
 
 		if (formatTextFields) {
-			textFieldId.setValue(RenderTrains.creatorProperties.getCustomTrainId());
+			textFieldId.setValue(MainRenderer.creatorProperties.getCustomTrainId());
 			final int color = CustomResources.colorStringToInt(customTrainObject.get(CUSTOM_TRAINS_COLOR).getAsString());
 			colorSelector.setColor(color);
 			if (color == 0) {
-				RenderTrains.creatorProperties.editCustomResourcesColor(colorSelector.getColor());
+				MainRenderer.creatorProperties.editCustomResourcesColor(colorSelector.getColor());
 			}
 			textFieldName.setValue(customTrainObject.get(CUSTOM_TRAINS_NAME).getAsString());
 			textFieldGangwayConnectionId.setValue(customTrainObject.get(CUSTOM_TRAINS_GANGWAY_CONNECTION_ID).getAsString());
 			textFieldTrainBarrierId.setValue(customTrainObject.get(CUSTOM_TRAINS_TRAIN_BARRIER_ID).getAsString());
 		}
 
-		buttonExport.active = !textFieldId.getValue().isEmpty() && !textFieldName.getValue().isEmpty() && !RenderTrains.creatorProperties.getModelFileName().isEmpty() && !RenderTrains.creatorProperties.getTextureFileName().isEmpty();
+		buttonExport.active = !textFieldId.getValue().isEmpty() && !textFieldName.getValue().isEmpty() && !MainRenderer.creatorProperties.getModelFileName().isEmpty() && !MainRenderer.creatorProperties.getTextureFileName().isEmpty();
 	}
 
 	private void onUpdateColor() {
-		RenderTrains.creatorProperties.editCustomResourcesColor(colorSelector.getColor());
+		MainRenderer.creatorProperties.editCustomResourcesColor(colorSelector.getColor());
 		updateControls(false);
 	}
 

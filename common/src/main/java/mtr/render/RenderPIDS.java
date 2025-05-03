@@ -106,7 +106,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
 		// Get PIDS position and determine if it should render arrivals
 		final BlockPos pos = entity.getBlockPos();
 		final Direction facing = IBlock.getStatePropertySafe(world, pos, HorizontalDirectionalBlock.FACING);
-		if (RenderTrains.shouldNotRender(pos, Math.min(MAX_VIEW_DISTANCE, RenderTrains.maxTrainRenderDistance), rotate90 ? null : facing)) {
+		if (MainRenderer.shouldNotRender(pos, Math.min(MAX_VIEW_DISTANCE, MainRenderer.maxTrainRenderDistance), rotate90 ? null : facing)) {
 			return;
 		}
 		if (IBlock.getStatePropertySafe(entity.getBlockState(), HALF) == DoubleBlockHalf.LOWER) {

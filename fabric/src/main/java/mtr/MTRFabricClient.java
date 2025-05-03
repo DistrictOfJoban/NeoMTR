@@ -12,7 +12,7 @@ import mtr.client.ICustomResources;
 import mtr.loader.fabric.MTRRegistryImpl;
 import mtr.registry.Items;
 import mtr.render.RenderDrivingOverlay;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import mtr.screen.ResourcePackCreatorScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -37,12 +37,7 @@ public class MTRFabricClient implements ClientModInitializer, ICustomResources {
 		MainClient.init();
 
 		WorldRenderEvents.AFTER_ENTITIES.register(context -> {
-			final PoseStack matrices = context.matrixStack();
-			matrices.pushPose();
-			final Vec3 cameraPos = context.camera().getPosition();
-			matrices.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-			RenderTrains.render(0, matrices, context.consumers());
-			matrices.popPose();
+			MainRenderer.render(0, context.matrixStack(), context.consumers());
 		});
 		WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register((worldRenderContext, hitResult) -> {
 			Minecraft.getInstance().level.getProfiler().popPush("NTEBlockEntities");

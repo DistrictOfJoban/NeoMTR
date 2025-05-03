@@ -1,7 +1,6 @@
 package mtr.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import mtr.MTRClient;
 import mtr.block.BlockLiftPanelBase;
 import mtr.block.BlockLiftTrackFloor;
@@ -59,7 +58,7 @@ public class RenderLiftPanel<T extends BlockLiftPanelBase.TileEntityLiftPanel1Ba
 		}
 
 		final BlockPos pos = entity.getBlockPos();
-		if (RenderTrains.shouldNotRender(pos, RenderTrains.maxTrainRenderDistance, null)) {
+		if (MainRenderer.shouldNotRender(pos, MainRenderer.maxTrainRenderDistance, null)) {
 			return;
 		}
 

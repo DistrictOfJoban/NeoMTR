@@ -55,7 +55,7 @@ public abstract class RenderSignalBase<T extends BlockEntityMapper> extends Bloc
 			return;
 		}
 		final Direction facing = IBlock.getStatePropertySafe(state, HorizontalDirectionalBlock.FACING);
-		if (RenderTrains.shouldNotRender(pos, RenderTrains.maxTrainRenderDistance, null)) {
+		if (MainRenderer.shouldNotRender(pos, MainRenderer.maxTrainRenderDistance, null)) {
 			return;
 		}
 

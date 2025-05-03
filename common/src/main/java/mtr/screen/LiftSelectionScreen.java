@@ -9,7 +9,7 @@ import mtr.data.NameColorDataBase;
 import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.packet.PacketTrainDataGuiClient;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 
@@ -53,7 +53,7 @@ public class LiftSelectionScreen extends ScreenMapper implements IGui {
 		for (int i = floorLevels.size() - 1; i >= 0; i--) {
 			if (floorCallEnabled.get(i)) {
 				list.add(new DataConverter(floorDescriptions.get(i),
-						lift.liftInstructions.containsInstruction(floorLevels.get(i).getY()) ? RenderTrains.LIFT_LIGHT_COLOR : ARGB_BLACK));
+						lift.liftInstructions.containsInstruction(floorLevels.get(i).getY()) ? MainRenderer.LIFT_LIGHT_COLOR : ARGB_BLACK));
 			} else {
 				list.add(new DataConverter(DashboardList.ID_DISABLED, floorDescriptions.get(i), 0xFF444444));
 			}

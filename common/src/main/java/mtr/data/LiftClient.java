@@ -6,7 +6,7 @@ import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.model.ModelLift1;
 import mtr.registry.Networking;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import mtr.screen.LiftSelectionScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -54,7 +54,7 @@ public class LiftClient extends Lift {
 			if (KeyMappings.LIFT_MENU.isDown() && !(minecraftClient.screen instanceof LiftSelectionScreen)) {
 				UtilitiesClient.setScreen(minecraftClient, new LiftSelectionScreen(this));
 			}
-			if (RenderTrains.showShiftProgressBar()) {
+			if (MainRenderer.showShiftProgressBar()) {
 				player.displayClientMessage(Text.translatable("gui.mtr.press_to_select_floor", KeyMappings.LIFT_MENU.getTranslatedKeyMessage()), true);
 			}
 		}

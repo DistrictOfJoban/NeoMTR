@@ -10,7 +10,7 @@ import mtr.mappings.UtilitiesClient;
 import mtr.model.ModelSimpleTrainBase;
 import mtr.model.ModelTrainBase;
 import mtr.render.JonModelTrainRenderer;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import mtr.sound.JonTrainSound;
 import mtr.sound.bve.BveTrainSound;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +32,7 @@ public class CustomResources implements IResourcePackCreatorProperties, ICustomR
 
 	public static void reload(ResourceManager manager) {
 		TrainClientRegistry.reset();
-		RenderTrains.clearTextureAvailability();
+		MainRenderer.clearTextureAvailability();
 		ClientData.DATA_CACHE.resetFonts();
 		CUSTOM_SIGNS.clear();
 		final List<String> customTrains = new ArrayList<>();

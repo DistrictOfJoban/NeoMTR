@@ -52,7 +52,7 @@ public class RenderLiftButtons extends BlockEntityRendererMapper<BlockLiftButton
 		}
 
 		final BlockPos pos = entity.getBlockPos();
-		if (RenderTrains.shouldNotRender(pos, RenderTrains.maxTrainRenderDistance, null)) {
+		if (MainRenderer.shouldNotRender(pos, MainRenderer.maxTrainRenderDistance, null)) {
 			return;
 		}
 
@@ -108,11 +108,11 @@ public class RenderLiftButtons extends BlockEntityRendererMapper<BlockLiftButton
 
 		if (buttonStates[0]) {
 			final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(buttonStates[2] || lookingAtTopHalf ? MoreRenderLayers.getLight(BUTTON_TEXTURE, true) : MoreRenderLayers.getExterior(BUTTON_TEXTURE));
-			IDrawing.drawTexture(matrices, vertexConsumer, -1.5F / 16, (buttonStates[1] ? 4.5F : 2.5F) / 16, 3F / 16, 3F / 16, 0, 1, 1, 0, facing, buttonStates[2] ? RenderTrains.LIFT_LIGHT_COLOR : lookingAtTopHalf ? HOVER_COLOR : ARGB_GRAY, light);
+			IDrawing.drawTexture(matrices, vertexConsumer, -1.5F / 16, (buttonStates[1] ? 4.5F : 2.5F) / 16, 3F / 16, 3F / 16, 0, 1, 1, 0, facing, buttonStates[2] ? MainRenderer.LIFT_LIGHT_COLOR : lookingAtTopHalf ? HOVER_COLOR : ARGB_GRAY, light);
 		}
 		if (buttonStates[1]) {
 			final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(buttonStates[3] || lookingAtBottomHalf ? MoreRenderLayers.getLight(BUTTON_TEXTURE, true) : MoreRenderLayers.getExterior(BUTTON_TEXTURE));
-			IDrawing.drawTexture(matrices, vertexConsumer, -1.5F / 16, (buttonStates[0] ? 0.5F : 2.5F) / 16, 3F / 16, 3F / 16, 0, 0, 1, 1, facing, buttonStates[3] ? RenderTrains.LIFT_LIGHT_COLOR : lookingAtBottomHalf ? HOVER_COLOR : ARGB_GRAY, light);
+			IDrawing.drawTexture(matrices, vertexConsumer, -1.5F / 16, (buttonStates[0] ? 0.5F : 2.5F) / 16, 3F / 16, 3F / 16, 0, 0, 1, 1, facing, buttonStates[3] ? MainRenderer.LIFT_LIGHT_COLOR : lookingAtBottomHalf ? HOVER_COLOR : ARGB_GRAY, light);
 		}
 
 		final float maxWidth = Math.min(0.25F, 0.375F / liftPositions.size());
@@ -124,7 +124,7 @@ public class RenderLiftButtons extends BlockEntityRendererMapper<BlockLiftButton
 		liftPositions.forEach(liftPosition -> {
 			final Tuple<String, Lift.LiftDirection> liftDisplay = liftDisplays.get(liftPosition);
 			if (liftDisplay != null) {
-				RenderTrains.renderLiftDisplay(matrices, vertexConsumers, pos, liftDisplay.getA(), liftDisplay.getB(), maxWidth, 0.3125F);
+				MainRenderer.renderLiftDisplay(matrices, vertexConsumers, pos, liftDisplay.getA(), liftDisplay.getB(), maxWidth, 0.3125F);
 			}
 			matrices.translate(maxWidth, 0, 0);
 		});

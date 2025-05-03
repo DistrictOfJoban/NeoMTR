@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import mtr.client.IDrawing;
 import mtr.mappings.UtilitiesClient;
 import mtr.path.PathData;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import mtr.util.BlockUtil;
 import mtr.util.Util;
 import net.minecraft.client.Minecraft;
@@ -30,19 +30,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Mixin(RenderTrains.class)
-public class RenderTrainsMixin {
-    @Inject(method = "render(FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;)V", at = @At(value = "INVOKE", target = "Ljava/util/Map;forEach(Ljava/util/function/BiConsumer;)V", ordinal = 0))
-    private static void renderCatenary(float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, CallbackInfo ci) {
-        final Minecraft client2 = Minecraft.getInstance();
-        final LocalPlayer player2 = client2.player;
-        final Level world = client2.level;
+@Mixin(MainRenderer.class)
+public class MainRendererMixin {
+    @Inject(method = "Lmtr/render/MainRenderer;renderAbsolute(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/level/Level;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;)V", at = @At(value = "INVOKE", target = "Ljava/util/Map;forEach(Ljava/util/function/BiConsumer;)V", ordinal = 0))
+    private static void renderCatenary(Minecraft minecraft, LocalPlayer player, Level level, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, CallbackInfo ci) {
         final int renderDistanceChunks2 = UtilitiesClient.getRenderDistance();
         final int maxCatenaryDistance2 = renderDistanceChunks2 * 16;
         final Map<UUID, Boolean> renderedCatenaryMap = new HashMap<>();
         matrices.pushPose();
         MSDClientData.CATENARIES.forEach((startPos, catenaryMap) -> catenaryMap.forEach((endPos, catenary) -> {
-            if (!Util.isBetween(player2.getX(), startPos.getX(), endPos.getX(), maxCatenaryDistance2) || !Util.isBetween(player2.getZ(), startPos.getZ(), endPos.getZ(), maxCatenaryDistance2)) {
+            if (!Util.isBetween(player.getX(), startPos.getX(), endPos.getX(), maxCatenaryDistance2) || !Util.isBetween(player.getZ(), startPos.getZ(), endPos.getZ(), maxCatenaryDistance2)) {
                 return;
             }
             final UUID catenaryProduct = PathData.getRailProduct(startPos, endPos);
@@ -67,7 +64,7 @@ public class RenderTrainsMixin {
         matrices.pushPose();
         final Map<UUID, Boolean> renderedRigidCatenaryMap = new HashMap<>();
         MSDClientData.RIGID_CATENARIES.forEach((startPos, rigidCatenaryMap) -> rigidCatenaryMap.forEach((endPos, rigidCatenary) -> {
-            if (!Util.isBetween(player2.getX(), startPos.getX(), endPos.getX(), maxCatenaryDistance2) || !Util.isBetween(player2.getZ(), startPos.getZ(), endPos.getZ(), maxCatenaryDistance2)) {
+            if (!Util.isBetween(player.getX(), startPos.getX(), endPos.getX(), maxCatenaryDistance2) || !Util.isBetween(player.getZ(), startPos.getZ(), endPos.getZ(), maxCatenaryDistance2)) {
                 return;
             }
             final UUID rigidCatenaryProduct = PathData.getRailProduct(startPos, endPos);
@@ -78,13 +75,13 @@ public class RenderTrainsMixin {
             } else {
                 renderedRigidCatenaryMap.put(rigidCatenaryProduct, true);
             }
-            renderRigidCatenaryStandard(world, rigidCatenary);
+            renderRigidCatenaryStandard(level, rigidCatenary);
         }));
         matrices.popPose();
         matrices.pushPose();
         final Map<UUID, Boolean> renderedTransCatenaryMap = new HashMap<>();
         MSDClientData.TRANS_CATENARIES.forEach((startPos, catenaryMap) -> catenaryMap.forEach((endPos, catenary) -> {
-            if (!Util.isBetween(player2.getX(), startPos.getX(), endPos.getX(), maxCatenaryDistance2) || !Util.isBetween(player2.getZ(), startPos.getZ(), endPos.getZ(), maxCatenaryDistance2)) {
+            if (!Util.isBetween(player.getX(), startPos.getX(), endPos.getX(), maxCatenaryDistance2) || !Util.isBetween(player.getZ(), startPos.getZ(), endPos.getZ(), maxCatenaryDistance2)) {
                 return;
             }
             final UUID catenaryProduct = PathData.getRailProduct(startPos, endPos);
@@ -126,10 +123,10 @@ public class RenderTrainsMixin {
         final int maxCatenaryDistance = UtilitiesClient.getRenderDistance() * 16;
         catenary.render((x1, y1, z1, x2, y2, z2, count, i, base, sinX, sinZ, increment) -> {
             final BlockPos pos3 = BlockUtil.newBlockPos(x1, y1, z1);
-            if (RenderTrains.shouldNotRender(pos3, maxCatenaryDistance, null)) {
+            if (MainRenderer.shouldNotRender(pos3, maxCatenaryDistance, null)) {
                 return;
             }
-            RenderTrains.scheduleRender(ResourceLocation.parse(texture), false, RenderTrains.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
+            MainRenderer.scheduleRender(ResourceLocation.parse(texture), false, MainRenderer.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
                 if (count < 8) {
                     IDrawing.drawTexture(matrices, vertexConsumer, (float) x1, (float) y1 + 0.65F + (float) base, (float) z1, (float) x2, (float) y2 + 0.65F + (float) base, (float) z2, (float) x2, (float) y2, (float) z2, (float) x1, (float) y1, (float) z1, 0.0F, 0.0F, 1.0F, 1.0F, Direction.UP, -1, 0);
                     IDrawing.drawTexture(matrices, vertexConsumer, (float) x2, (float) y2 + 0.65F + (float) base, (float) z2, (float) x1, (float) y1 + 0.65F + (float) base, (float) z1, (float) x1, (float) y1, (float) z1, (float) x2, (float) y2, (float) z2, 0.0F, 1.0F, 1.0F, 0.0F, Direction.UP, -1, 0);
@@ -155,11 +152,11 @@ public class RenderTrainsMixin {
         final int maxCatenaryDistance = UtilitiesClient.getRenderDistance() * 16;
         rigidCatenary.render((x1, z1, x2, z2, x3, z3, x4, z4, x5, z5, x6, z6, x7, z7, x8, z8, y1, y2) -> {
             final BlockPos pos3 = BlockUtil.newBlockPos(x1, y1, z1);
-            if (RenderTrains.shouldNotRender(pos3, maxCatenaryDistance, null)) {
+            if (MainRenderer.shouldNotRender(pos3, maxCatenaryDistance, null)) {
                 return;
             }
             final int light2 = LightTexture.pack(world.getBrightness(LightLayer.BLOCK, pos3), world.getBrightness(LightLayer.SKY, pos3));
-            RenderTrains.scheduleRender(ResourceLocation.parse(texture), false, RenderTrains.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
+            MainRenderer.scheduleRender(ResourceLocation.parse(texture), false, MainRenderer.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
                 IDrawing.drawTexture(matrices, vertexConsumer, (float) x1, (float) y1, (float) z1, (float) x2, (float) y1, (float) z2, (float) x3, (float) y2, (float) z3, (float) x4, (float) y2, (float) z4, 0.0F, 0.0F, 1.0F, 0.03125F, Direction.UP, -1, 0);
                 IDrawing.drawTexture(matrices, vertexConsumer, (float) x3, (float) y2, (float) z3, (float) x2, (float) y1, (float) z2, (float) x1, (float) y1, (float) z1, (float) x4, (float) y2, (float) z4, 0.0F, 0.03125F, 1.0F, 0.0F, Direction.UP, -1, 0);
                 IDrawing.drawTexture(matrices, vertexConsumer, (float) x1, (float) y1, (float) z1, (float) x5, (float) y1 + 0.125F, (float) z5, (float) x8, (float) y2 + 0.125F, (float) z8, (float) x4, (float) y2, (float) z4, 0.0F, 0.5F, 1.0F, 1.0F, Direction.UP, -1, light2);
@@ -177,10 +174,10 @@ public class RenderTrainsMixin {
         final int maxCatenaryDistance = UtilitiesClient.getRenderDistance() * 16;
         catenary.render((x1, y1, z1, x2, y2, z2, count, i, base, sinX, sinZ, increment) -> {
             final BlockPos pos3 = BlockUtil.newBlockPos(x1, y1, z1);
-            if (RenderTrains.shouldNotRender(pos3, maxCatenaryDistance, null)) {
+            if (MainRenderer.shouldNotRender(pos3, maxCatenaryDistance, null)) {
                 return;
             }
-            RenderTrains.scheduleRender(ResourceLocation.parse(texture), false, RenderTrains.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
+            MainRenderer.scheduleRender(ResourceLocation.parse(texture), false, MainRenderer.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
                 IDrawing.drawTexture(matrices, vertexConsumer, (float) (x1 - sinX), (float) y1, (float) (z1 + sinZ), (float) (x2 - sinX), (float) y2, (float) (z2 + sinZ), (float) (x2 + sinX), (float) y2, (float) (z2 - sinZ), (float) (x1 + sinX), (float) y1, (float) (z1 - sinZ), 0.0F, 0.0F, 1.0F, 0.03125F, Direction.UP, -1, 0);
                 IDrawing.drawTexture(matrices, vertexConsumer, (float) (x2 - sinX), (float) y2, (float) (z2 + sinZ), (float) (x1 - sinX), (float) y1, (float) (z1 + sinZ), (float) (x1 + sinX), (float) y1, (float) (z1 - sinZ), (float) (x2 + sinX), (float) y2, (float) (z2 - sinZ), 0.0F, 0.03125F, 1.0F, 0.0F, Direction.UP, -1, 0);
                 IDrawing.drawTexture(matrices, vertexConsumer, (float) x1, (float) y1 + 0.03125F, (float) z1, (float) x2, (float) y2 + 0.03125F, (float) z2, (float) x2, (float) y2, (float) z2, (float) x1, (float) y1, (float) z1, 0.0F, 0.0F, 1.0F, 0.03125F, Direction.UP, -1, 0);
@@ -193,10 +190,10 @@ public class RenderTrainsMixin {
         final int maxCatenaryDistance = UtilitiesClient.getRenderDistance() * 16;
         catenary.render((x1, y1, z1, x2, y2, z2, count, i, base, sinX, sinZ, increment) -> {
             final BlockPos pos3 = BlockUtil.newBlockPos(x1, y1, z1);
-            if (RenderTrains.shouldNotRender(pos3, maxCatenaryDistance, null)) {
+            if (MainRenderer.shouldNotRender(pos3, maxCatenaryDistance, null)) {
                 return;
             }
-            RenderTrains.scheduleRender(ResourceLocation.parse(texture), false, RenderTrains.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
+            MainRenderer.scheduleRender(ResourceLocation.parse(texture), false, MainRenderer.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
                 if (count < 8) {
                     IDrawing.drawTexture(matrices, vertexConsumer, (float) x1, (float) y1 + 0.65F + (float) base, (float) z1, (float) x2, (float) y2 + 0.65F + (float) base, (float) z2, (float) x2, (float) y2, (float) z2, (float) x1, (float) y1, (float) z1, 0.0F, 0.0F, 1.0F, 1.0F, Direction.UP, -1, 0);
                     IDrawing.drawTexture(matrices, vertexConsumer, (float) x2, (float) y2 + 0.65F + (float) base, (float) z2, (float) x1, (float) y1 + 0.65F + (float) base, (float) z1, (float) x1, (float) y1, (float) z1, (float) x2, (float) y2, (float) z2, 0.0F, 1.0F, 1.0F, 0.0F, Direction.UP, -1, 0);

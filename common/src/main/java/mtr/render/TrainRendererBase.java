@@ -46,7 +46,7 @@ public abstract class TrainRendererBase {
 		if (posAverage == null) {
 			return;
 		}
-		matrices.translate(0, RenderTrains.PLAYER_RENDER_OFFSET, 0);
+		matrices.translate(0, MainRenderer.PLAYER_RENDER_OFFSET, 0);
 		final Player renderPlayer = world.getPlayerByUUID(playerId);
 		if (renderPlayer != null && (!playerId.equals(player.getUUID()) || camera.isDetached())) {
 			// Maybe this can stop the player from appearing moving and cape from flapping
@@ -56,7 +56,8 @@ public abstract class TrainRendererBase {
 			renderPlayer.zCloak = renderPlayer.zCloakO = renderPlayer.zo;
 			renderPlayer.walkAnimation.setSpeed(0);
 
-			entityRenderDispatcher.render(renderPlayer, playerPositionOffset.x, playerPositionOffset.y, playerPositionOffset.z, 0, 1, matrices, vertexConsumers, 0xF000F0);
+			MainRenderer.transformRelativeToCamera(matrices, playerPositionOffset.x, playerPositionOffset.y, playerPositionOffset.z);
+			entityRenderDispatcher.render(renderPlayer, 0, 0, 0, 0, 1, matrices, vertexConsumers, 0xF000F0);
 		}
 		matrices.popPose();
 	}
@@ -78,7 +79,17 @@ public abstract class TrainRendererBase {
 
 	public static BlockPos applyAverageTransform(double x, double y, double z) {
 		final BlockPos posAverage = BlockUtil.newBlockPos(x, y, z);
-		if (RenderTrains.shouldNotRender(posAverage, UtilitiesClient.getRenderDistance() * (Config.trainRenderDistanceRatio() + 1), null)) {
+		if (MainRenderer.shouldNotRender(posAverage, UtilitiesClient.getRenderDistance() * (Config.trainRenderDistanceRatio() + 1), null)) {
+			return null;
+		}
+		matrices.pushPose();
+		return posAverage;
+	}
+
+	public static BlockPos applyAverageTransformLocal(double x, double y, double z) {
+		final BlockPos realPos = BlockUtil.newBlockPos(camera.getPosition().add(x, y, z));
+		final BlockPos posAverage = BlockUtil.newBlockPos(x, y, z);
+		if (MainRenderer.shouldNotRender(realPos, UtilitiesClient.getRenderDistance() * (Config.trainRenderDistanceRatio() + 1), null)) {
 			return null;
 		}
 		matrices.pushPose();
@@ -88,7 +99,7 @@ public abstract class TrainRendererBase {
 	public static void applyTransform(TrainClient train, double x, double y, double z, float yaw, float pitch, float roll, boolean isBbModel) {
 		final TrainProperties trainProperties = TrainClientRegistry.getTrainProperties(train.trainId);
 		final boolean hasPitch = pitch < 0 ? train.transportMode.hasPitchAscending : train.transportMode.hasPitchDescending;
-		matrices.translate(x, y, z);
+		MainRenderer.transformRelativeToCamera(matrices, x, y, z);
 		matrices.translate(0, trainProperties.railSurfaceOffset, 0);
 		UtilitiesClient.rotateY(matrices, (float) Math.PI + yaw);
 		UtilitiesClient.rotateX(matrices, (hasPitch ? pitch : 0));

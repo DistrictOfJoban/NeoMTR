@@ -47,7 +47,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class RenderTrains implements IGui {
+public class MainRenderer implements IGui {
 
 	public static int maxTrainRenderDistance;
 	public static ResourcePackCreatorProperties creatorProperties = new ResourcePackCreatorProperties();
@@ -188,7 +188,7 @@ public class RenderTrains implements IGui {
 		ClientData.LIFTS.forEach(lift -> lift.tickClient(world, newLastFrameDuration));
 	}
 
-	public static void render(float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers) {
+	public static void render(float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
 		final Minecraft client = Minecraft.getInstance();
 
 		final LocalPlayer player = client.player;
@@ -199,59 +199,78 @@ public class RenderTrains implements IGui {
 		}
 
 		final int renderDistanceChunks = UtilitiesClient.getRenderDistance();
-//		final float lastFrameDuration = MTRClient.getLastFrameDuration();
-
-//		if (Config.useDynamicFPS()) {
-//			if (lastFrameDuration > 0.5) {
-//				maxTrainRenderDistance = Math.max(maxTrainRenderDistance - (maxTrainRenderDistance - DETAIL_RADIUS) / 2, DETAIL_RADIUS);
-//			} else if (lastFrameDuration < 0.4) {
-//				maxTrainRenderDistance = Math.min(maxTrainRenderDistance + 1, renderDistanceChunks * (Config.trainRenderDistanceRatio() + 1));
-//			}
-//		} else {
 		maxTrainRenderDistance = renderDistanceChunks * (Config.trainRenderDistanceRatio() + 1);
-//		}
 
-//		if (!backupRendering) {
-//			matrices.popPose();
-//			matrices.pushPose();
-//			final Vec3 cameraPosition = client.gameRenderer.getMainCamera().getPosition();
-//			matrices.translate(-cameraPosition.x, -cameraPosition.y, -cameraPosition.z);
-//		}
-		matrices.pushPose();
+		final Vec3 cameraPos = client.gameRenderer.getMainCamera().getPosition();
 
-		TrainRendererBase.setupStaticInfo(matrices, vertexConsumers, tickDelta);
-		TrainRendererBase.setBatch(false);
-		ClientData.TRAINS.forEach(train -> train.renderTrain(world, newLastFrameDuration));
-		if (!Config.hideTranslucentParts()) {
-			TrainRendererBase.setBatch(true);
-			ClientData.TRAINS.forEach(TrainClient::renderTranslucent);
+		poseStack.pushPose();
+		poseStack.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
+		renderAbsolute(client, client.player, client.level, tickDelta, poseStack, bufferSource);
+		poseStack.popPose();
+
+		poseStack.pushPose();
+		renderRelative(client, client.player, client.level, tickDelta, poseStack, bufferSource);
+		poseStack.popPose();
+
+		// Clean up
+		if (prevPlatformCount != ClientData.PLATFORMS.size() || prevSidingCount != ClientData.SIDINGS.size()) {
+			ClientData.DATA_CACHE.sync();
 		}
+		prevPlatformCount = ClientData.PLATFORMS.size();
+		prevSidingCount = ClientData.SIDINGS.size();
+		ClientData.DATA_CACHE.clearDataIfNeeded();
+		lastSimulatedTick = MTRClient.getGameTick();
+	}
 
-		ClientData.LIFTS.forEach(lift -> lift.render(world, (x, y, z, frontDoorValue, backDoorValue) -> {
+	public static void renderRelative(Minecraft client, LocalPlayer player, Level level, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
+		TrainRendererBase.setupStaticInfo(poseStack, bufferSource, tickDelta);
+		TrainRendererBase.setBatch(false);
+		renderTrains(level, tickDelta, poseStack, bufferSource);
+		renderLifts(level, tickDelta, poseStack, bufferSource);
+		doBatchedRendering(poseStack, bufferSource);
+	}
+
+	private static void renderLifts(Level level, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
+		ClientData.LIFTS.forEach(lift -> lift.render(level, (x, y, z, frontDoorValue, backDoorValue) -> {
 			final BlockPos posAverage = TrainRendererBase.applyAverageTransform(x, y, z);
 			if (posAverage == null) {
 				return;
 			}
 
-			matrices.translate(x, y, z);
-			UtilitiesClient.rotateXDegrees(matrices, 180);
-			UtilitiesClient.rotateYDegrees(matrices, 180 + lift.facing.toYRot());
-			final int light = LightTexture.pack(world.getBrightness(LightLayer.BLOCK, posAverage), world.getBrightness(LightLayer.SKY, posAverage));
-			lift.getModel().render(matrices, vertexConsumers, lift, LIFT_TEXTURE, light, frontDoorValue, backDoorValue, false, 0, 1, false, true, false, false, false);
+			MainRenderer.transformRelativeToCamera(poseStack, x, y, z);
+			UtilitiesClient.rotateXDegrees(poseStack, 180);
+			UtilitiesClient.rotateYDegrees(poseStack, 180 + lift.facing.toYRot());
+			final int light = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, posAverage), level.getBrightness(LightLayer.SKY, posAverage));
+			lift.getModel().render(poseStack, bufferSource, lift, LIFT_TEXTURE, light, frontDoorValue, backDoorValue, false, 0, 1, false, true, false, false, false);
 
 			for (int i = 0; i < (lift.isDoubleSided ? 2 : 1); i++) {
-				UtilitiesClient.rotateYDegrees(matrices, 180);
-				matrices.pushPose();
-				matrices.translate(0.875F, -1.5, lift.liftDepth / 2F - 0.25 - SMALL_OFFSET);
-				renderLiftDisplay(matrices, vertexConsumers, posAverage, ClientData.DATA_CACHE.requestLiftFloorText(lift.getCurrentFloorBlockPos())[0], lift.getLiftDirection(), 0.1875F, 0.3125F);
-				matrices.popPose();
+				UtilitiesClient.rotateYDegrees(poseStack, 180);
+				poseStack.pushPose();
+				poseStack.translate(0.875F, -1.5, lift.liftDepth / 2F - 0.25 - SMALL_OFFSET);
+				renderLiftDisplay(poseStack, bufferSource, posAverage, ClientData.DATA_CACHE.requestLiftFloorText(lift.getCurrentFloorBlockPos())[0], lift.getLiftDirection(), 0.1875F, 0.3125F);
+				poseStack.popPose();
 			}
 
-			matrices.popPose();
+			poseStack.popPose();
 		}, newLastFrameDuration));
+	}
+
+	private static void renderTrains(Level level, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
+		ClientData.TRAINS.forEach(train -> train.renderTrain(level, newLastFrameDuration));
+		if (!Config.hideTranslucentParts()) {
+			TrainRendererBase.setBatch(true);
+			ClientData.TRAINS.forEach(TrainClient::renderTranslucent);
+		}
+	}
+
+	public static void renderAbsolute(Minecraft client, LocalPlayer player, Level level, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource) {
+		poseStack.pushPose();
+
+		TrainRendererBase.setupStaticInfo(poseStack, bufferSource, tickDelta);
+		TrainRendererBase.setBatch(false);
 
 		final boolean renderColors = isHoldingRailRelated(player);
-		final int maxRailDistance = renderDistanceChunks * 16;
+		final int maxRailDistance = client.options.renderDistance().get() * 16;
 		final Map<UUID, RailType> renderedRailMap = new HashMap<>();
 		ClientData.RAILS.forEach((startPos, railMap) -> railMap.forEach((endPos, rail) -> {
 			if (!Util.isBetween(player.getX(), startPos.getX(), endPos.getX(), maxRailDistance) || !Util.isBetween(player.getZ(), startPos.getZ(), endPos.getZ(), maxRailDistance)) {
@@ -269,23 +288,23 @@ public class RenderTrains implements IGui {
 
 			switch (rail.transportMode) {
 				case TRAIN:
-					renderRailStandard(world, rail, 0.0625F + SMALL_OFFSET, renderColors, 1);
+					renderRailStandard(level, rail, 0.0625F + SMALL_OFFSET, renderColors, 1);
 					if (renderColors) {
-						renderSignalsStandard(world, matrices, vertexConsumers, rail, startPos, endPos);
+						renderSignalsStandard(level, poseStack, bufferSource, rail, startPos, endPos);
 					}
 					break;
 				case BOAT:
 					if (renderColors) {
-						renderRailStandard(world, rail, 0.0625F + SMALL_OFFSET, true, 0.5F);
-						renderSignalsStandard(world, matrices, vertexConsumers, rail, startPos, endPos);
+						renderRailStandard(level, rail, 0.0625F + SMALL_OFFSET, true, 0.5F);
+						renderSignalsStandard(level, poseStack, bufferSource, rail, startPos, endPos);
 					}
 					break;
 				case CABLE_CAR:
 					if (rail.railType.hasSavedRail || rail.railType == RailType.CABLE_CAR_STATION) {
-						renderRailStandard(world, rail, 0.25F + SMALL_OFFSET, renderColors, 0.25F, "mtr:textures/block/metal.png", 0.25F, 0, 0.75F, 1);
+						renderRailStandard(level, rail, 0.25F + SMALL_OFFSET, renderColors, 0.25F, "mtr:textures/block/metal.png", 0.25F, 0, 0.75F, 1);
 					}
 					if (renderColors && !rail.railType.hasSavedRail) {
-						renderRailStandard(world, rail, 0.5F + SMALL_OFFSET, true, 1, "mtr:textures/block/one_way_rail_arrow.png", 0, 0.75F, 1, 0.25F);
+						renderRailStandard(level, rail, 0.5F + SMALL_OFFSET, true, 1, "mtr:textures/block/one_way_rail_arrow.png", 0, 0.75F, 1, 0.25F);
 					}
 
 					if (rail.railType != RailType.NONE) {
@@ -293,29 +312,31 @@ public class RenderTrains implements IGui {
 							final int r = renderColors ? (rail.railType.color >> 16) & 0xFF : 0;
 							final int g = renderColors ? (rail.railType.color >> 8) & 0xFF : 0;
 							final int b = renderColors ? rail.railType.color & 0xFF : 0;
-							IDrawing.drawLine(matrices, vertexConsumers, (float) x1, (float) y1 + 0.5F, (float) z1, (float) x3, (float) y2 + 0.5F, (float) z3, r, g, b);
+							IDrawing.drawLine(poseStack, bufferSource, (float) x1, (float) y1 + 0.5F, (float) z1, (float) x3, (float) y2 + 0.5F, (float) z3, r, g, b);
 						}, 0, 0);
 					}
 
 					break;
 				case AIRPLANE:
 					if (renderColors) {
-						renderRailStandard(world, rail, 0.0625F + SMALL_OFFSET, true, 1);
-						renderSignalsStandard(world, matrices, vertexConsumers, rail, startPos, endPos);
+						renderRailStandard(level, rail, 0.0625F + SMALL_OFFSET, true, 1);
+						renderSignalsStandard(level, poseStack, bufferSource, rail, startPos, endPos);
 					} else {
-						renderRailStandard(world, rail, 0.0625F + SMALL_OFFSET, false, 0.25F, "textures/block/iron_block.png", 0.25F, 0, 0.75F, 1);
+						renderRailStandard(level, rail, 0.0625F + SMALL_OFFSET, false, 0.25F, "textures/block/iron_block.png", 0.25F, 0, 0.75F, 1);
 					}
 					break;
 			}
 		}));
 
 		ItemStack playerHolding = player.getMainHandItem();
-		if(playerHolding.getItem() instanceof ItemRailModifier) {
-			renderRailPreview(world, player, playerHolding);
+		if (playerHolding.getItem() instanceof ItemRailModifier) {
+			renderRailPreview(level, player, playerHolding);
 		}
 
-		matrices.popPose();
+		poseStack.popPose();
+	}
 
+	private static void doBatchedRendering(PoseStack poseStack, MultiBufferSource bufferSource) {
 		if (lastSimulatedTick != MTRClient.getGameTick()) {
 			for (int i = 0; i < TOTAL_RENDER_STAGES; i++) {
 				for (int j = 0; j < QueuedRenderLayer.values().length; j++) {
@@ -345,19 +366,11 @@ public class RenderTrains implements IGui {
 							renderType = MoreRenderLayers.getExterior(key);
 							break;
 					}
-					final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(renderType);
-					value.forEach(renderer -> renderer.accept(matrices, vertexConsumer));
+					final VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
+					value.forEach(renderer -> renderer.accept(poseStack, vertexConsumer));
 				});
 			}
 		}
-
-		if (prevPlatformCount != ClientData.PLATFORMS.size() || prevSidingCount != ClientData.SIDINGS.size()) {
-			ClientData.DATA_CACHE.sync();
-		}
-		prevPlatformCount = ClientData.PLATFORMS.size();
-		prevSidingCount = ClientData.SIDINGS.size();
-		ClientData.DATA_CACHE.clearDataIfNeeded();
-		lastSimulatedTick = MTRClient.getGameTick();
 	}
 
 	private static void renderRailPreview(Level level, Player localPlayer, ItemStack playerHolding) {
@@ -405,7 +418,7 @@ public class RenderTrains implements IGui {
 	}
 
 	public static void renderLiftDisplay(PoseStack matrices, MultiBufferSource vertexConsumers, BlockPos pos, String floorNumber, Lift.LiftDirection liftDirection, float maxWidth, float height) {
-		if (RenderTrains.shouldNotRender(pos, Math.min(RenderPIDS.MAX_VIEW_DISTANCE, RenderTrains.maxTrainRenderDistance), null)) {
+		if (MainRenderer.shouldNotRender(pos, Math.min(RenderPIDS.MAX_VIEW_DISTANCE, MainRenderer.maxTrainRenderDistance), null)) {
 			return;
 		}
 
@@ -441,6 +454,20 @@ public class RenderTrains implements IGui {
 		} else {
 			return true;
 		}
+	}
+
+	/**
+	 * Transform an absolute world coordinate to a coordinate relative to the player's camera
+	 * Used for WorldRenderEvents to translate a pose to a particular point in the world
+	 */
+	public static Vec3 getOffsetPos(Vec3 vec3) {
+		final Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+		return cameraPos.subtract(vec3);
+	}
+
+	public static void transformRelativeToCamera(PoseStack poseStack, double worldX, double worldY, double worldZ) {
+		final Vec3 offsetPos = getOffsetPos(new Vec3(worldX, worldY, worldZ));
+		poseStack.translate(-offsetPos.x(), -offsetPos.y(), -offsetPos.z());
 	}
 
 	@Deprecated // TODO remove later
@@ -498,26 +525,40 @@ public class RenderTrains implements IGui {
 	private static void renderRailStandard(Level world, Rail rail, float yOffset, boolean renderColors, float railWidth, String texture, float u1, float v1, float u2, float v2) {
 		final int maxRailDistance = UtilitiesClient.getRenderDistance() * 16;
 
-		rail.render((x1, z1, x2, z2, x3, z3, x4, z4, y1, y2) -> {
-			final BlockPos pos2 = BlockUtil.newBlockPos(x1, y1, z1);
+		rail.render((absX1, absZ1, absX2, absZ2, absX3, absZ3, absX4, absZ4, absY1, absY2) -> {
+			final BlockPos pos2 = BlockUtil.newBlockPos(absX1, absY1, absZ1);
 			if (shouldNotRender(pos2, maxRailDistance, null)) {
 				return;
 			}
 			final int light2 = LightTexture.pack(world.getBrightness(LightLayer.BLOCK, pos2), world.getBrightness(LightLayer.SKY, pos2));
 
+			final double x2 = absX2 - absX1;
+			final double z2 = absZ2 - absZ1;
+			final double x3 = absX3 - absX1;
+			final double z3 = absZ3 - absZ1;
+			final double x4 = absX4 - absX1;
+			final double z4 = absZ4 - absZ1;
+			final double y2 = absY2 - absY1;
+
 			if (rail.railType == RailType.NONE) {
 				if (rail.transportMode != TransportMode.CABLE_CAR && renderColors) {
 					scheduleRender(ResourceLocation.parse("mtr:textures/block/one_way_rail_arrow.png"), false, QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
-						IDrawing.drawTexture(matrices, vertexConsumer, (float) x1, (float) y1 + yOffset, (float) z1, (float) x2, (float) y1 + yOffset + SMALL_OFFSET, (float) z2, (float) x3, (float) y2 + yOffset, (float) z3, (float) x4, (float) y2 + yOffset + SMALL_OFFSET, (float) z4, 0, 0.25F, 1, 0.75F, Direction.UP, -1, light2);
-						IDrawing.drawTexture(matrices, vertexConsumer, (float) x2, (float) y1 + yOffset + SMALL_OFFSET, (float) z2, (float) x1, (float) y1 + yOffset, (float) z1, (float) x4, (float) y2 + yOffset + SMALL_OFFSET, (float) z4, (float) x3, (float) y2 + yOffset, (float) z3, 0, 0.25F, 1, 0.75F, Direction.UP, -1, light2);
+						matrices.pushPose();
+						MainRenderer.transformRelativeToCamera(matrices, absX1, absY1, absZ1);
+						IDrawing.drawTexture(matrices, vertexConsumer, (float) 0, (float) 0 + yOffset, (float) 0, (float) x2, (float) 0 + yOffset + SMALL_OFFSET, (float) z2, (float) x3, (float) y2 + yOffset, (float) z3, (float) x4, (float) y2 + yOffset + SMALL_OFFSET, (float) z4, 0, 0.25F, 1, 0.75F, Direction.UP, -1, light2);
+						IDrawing.drawTexture(matrices, vertexConsumer, (float) x2, (float) 0 + yOffset + SMALL_OFFSET, (float) z2, (float) 0, (float) 0 + yOffset, (float) 0, (float) x4, (float) y2 + yOffset + SMALL_OFFSET, (float) z4, (float) x3, (float) y2 + yOffset, (float) z3, 0, 0.25F, 1, 0.75F, Direction.UP, -1, light2);
+						matrices.popPose();
 					});
 				}
 			} else {
-				final float textureOffset = (((int) (x1 + z1)) % 4) * 0.25F + (float) Config.trackTextureOffset() / Config.TRACK_OFFSET_COUNT;
+				final float textureOffset = (((int) (absX1 + absZ1)) % 4) * 0.25F + (float) Config.trackTextureOffset() / Config.TRACK_OFFSET_COUNT;
 				final int color = renderColors || !Config.hideSpecialRailColors() && rail.railType.hasSavedRail ? rail.railType.color : -1;
 				scheduleRender(ResourceLocation.parse(texture), false, QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
-					IDrawing.drawTexture(matrices, vertexConsumer, (float) x1, (float) y1 + yOffset, (float) z1, (float) x2, (float) y1 + yOffset + SMALL_OFFSET, (float) z2, (float) x3, (float) y2 + yOffset, (float) z3, (float) x4, (float) y2 + yOffset + SMALL_OFFSET, (float) z4, u1 < 0 ? 0 : u1, v1 < 0 ? 0.1875F + textureOffset : v1, u2 < 0 ? 1 : u2, v2 < 0 ? 0.3125F + textureOffset : v2, Direction.UP, color, light2);
-					IDrawing.drawTexture(matrices, vertexConsumer, (float) x2, (float) y1 + yOffset + SMALL_OFFSET, (float) z2, (float) x1, (float) y1 + yOffset, (float) z1, (float) x4, (float) y2 + yOffset + SMALL_OFFSET, (float) z4, (float) x3, (float) y2 + yOffset, (float) z3, u1 < 0 ? 0 : u1, v1 < 0 ? 0.1875F + textureOffset : v1, u2 < 0 ? 1 : u2, v2 < 0 ? 0.3125F + textureOffset : v2, Direction.UP, color, light2);
+					matrices.pushPose();
+					MainRenderer.transformRelativeToCamera(matrices, absX1, absY1, absZ1);
+					IDrawing.drawTexture(matrices, vertexConsumer, (float) 0, (float) 0 + yOffset, (float) 0, (float) x2, (float) 0 + yOffset + SMALL_OFFSET, (float) z2, (float) x3, (float) y2 + yOffset, (float) z3, (float) x4, (float) y2 + yOffset + SMALL_OFFSET, (float) z4, u1 < 0 ? 0 : u1, v1 < 0 ? 0.1875F + textureOffset : v1, u2 < 0 ? 1 : u2, v2 < 0 ? 0.3125F + textureOffset : v2, Direction.UP, color, light2);
+					IDrawing.drawTexture(matrices, vertexConsumer, (float) x2, (float) 0 + yOffset + SMALL_OFFSET, (float) z2, (float) 0, (float) 0 + yOffset, (float) 0, (float) x4, (float) y2 + yOffset + SMALL_OFFSET, (float) z4, (float) x3, (float) y2 + yOffset, (float) z3, u1 < 0 ? 0 : u1, v1 < 0 ? 0.1875F + textureOffset : v1, u2 < 0 ? 1 : u2, v2 < 0 ? 0.3125F + textureOffset : v2, Direction.UP, color, light2);
+					matrices.popPose();
 				});
 			}
 		}, -railWidth, railWidth);
@@ -536,12 +577,20 @@ public class RenderTrains implements IGui {
 			final float u2 = u1 + width;
 
 			final int color = ARGB_BLACK | signalBlock.color.getMapColor().col;
-			rail.render((x1, z1, x2, z2, x3, z3, x4, z4, y1, y2) -> {
-				final BlockPos pos2 = BlockUtil.newBlockPos(x1, y1, z1);
+			rail.render((absX1, absZ1, absX2, absZ2, absX3, absZ3, absX4, absZ4, absY1, absY2) -> {
+				final BlockPos pos2 = BlockUtil.newBlockPos(absX1, absY1, absZ1);
 				if (shouldNotRender(pos2, maxRailDistance, null)) {
 					return;
 				}
 				final int light2 = shouldGlow ? MAX_LIGHT_GLOWING : LightTexture.pack(world.getBrightness(LightLayer.BLOCK, pos2), world.getBrightness(LightLayer.SKY, pos2));
+				final double x1 = absX1, y1 = absY1, z1 = absZ1;
+				final double x2 = absX2/* - absX1*/;
+				final double z2 = absZ2/* - absZ1*/;
+				final double x3 = absX3/* - absX1*/;
+				final double z3 = absZ3/* - absZ1*/;
+				final double x4 = absX4/* - absX1*/;
+				final double z4 = absZ4/* - absZ1*/;
+				final double y2 = absY2/* - absY1*/;
 
 				IDrawing.drawTexture(matrices, vertexConsumer, (float) x1, (float) y1, (float) z1, (float) x2, (float) y1 + SMALL_OFFSET, (float) z2, (float) x3, (float) y2, (float) z3, (float) x4, (float) y2 + SMALL_OFFSET, (float) z4, u1, 0, u2, 1, Direction.UP, color, light2);
 				IDrawing.drawTexture(matrices, vertexConsumer, (float) x4, (float) y2 + SMALL_OFFSET, (float) z4, (float) x3, (float) y2, (float) z3, (float) x2, (float) y1 + SMALL_OFFSET, (float) z2, (float) x1, (float) y1, (float) z1, u1, 0, u2, 1, Direction.UP, color, light2);

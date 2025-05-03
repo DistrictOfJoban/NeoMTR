@@ -36,7 +36,7 @@ public class RenderAPGGlass extends RenderRouteBase<BlockAPGGlass.TileEntityAPGG
 		if (IBlock.getStatePropertySafe(state, HALF) == DoubleBlockHalf.UPPER && IBlock.getStatePropertySafe(state, SIDE_EXTENDED) != EnumSide.SINGLE) {
 			final boolean isLeft = isLeft(state);
 			final boolean isRight = isRight(state);
-			RenderTrains.scheduleRender(ClientData.DATA_CACHE.getColorStrip(platformId).resourceLocation, false, RenderTrains.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
+			MainRenderer.scheduleRender(ClientData.DATA_CACHE.getColorStrip(platformId).resourceLocation, false, MainRenderer.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
 				storedMatrixTransformations.transform(matrices);
 				IDrawing.drawTexture(matrices, vertexConsumer, isLeft ? sidePadding : 0, COLOR_STRIP_START, 0, isRight ? 1 - sidePadding : 1, COLOR_STRIP_END, 0, facing, color, light);
 				IDrawing.drawTexture(matrices, vertexConsumer, isRight ? 1 - sidePadding : 1, COLOR_STRIP_START, 0.125F, isLeft ? sidePadding : 0, COLOR_STRIP_END, 0.125F, facing, color, light);
@@ -45,7 +45,7 @@ public class RenderAPGGlass extends RenderRouteBase<BlockAPGGlass.TileEntityAPGG
 
 			final float width = leftBlocks + rightBlocks + 1 - sidePadding * 2;
 			final float height = 1 - topPadding - bottomPadding;
-			RenderTrains.scheduleRender(ClientData.DATA_CACHE.getSingleRowStationName(platformId, width / height).resourceLocation, false, RenderTrains.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
+			MainRenderer.scheduleRender(ClientData.DATA_CACHE.getSingleRowStationName(platformId, width / height).resourceLocation, false, MainRenderer.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
 				storedMatrixTransformations.transform(matrices);
 				IDrawing.drawTexture(matrices, vertexConsumer, 1 - (rightBlocks == 0 ? sidePadding : 0), topPadding, 0.125F, leftBlocks == 0 ? sidePadding : 0, 1 - bottomPadding, 0.125F, (rightBlocks - (rightBlocks == 0 ? 0 : sidePadding)) / width, 0, (width - leftBlocks + (leftBlocks == 0 ? 0 : sidePadding)) / width, 1, facing, color, light);
 				matrices.popPose();

@@ -11,8 +11,9 @@ import cn.zbx1425.sowcerext.model.integration.BufferSourceProxy;
 import com.mojang.blaze3d.vertex.PoseStack;
 import cn.zbx1425.sowcer.math.Matrix4f;
 import mtr.data.Rail;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.Level;
@@ -21,11 +22,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(RenderTrains.class)
-public class RenderTrainsMixin {
+@Mixin(MainRenderer.class)
+public class MainRendererMixin {
 
-    @Inject(at = @At("HEAD"), method = "render")
-    private static void renderHead(float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "renderAbsolute")
+    private static void renderHead(Minecraft minecraft, LocalPlayer player, Level level, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, CallbackInfo ci) {
         Minecraft.getInstance().level.getProfiler().popPush("MTRRailwayData");
         RenderUtil.commonVertexConsumers = vertexConsumers;
         RenderUtil.commonPoseStack = matrices;
@@ -33,8 +34,8 @@ public class RenderTrainsMixin {
 
     }
 
-    @Inject(at = @At("TAIL"), method = "render")
-    private static void renderTail(float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, CallbackInfo ci) {
+    @Inject(at = @At("TAIL"), method = "renderAbsolute")
+    private static void renderTail(Minecraft minecraft, LocalPlayer player, Level level, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, CallbackInfo ci) {
         // Already once per frame, since TAIL
 
         Minecraft.getInstance().level.getProfiler().popPush("NTERailwayData");

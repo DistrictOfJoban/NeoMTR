@@ -20,7 +20,7 @@
     "ModelSimpleTrainBaseAccessor",
     "NativeImageAccessor",
     "RailAccessor",
-    "RenderTrainsMixin",
+    "MainRendererMixin",
     "ResourcePackCreatorPropertiesMixin",
     "ResourcePackCreatorScreenMixin",
     "TrainAccessor",

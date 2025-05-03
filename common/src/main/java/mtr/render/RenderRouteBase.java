@@ -52,13 +52,13 @@ public abstract class RenderRouteBase<T extends BlockPSDTop.TileEntityRouteBase>
 
 		final StoredMatrixTransformations storedMatrixTransformations = new StoredMatrixTransformations();
 		storedMatrixTransformations.add(matricesNew -> {
-			matricesNew.translate(0.5 + entity.getBlockPos().getX(), entity.getBlockPos().getY(), 0.5 + entity.getBlockPos().getZ());
+			MainRenderer.transformRelativeToCamera(matricesNew, 0.5 + entity.getBlockPos().getX(), entity.getBlockPos().getY(), 0.5 + entity.getBlockPos().getZ());
 			UtilitiesClient.rotateYDegrees(matricesNew, -facing.toYRot());
 		});
 
 		renderAdditionalUnmodified(storedMatrixTransformations.copy(), state, facing, light);
 
-		if (!RenderTrains.shouldNotRender(pos, RenderTrains.maxTrainRenderDistance, null)) {
+		if (!MainRenderer.shouldNotRender(pos, MainRenderer.maxTrainRenderDistance, null)) {
 			final long platformId = entity.getPlatformId(ClientData.PLATFORMS, ClientData.DATA_CACHE);
 
 			if (platformId != 0) {
@@ -85,7 +85,7 @@ public abstract class RenderRouteBase<T extends BlockPSDTop.TileEntityRouteBase>
 						resourceLocation = ClientData.DATA_CACHE.getRouteMap(platformId, false, arrowDirection == 2, width / height, transparentWhite).resourceLocation;
 					}
 
-					RenderTrains.scheduleRender(resourceLocation, false, RenderTrains.QueuedRenderLayer.EXTERIOR, (matricesNew, vertexConsumer) -> {
+					MainRenderer.scheduleRender(resourceLocation, false, MainRenderer.QueuedRenderLayer.EXTERIOR, (matricesNew, vertexConsumer) -> {
 						storedMatrixTransformations.transform(matricesNew);
 						IDrawing.drawTexture(matricesNew, vertexConsumer, leftBlocks == 0 ? sidePadding : 0, topPadding, 0, 1 - (rightBlocks == 0 ? sidePadding : 0), 1 - bottomPadding, 0, (leftBlocks - (leftBlocks == 0 ? 0 : sidePadding)) / width, 0, (width - rightBlocks + (rightBlocks == 0 ? 0 : sidePadding)) / width, 1, facing.getOpposite(), color, light);
 						matricesNew.popPose();

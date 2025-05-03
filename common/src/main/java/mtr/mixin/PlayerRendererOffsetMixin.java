@@ -1,7 +1,7 @@
 package mtr.mixin;
 
 import mtr.client.ClientData;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.phys.Vec3;
@@ -16,7 +16,7 @@ public class PlayerRendererOffsetMixin {
 	@Inject(method = "getRenderOffset(Lnet/minecraft/client/player/AbstractClientPlayer;F)Lnet/minecraft/world/phys/Vec3;", at = @At(value = "RETURN"), cancellable = true)
 	public void getRenderOffset(AbstractClientPlayer abstractClientPlayer, float f, CallbackInfoReturnable<Vec3> callbackInfoReturnable) {
 		if (ClientData.isRiding(abstractClientPlayer.getUUID())) {
-			callbackInfoReturnable.setReturnValue(new Vec3(0, -RenderTrains.PLAYER_RENDER_OFFSET, 0));
+			callbackInfoReturnable.setReturnValue(new Vec3(0, -MainRenderer.PLAYER_RENDER_OFFSET, 0));
 		}
 	}
 }

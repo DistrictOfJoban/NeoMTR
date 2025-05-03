@@ -53,7 +53,7 @@ public class RenderPSDTop extends RenderRouteBase<BlockPSDTop.TileEntityPSDTop> 
 		if (!airLeft && !airRight || persistent) {
 			return;
 		}
-		RenderTrains.scheduleRender(ResourceLocation.parse("mtr:textures/block/psd_top.png"), false, RenderTrains.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
+		MainRenderer.scheduleRender(ResourceLocation.parse("mtr:textures/block/psd_top.png"), false, MainRenderer.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
 			storedMatrixTransformations.transform(matrices);
 			if (airLeft) {
 				// back
@@ -104,7 +104,7 @@ public class RenderPSDTop extends RenderRouteBase<BlockPSDTop.TileEntityPSDTop> 
 		final boolean isNotPersistent = IBlock.getStatePropertySafe(state, BlockPSDTop.PERSISTENT) == BlockPSDTop.EnumPersistent.NONE;
 		final boolean airLeft = isNotPersistent && IBlock.getStatePropertySafe(state, BlockPSDTop.AIR_LEFT);
 		final boolean airRight = isNotPersistent && IBlock.getStatePropertySafe(state, BlockPSDTop.AIR_RIGHT);
-		RenderTrains.scheduleRender(ClientData.DATA_CACHE.getColorStrip(platformId).resourceLocation, false, RenderTrains.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
+		MainRenderer.scheduleRender(ClientData.DATA_CACHE.getColorStrip(platformId).resourceLocation, false, MainRenderer.QueuedRenderLayer.EXTERIOR, (matrices, vertexConsumer) -> {
 			storedMatrixTransformations.transform(matrices);
 			IDrawing.drawTexture(matrices, vertexConsumer, airLeft ? 0.625F : 0, COLOR_STRIP_START, 0, airRight ? 0.375F : 1, COLOR_STRIP_END, 0, facing, color, light);
 			if (airLeft) {

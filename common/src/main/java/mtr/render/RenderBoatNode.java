@@ -34,7 +34,7 @@ public class RenderBoatNode extends BlockEntityRendererMapper<BlockNode.TileEnti
 		}
 
 		final Player player = Minecraft.getInstance().player;
-		if (player == null || !RenderTrains.isHoldingRailRelated(player)) {
+		if (player == null || !MainRenderer.isHoldingRailRelated(player)) {
 			return;
 		}
 

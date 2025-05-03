@@ -1,7 +1,7 @@
 package mtr.fabric.mixin;
 
 import mtr.MTRClient;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,6 +14,6 @@ public class MinecraftMixin {
     @Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;render(Lnet/minecraft/client/DeltaTracker;Z)V"))
     void renderFramePre(boolean renderLevel, CallbackInfo ci) {
         MTRClient.incrementGameTick();
-        RenderTrains.simulate();
+        MainRenderer.simulate();
     }
 }

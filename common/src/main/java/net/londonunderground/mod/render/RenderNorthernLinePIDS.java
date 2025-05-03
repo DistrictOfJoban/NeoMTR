@@ -12,7 +12,7 @@ import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.BlockEntityRendererMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.londonunderground.mod.LUAddon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -93,7 +93,7 @@ public class RenderNorthernLinePIDS<T extends BlockEntityMapper> extends BlockEn
 
 		final BlockPos pos = entity.getBlockPos();
 		final Direction facing = IBlock.getStatePropertySafe(world, pos, HorizontalDirectionalBlock.FACING);
-		if (RenderTrains.shouldNotRender(pos, Math.min(MAX_VIEW_DISTANCE, RenderTrains.maxTrainRenderDistance), rotate90 ? null : facing)) {
+		if (MainRenderer.shouldNotRender(pos, Math.min(MAX_VIEW_DISTANCE, MainRenderer.maxTrainRenderDistance), rotate90 ? null : facing)) {
 			return;
 		}
 

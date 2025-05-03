@@ -6,7 +6,7 @@ import mtr.data.IGui;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.BlockEntityRendererMapper;
 import mtr.mappings.UtilitiesClient;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -74,7 +74,7 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
         }
         final BlockPos pos = entity.getBlockPos();
         final Direction facing = IBlock.getStatePropertySafe(world, pos, HorizontalDirectionalBlock.FACING);
-        if (RenderTrains.shouldNotRender(pos, RenderTrains.maxTrainRenderDistance, rotate90 ? null : facing)) {
+        if (MainRenderer.shouldNotRender(pos, MainRenderer.maxTrainRenderDistance, rotate90 ? null : facing)) {
             return;
         }
         final String[] customMessages = new String[maxArrivals];

@@ -18,7 +18,7 @@ import mtr.client.ResourcePackCreatorProperties;
 import mtr.data.EnumHelper;
 import mtr.mappings.UtilitiesClient;
 import mtr.model.ModelTrainBase;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 
@@ -359,14 +359,14 @@ public class DynamicTrainModelLoader {
         final ResourceLocation id = ResourceLocation.parse(textureString);
         final boolean available;
 
-        if (!RenderTrains.AVAILABLE_TEXTURES.contains(textureString) && !RenderTrains.UNAVAILABLE_TEXTURES.contains(textureString)) {
+        if (!MainRenderer.AVAILABLE_TEXTURES.contains(textureString) && !MainRenderer.UNAVAILABLE_TEXTURES.contains(textureString)) {
             available = UtilitiesClient.hasResource(id);
-            (available ? RenderTrains.AVAILABLE_TEXTURES : RenderTrains.UNAVAILABLE_TEXTURES).add(textureString);
+            (available ? MainRenderer.AVAILABLE_TEXTURES : MainRenderer.UNAVAILABLE_TEXTURES).add(textureString);
             if (!available) {
                 MTR.LOGGER.warn("[NeoMTR] Texture {} not found, using default", textureString);
             }
         } else {
-            available = RenderTrains.AVAILABLE_TEXTURES.contains(textureString);
+            available = MainRenderer.AVAILABLE_TEXTURES.contains(textureString);
         }
 
         if (available) {

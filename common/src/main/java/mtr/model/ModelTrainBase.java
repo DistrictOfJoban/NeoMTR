@@ -8,7 +8,7 @@ import mtr.client.ScrollingText;
 import mtr.data.*;
 import mtr.mappings.ModelMapper;
 import mtr.render.MoreRenderLayers;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.EntityModel;
@@ -238,7 +238,7 @@ public abstract class ModelTrainBase extends EntityModel<Entity> implements IGui
 				messages.add(IGui.insertTranslation("gui.mtr.london_train_next_station_announcement_cjk", "gui.mtr.london_train_next_station_announcement", 1, IGui.textOrUntitled(station.name)));
 			}
 
-			final String mergedInterchangeRoutes = RenderTrains.getInterchangeRouteNames(station, thisRoute, nextRoute);
+			final String mergedInterchangeRoutes = MainRenderer.getInterchangeRouteNames(station, thisRoute, nextRoute);
 			if (!mergedInterchangeRoutes.isEmpty()) {
 				messages.add(IGui.insertTranslation("gui.mtr.london_train_interchange_announcement_cjk", "gui.mtr.london_train_interchange_announcement", 1, mergedInterchangeRoutes));
 			}

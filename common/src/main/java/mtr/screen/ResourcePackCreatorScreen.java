@@ -10,11 +10,10 @@ import mtr.client.DoorAnimationType;
 import mtr.client.IDrawing;
 import mtr.client.IResourcePackCreatorProperties;
 import mtr.data.*;
-import mtr.mappings.ScreenMapper;
 import mtr.mappings.Text;
 import mtr.mappings.UtilitiesClient;
 import mtr.model.ModelTrainBase;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -127,89 +126,89 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 		});
 
 		buttonTransportMode = UtilitiesClient.newButton(button -> {
-			RenderTrains.creatorProperties.editTransportMode();
+			MainRenderer.creatorProperties.editTransportMode();
 			updateControls(true);
 		});
 		sliderLength = new WidgetShorterSlider(0, 0, 31, value -> {
-			RenderTrains.creatorProperties.editLength(value + 1);
+			MainRenderer.creatorProperties.editLength(value + 1);
 			updateControls(true);
 			return Text.translatable("gui.mtr.vehicle_length", value + 1).getString();
 		}, null);
 		sliderWidth = new WidgetShorterSlider(0, 0, 7, value -> {
-			RenderTrains.creatorProperties.editWidth(value + 1);
+			MainRenderer.creatorProperties.editWidth(value + 1);
 			updateControls(true);
 			return Text.translatable("gui.mtr.vehicle_width", value + 1).getString();
 		}, null);
 		sliderDoorMax = new WidgetShorterSlider(0, 0, 31, value -> {
-			RenderTrains.creatorProperties.editDoorMax(value + 1);
+			MainRenderer.creatorProperties.editDoorMax(value + 1);
 			updateControls(true);
 			return Text.translatable("gui.mtr.vehicle_door_max", value + 1).getString();
 		}, null);
 		buttonDoorAnimationType = UtilitiesClient.newButton(button -> {
-			RenderTrains.creatorProperties.editDoorAnimationType();
+			MainRenderer.creatorProperties.editDoorAnimationType();
 			updateControls(true);
 		});
 
 		checkboxPartMirror = new WidgetBetterCheckbox(0, 0, 0, SQUARE_SIZE, Text.translatable("gui.mtr.part_mirror"), checked -> {
-			RenderTrains.creatorProperties.editPartMirror(editingPartIndex, checked);
+			MainRenderer.creatorProperties.editPartMirror(editingPartIndex, checked);
 			updateControls(true);
 		});
 		checkboxPartSkipRenderingIfTooFar = new WidgetBetterCheckbox(0, 0, 0, SQUARE_SIZE, Text.translatable("gui.mtr.part_skip_rendering_if_too_far"), checked -> {
-			RenderTrains.creatorProperties.editPartSkipRenderingIfTooFar(editingPartIndex, checked);
+			MainRenderer.creatorProperties.editPartSkipRenderingIfTooFar(editingPartIndex, checked);
 			updateControls(true);
 		});
 		checkboxIsDisplay = new WidgetBetterCheckbox(0, 0, 0, SQUARE_SIZE, Text.translatable("gui.mtr.part_is_display"), checked -> {
-			RenderTrains.creatorProperties.editPartDisplay(editingPartIndex, checked);
+			MainRenderer.creatorProperties.editPartDisplay(editingPartIndex, checked);
 			updateControls(true);
 		});
 		sliderDisplayXPadding = new WidgetShorterSlider(0, 0, 40, value -> {
 			final float newValue = (value - 20) / 20F;
-			RenderTrains.creatorProperties.editPartDisplayPadding(editingPartIndex, newValue, false);
+			MainRenderer.creatorProperties.editPartDisplayPadding(editingPartIndex, newValue, false);
 			updateControls(true);
 			return Text.translatable("gui.mtr.part_display_x_padding", newValue).getString();
 		}, null);
 		sliderDisplayYPadding = new WidgetShorterSlider(0, 0, 40, value -> {
 			final float newValue = (value - 20) / 20F;
-			RenderTrains.creatorProperties.editPartDisplayPadding(editingPartIndex, newValue, true);
+			MainRenderer.creatorProperties.editPartDisplayPadding(editingPartIndex, newValue, true);
 			updateControls(true);
 			return Text.translatable("gui.mtr.part_display_y_padding", newValue).getString();
 		}, null);
 		sliderDisplayCjkSizeRatio = new WidgetShorterSlider(0, 0, 40, value -> {
 			final float newValue = (value - 20) / 10F;
-			RenderTrains.creatorProperties.editPartDisplayCjkSizeRatio(editingPartIndex, newValue);
+			MainRenderer.creatorProperties.editPartDisplayCjkSizeRatio(editingPartIndex, newValue);
 			updateControls(true);
 			return Text.translatable("gui.mtr.part_display_cjk_size_ratio", newValue).getString();
 		}, null);
 		buttonDisplayType = UtilitiesClient.newButton(button -> {
-			RenderTrains.creatorProperties.editPartDisplayType(editingPartIndex);
+			MainRenderer.creatorProperties.editPartDisplayType(editingPartIndex);
 			updateControls(true);
 		});
 		colorSelectorDisplayCjk = new WidgetColorSelector(this, false, () -> onUpdateColor(true));
 		colorSelectorDisplay = new WidgetColorSelector(this, false, () -> onUpdateColor(false));
 		checkboxShouldScroll = new WidgetBetterCheckbox(0, 0, 0, SQUARE_SIZE, Text.translatable("gui.mtr.part_display_should_scroll"), checked -> {
-			RenderTrains.creatorProperties.editPartDisplayShouldScroll(editingPartIndex, checked);
+			MainRenderer.creatorProperties.editPartDisplayShouldScroll(editingPartIndex, checked);
 			updateControls(true);
 		});
 		checkboxForceUpperCase = new WidgetBetterCheckbox(0, 0, 0, SQUARE_SIZE, Text.translatable("gui.mtr.part_display_force_upper_case"), checked -> {
-			RenderTrains.creatorProperties.editPartDisplayForceUpperCase(editingPartIndex, checked);
+			MainRenderer.creatorProperties.editPartDisplayForceUpperCase(editingPartIndex, checked);
 			updateControls(true);
 		});
 		checkboxForceSingleLine = new WidgetBetterCheckbox(0, 0, 0, SQUARE_SIZE, Text.translatable("gui.mtr.part_display_force_single_line"), checked -> {
-			RenderTrains.creatorProperties.editPartDisplayForceSingleLine(editingPartIndex, checked);
+			MainRenderer.creatorProperties.editPartDisplayForceSingleLine(editingPartIndex, checked);
 			updateControls(true);
 		});
 		textFieldDisplayTest = new WidgetBetterTextField(DEFAULT_TEST_STRING, Integer.MAX_VALUE);
 
 		buttonPartStage = UtilitiesClient.newButton(button -> {
-			RenderTrains.creatorProperties.editPartRenderStage(editingPartIndex);
+			MainRenderer.creatorProperties.editPartRenderStage(editingPartIndex);
 			updateControls(true);
 		});
 		buttonPartDoorOffset = UtilitiesClient.newButton(button -> {
-			RenderTrains.creatorProperties.editPartDoorOffset(editingPartIndex);
+			MainRenderer.creatorProperties.editPartDoorOffset(editingPartIndex);
 			updateControls(true);
 		});
 		buttonPartRenderCondition = UtilitiesClient.newButton(button -> {
-			RenderTrains.creatorProperties.editPartRenderCondition(editingPartIndex);
+			MainRenderer.creatorProperties.editPartRenderCondition(editingPartIndex);
 			updateControls(true);
 		});
 		textFieldPositions = new WidgetBetterTextField("[^\\d.,\\[\\]\\- ]", "[0,0]", Integer.MAX_VALUE);
@@ -262,17 +261,17 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 		UtilitiesClient.setWidgetY(sliderLength, SQUARE_SIZE);
 		sliderLength.setWidth(PANEL_WIDTH - textWidth2);
 		sliderLength.setHeight(SQUARE_SIZE / 2);
-		sliderLength.setValue(RenderTrains.creatorProperties.getLength() - 1);
+		sliderLength.setValue(MainRenderer.creatorProperties.getLength() - 1);
 		UtilitiesClient.setWidgetX(sliderWidth, xStart);
 		UtilitiesClient.setWidgetY(sliderWidth, SQUARE_SIZE * 3 / 2);
 		sliderWidth.setWidth(PANEL_WIDTH - textWidth2);
 		sliderWidth.setHeight(SQUARE_SIZE / 2);
-		sliderWidth.setValue(RenderTrains.creatorProperties.getWidth() - 1);
+		sliderWidth.setValue(MainRenderer.creatorProperties.getWidth() - 1);
 		UtilitiesClient.setWidgetX(sliderDoorMax, xStart);
 		UtilitiesClient.setWidgetY(sliderDoorMax, SQUARE_SIZE * 2);
 		sliderDoorMax.setWidth(PANEL_WIDTH - textWidth2);
 		sliderDoorMax.setHeight(SQUARE_SIZE / 2);
-		sliderDoorMax.setValue(RenderTrains.creatorProperties.getDoorMax() - 1);
+		sliderDoorMax.setValue(MainRenderer.creatorProperties.getDoorMax() - 1);
 
 		IDrawing.setPositionAndWidth(buttonDoorAnimationType, xStart, SQUARE_SIZE * 5 / 2, PANEL_WIDTH);
 
@@ -315,15 +314,15 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 		IDrawing.setPositionAndWidth(buttonDone, xStart, height - SQUARE_SIZE, PANEL_WIDTH);
 
 		textFieldPositions.setResponder(text -> {
-			RenderTrains.creatorProperties.editPartPositions(editingPartIndex, textFieldPositions.getValue());
+			MainRenderer.creatorProperties.editPartPositions(editingPartIndex, textFieldPositions.getValue());
 			updateControls(false);
 		});
 		textFieldWhitelistedCars.setResponder(text -> {
-			RenderTrains.creatorProperties.editPartWhitelistedCars(editingPartIndex, textFieldWhitelistedCars.getValue());
+			MainRenderer.creatorProperties.editPartWhitelistedCars(editingPartIndex, textFieldWhitelistedCars.getValue());
 			updateControls(false);
 		});
 		textFieldBlacklistedCars.setResponder(text -> {
-			RenderTrains.creatorProperties.editPartBlacklistedCars(editingPartIndex, textFieldBlacklistedCars.getValue());
+			MainRenderer.creatorProperties.editPartBlacklistedCars(editingPartIndex, textFieldBlacklistedCars.getValue());
 			updateControls(false);
 		});
 
@@ -382,7 +381,7 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 			availableModelPartsList.render(guiGraphics, font);
 			usedModelPartsList.render(guiGraphics, font);
 			if (isEditing()) {
-				guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.editing_part", RenderTrains.creatorProperties.getPropertiesPartsArray().get(editingPartIndex).getAsJsonObject().get(KEY_PROPERTIES_NAME).getAsString()), PANEL_WIDTH / 2, TEXT_PADDING, ARGB_WHITE);
+				guiGraphics.drawCenteredString(font, Text.translatable("gui.mtr.editing_part", MainRenderer.creatorProperties.getPropertiesPartsArray().get(editingPartIndex).getAsJsonObject().get(KEY_PROPERTIES_NAME).getAsString()), PANEL_WIDTH / 2, TEXT_PADDING, ARGB_WHITE);
 				if (colorSelectorDisplay.visible) {
 					guiGraphics.drawString(font, Text.translatable(colorSelectorDisplayCjk.visible ? "gui.mtr.part_display_text_color_cjk" : "gui.mtr.part_display_text_color"), TEXT_PADDING, SQUARE_SIZE * 13 / 2 + TEXT_PADDING, ARGB_WHITE);
 				}
@@ -410,7 +409,7 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double amount) {
 		if (mouseX >= PANEL_WIDTH && mouseX < width - PANEL_WIDTH) {
 			scale = Math.max(scale - (float) amount, MIN_SCALE);
-			final float bound = cars * RenderTrains.creatorProperties.getLength() / 2F;
+			final float bound = cars * MainRenderer.creatorProperties.getLength() / 2F;
 			translation = Mth.clamp(translation, -bound, bound);
 		}
 		availableModelPartsList.mouseScrolled(mouseX, mouseY, scrollX, amount);
@@ -423,7 +422,7 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 		if (mouseX >= PANEL_WIDTH && mouseX < width - PANEL_WIDTH && mouseY < height - TEXT_HEIGHT - SQUARE_SIZE * 3) {
 			if (button == 0) {
 				final Vec3 movement = new Vec3(0, deltaY * MOUSE_SCALE * scale, deltaX * MOUSE_SCALE * scale).yRot(yaw).zRot(roll);
-				final float bound = cars * RenderTrains.creatorProperties.getLength() / 2F;
+				final float bound = cars * MainRenderer.creatorProperties.getLength() / 2F;
 				translation = Mth.clamp(translation - (float) movement.z, -bound, bound);
 			} else {
 				yaw -= (float) deltaX * MOUSE_SCALE * scale;
@@ -438,7 +437,7 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 		availableModelPartsList.tick();
 		usedModelPartsList.tick();
 
-		final float maxTime = EnumHelper.valueOf(DoorAnimationType.STANDARD, RenderTrains.creatorProperties.getDoorAnimationType()).maxTime;
+		final float maxTime = EnumHelper.valueOf(DoorAnimationType.STANDARD, MainRenderer.creatorProperties.getDoorAnimationType()).maxTime;
 		final float increment = 1F / Train.DOOR_MOVE_TIME;
 		if (openingLeft) {
 			if (doorLeftValue < maxTime) {
@@ -480,14 +479,14 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 	}
 
 	private void updateControls(boolean formatTextFields) {
-		availableModelPartsList.setData(updatePartsList(RenderTrains.creatorProperties.getModelPartsArray(), null, null), false, false, false, false, true, false);
-		final JsonArray partsArray = RenderTrains.creatorProperties.getPropertiesPartsArray();
+		availableModelPartsList.setData(updatePartsList(MainRenderer.creatorProperties.getModelPartsArray(), null, null), false, false, false, false, true, false);
+		final JsonArray partsArray = MainRenderer.creatorProperties.getPropertiesPartsArray();
 		usedModelPartsList.setData(updatePartsList(partsArray, ResourcePackCreatorScreen::getColor, ResourcePackCreatorScreen::getName), false, false, true, false, false, true);
 
-		final String transportModeString = RenderTrains.creatorProperties.getTransportMode();
+		final String transportModeString = MainRenderer.creatorProperties.getTransportMode();
 		buttonTransportMode.setMessage(Text.translatable("gui.mtr.transport_mode_" + transportModeString.toLowerCase(Locale.ENGLISH)));
 		cars = Mth.clamp(cars, 1, Math.min(32, EnumHelper.valueOf(TransportMode.TRAIN, transportModeString).maxLength));
-		buttonDoorAnimationType.setMessage(Text.translatable("gui.mtr.door_animation_type_" + RenderTrains.creatorProperties.getDoorAnimationType().toLowerCase(Locale.ENGLISH)));
+		buttonDoorAnimationType.setMessage(Text.translatable("gui.mtr.door_animation_type_" + MainRenderer.creatorProperties.getDoorAnimationType().toLowerCase(Locale.ENGLISH)));
 
 		final int sliderCarsValue = cars - 1;
 		if (sliderCarsValue != sliderCars.getIntValue()) {
@@ -501,15 +500,15 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 		buttonDoorLeft.setMessage(Text.literal(openingLeft ? DOOR_CLOSE : DOOR_OPEN).append(" ").append(Text.translatable("gui.mtr.left")));
 		buttonDoorRight.setMessage(Text.literal(openingRight ? DOOR_CLOSE : DOOR_OPEN).append(" ").append(Text.translatable("gui.mtr.right")));
 
-		final int sliderLengthValue = RenderTrains.creatorProperties.getLength() - 1;
+		final int sliderLengthValue = MainRenderer.creatorProperties.getLength() - 1;
 		if (sliderLengthValue != sliderLength.getIntValue()) {
 			sliderLength.setValue(sliderLengthValue);
 		}
-		final int sliderWidthValue = RenderTrains.creatorProperties.getWidth() - 1;
+		final int sliderWidthValue = MainRenderer.creatorProperties.getWidth() - 1;
 		if (sliderWidthValue != sliderWidth.getIntValue()) {
 			sliderWidth.setValue(sliderWidthValue);
 		}
-		final int sliderDoorMaxValue = RenderTrains.creatorProperties.getDoorMax() - 1;
+		final int sliderDoorMaxValue = MainRenderer.creatorProperties.getDoorMax() - 1;
 		if (sliderDoorMaxValue != sliderDoorMax.getIntValue()) {
 			sliderDoorMax.setValue(sliderDoorMaxValue);
 		}
@@ -637,7 +636,7 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 	}
 
 	private void onAdd(NameColorDataBase data, int index) {
-		RenderTrains.creatorProperties.addPart(data.name);
+		MainRenderer.creatorProperties.addPart(data.name);
 		updateControls(true);
 	}
 
@@ -647,18 +646,18 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 	}
 
 	private void onDelete(NameColorDataBase data, int index) {
-		RenderTrains.creatorProperties.removePart(index);
+		MainRenderer.creatorProperties.removePart(index);
 		editingPartIndex = -1;
 		updateControls(true);
 	}
 
 	private void onUpdateColor(boolean isCjk) {
-		RenderTrains.creatorProperties.editPartDisplayColor(editingPartIndex, (isCjk ? colorSelectorDisplayCjk : colorSelectorDisplay).getColor(), isCjk);
+		MainRenderer.creatorProperties.editPartDisplayColor(editingPartIndex, (isCjk ? colorSelectorDisplayCjk : colorSelectorDisplay).getColor(), isCjk);
 		updateControls(false);
 	}
 
 	private boolean isEditing() {
-		return editingPartIndex >= 0 && editingPartIndex < RenderTrains.creatorProperties.getPropertiesPartsArray().size();
+		return editingPartIndex >= 0 && editingPartIndex < MainRenderer.creatorProperties.getPropertiesPartsArray().size();
 	}
 
 	public static void render(PoseStack matrices) {
@@ -679,8 +678,8 @@ public class ResourcePackCreatorScreen extends MTRScreenBase implements IResourc
 			final int light = LightTexture.pack(0, (int) Math.round(brightness / 100D * 0x0F));
 			for (int i = 0; i < cars; i++) {
 				matrices.pushPose();
-				matrices.translate(0, 0, (i - (cars - 1) / 2F) * (RenderTrains.creatorProperties.getLength() + 1) + translation);
-				RenderTrains.creatorProperties.render(matrices, i, cars, head1IsFront, doorLeftValue, doorRightValue, openingRight || openingLeft, light);
+				matrices.translate(0, 0, (i - (cars - 1) / 2F) * (MainRenderer.creatorProperties.getLength() + 1) + translation);
+				MainRenderer.creatorProperties.render(matrices, i, cars, head1IsFront, doorLeftValue, doorRightValue, openingRight || openingLeft, light);
 				matrices.popPose();
 			}
 			matrices.popPose();

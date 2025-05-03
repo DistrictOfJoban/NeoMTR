@@ -5,7 +5,7 @@ import cn.zbx1425.sowcerext.model.integration.BufferSourceProxy;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import mtr.neoforge.DeferredRegisterHolder;
-import mtr.render.RenderTrains;
+import mtr.render.MainRenderer;
 import mtr.screen.ResourcePackCreatorScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -132,12 +132,7 @@ public class ForgeUtilities {
 		@SubscribeEvent
 		public static void onRenderLevelStageEvent(RenderLevelStageEvent event) {
 			if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
-				PoseStack matrices = event.getPoseStack();
-				matrices.pushPose();
-				final Vec3 cameraPos = event.getCamera().getPosition();
-				matrices.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-				RenderTrains.render(0, matrices, Minecraft.getInstance().renderBuffers().bufferSource());
-				matrices.popPose();
+				MainRenderer.render(0, event.getPoseStack(), Minecraft.getInstance().renderBuffers().bufferSource());
 			} else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
 				Minecraft.getInstance().level.getProfiler().popPush("NTEBlockEntities");
 				BufferSourceProxy vertexConsumersProxy = new BufferSourceProxy(Minecraft.getInstance().renderBuffers().bufferSource());
@@ -160,7 +155,7 @@ public class ForgeUtilities {
 		@SubscribeEvent
 		public static void onRenderFrame(RenderFrameEvent.Pre event) {
 			mtr.MTRClient.incrementGameTick();
-			mtr.render.RenderTrains.simulate();
+			MainRenderer.simulate();
 		}
 	}
 

@@ -8,6 +8,7 @@ import mtr.block.BlockPSDAPGDoorBase;
 import mtr.block.IBlock;
 import mtr.client.*;
 import mtr.registry.Networking;
+import mtr.render.MainRenderer;
 import mtr.render.RenderDrivingOverlay;
 import mtr.render.TrainRendererBase;
 import mtr.sound.TrainSoundBase;
@@ -263,7 +264,7 @@ public class TrainClient extends Train implements IGui {
 	}
 
 	private static Vec3 withCarTransform(Vec3 child, double x, double y, double z, float yaw, float pitch, float roll, float railSurfaceOffset) {
-		return child.add(0, -railSurfaceOffset, 0).zRot(roll).xRot(pitch).yRot(yaw).add(0, railSurfaceOffset, 0).add(x, y, z);
+		return child.add(0, -railSurfaceOffset, 0).zRot(roll).xRot(pitch).yRot(yaw).add(0, railSurfaceOffset, 0).subtract(MainRenderer.getOffsetPos(new Vec3(x, y, z)));
 	}
 
 	@Override

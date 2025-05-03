@@ -5,8 +5,8 @@ import com.lx862.jcm.mod.data.BlockProperties;
 import mtr.block.IBlock;
 import mtr.client.ClientData;
 import mtr.client.IDrawing;
+import mtr.render.MainRenderer;
 import mtr.render.RenderStationNameBase;
-import mtr.render.RenderTrains;
 import mtr.render.StoredMatrixTransformations;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -28,7 +28,7 @@ public class StationNameStandingRenderer extends RenderStationNameBase<StationNa
     @Override
     protected void drawStationName(BlockGetter world, BlockPos pos, BlockState state, Direction facing, StoredMatrixTransformations storedMatrixTransformations, MultiBufferSource vertexConsumers, String stationName, int stationColor, int color, int light) {
         if (IBlock.getStatePropertySafe(state, BlockProperties.VERTICAL_PART_3) == IBlock.EnumThird.MIDDLE) {
-            RenderTrains.scheduleRender(ClientData.DATA_CACHE.getTallStationName(color, stationName, stationColor, WIDTH / HEIGHT).resourceLocation, false, RenderTrains.QueuedRenderLayer.EXTERIOR, (poseStack, vertexConsumer) -> {
+            MainRenderer.scheduleRender(ClientData.DATA_CACHE.getTallStationName(color, stationName, stationColor, WIDTH / HEIGHT).resourceLocation, false, MainRenderer.QueuedRenderLayer.EXTERIOR, (poseStack, vertexConsumer) -> {
                 storedMatrixTransformations.transform(poseStack);
                 IDrawing.drawTexture(poseStack, vertexConsumer, -WIDTH / 2, -HEIGHT / 2 - OFFSET_Y, WIDTH, HEIGHT, 0, 0, 1, 1, facing, ARGB_WHITE, light);
                 poseStack.popPose();
