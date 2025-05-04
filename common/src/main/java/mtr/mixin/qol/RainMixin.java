@@ -19,11 +19,11 @@ public class RainMixin {
             method = "renderSnowAndRain(Lnet/minecraft/client/renderer/LightTexture;FDDD)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getHeight(Lnet/minecraft/world/level/levelgen/Heightmap$Types;II)I")
     )
-    public int modifyRain(Level level, Heightmap.Types heightmapType, int x, int z, Operation<Integer> original) {
+    public int mtrModifyRain(Level level, Heightmap.Types heightmapType, int x, int z, Operation<Integer> original) {
         for(TrainClient trainClient : ClientData.TRAINS) {
-            int trainRoofAtCurrentPos = trainClient.getRoofAt(x, z);
-            if(trainRoofAtCurrentPos != Integer.MIN_VALUE) {
-                return trainRoofAtCurrentPos;
+            Double trainRoofAtCurrentPos = trainClient.getTopY(x, z);
+            if(trainRoofAtCurrentPos != null) {
+                return (int)Math.round(trainRoofAtCurrentPos);
             }
         }
 
@@ -34,11 +34,11 @@ public class RainMixin {
             method = "Lnet/minecraft/client/renderer/LevelRenderer;tickRain(Lnet/minecraft/client/Camera;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelReader;getHeightmapPos(Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;")
     )
-    public BlockPos modifyRainSound(LevelReader levelReader, Heightmap.Types heightmapType, BlockPos pos, Operation<BlockPos> original) {
+    public BlockPos mtrModifyRainSound(LevelReader levelReader, Heightmap.Types heightmapType, BlockPos pos, Operation<BlockPos> original) {
         for(TrainClient trainClient : ClientData.TRAINS) {
-            int trainRoofAtCurrentPos = trainClient.getRoofAt(pos.getX(), pos.getZ());
-            if(trainRoofAtCurrentPos != Integer.MIN_VALUE) {
-                return new BlockPos(pos.getX(), trainRoofAtCurrentPos + 1, pos.getZ());
+            Double trainRoofAtCurrentPos = trainClient.getTopY(pos.getX(), pos.getZ());
+            if(trainRoofAtCurrentPos != null) {
+                return new BlockPos(pos.getX(), (int)Math.round(trainRoofAtCurrentPos) + 1, pos.getZ());
             }
         }
 

@@ -7,8 +7,9 @@
     "PlayerTeleportationStateAccessor"
   ],
   "client": [
-    "qol.RainMixin",
-    "PlayerRendererOffsetMixin"
+    "PlayerRendererOffsetMixin",
+    "qol.EntityMixin",
+    "qol.RainMixin"
   ],
   "injectors": {
     "defaultRequire": 1

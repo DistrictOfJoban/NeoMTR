@@ -70,6 +70,9 @@ public abstract class Train extends NameColorDataBase {
 	protected static final int MAX_CHECK_DISTANCE = 32;
 	public static final int DOOR_DELAY = 60;
 
+	/** An assumed height of regular trains. Currently MTR does not have info regarding height. */
+	private static final float ASSUMED_TRAIN_HEIGHT = 3.0f;
+
 	private static final String KEY_SPEED = "speed";
 	private static final String KEY_RAIL_PROGRESS = "rail_progress";
 	private static final String KEY_ELAPSED_DWELL_TICKS = "stop_counter";
@@ -657,6 +660,10 @@ public abstract class Train extends NameColorDataBase {
 		doorTarget = false;
 		doorValue = 0;
 		nextPlatformIndex = nextStoppingIndex;
+	}
+
+	public float getHeight() {
+		return ASSUMED_TRAIN_HEIGHT;
 	}
 
 	protected boolean openDoors() {
