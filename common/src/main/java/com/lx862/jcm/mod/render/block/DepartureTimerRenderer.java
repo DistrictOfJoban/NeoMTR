@@ -25,7 +25,6 @@ public class DepartureTimerRenderer extends JCMBlockEntityRenderer<DepartureTime
 
     @Override
     public void renderCurated(DepartureTimerBlockEntity blockEntity, PoseStack poseStack, MultiBufferSource bufferSource, Level world, net.minecraft.world.level.block.state.BlockState state, net.minecraft.core.BlockPos pos, float partialTick, int light, int packedOverlay) {
-        poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
         poseStack.scale(0.018F, 0.018F, 0.018F);
         rotateToBlockDirection(poseStack, blockEntity);
@@ -56,6 +55,5 @@ public class DepartureTimerRenderer extends JCMBlockEntityRenderer<DepartureTime
         long mins = seconds / 60;
 
         TextRenderingManager.draw(poseStack, bufferSource, new TextInfo(String.format("%d:%02d", mins % 10, seconds % 60)).withColor(0xFFEE2233).withFont("jsblock:deptimer"), 0, 0);
-        poseStack.popPose();
     }
 }
