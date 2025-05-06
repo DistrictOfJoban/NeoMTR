@@ -57,7 +57,7 @@ public abstract class TrainRendererBase {
 			renderPlayer.walkAnimation.setSpeed(0);
 
 			MainRenderer.transformRelativeToCamera(matrices, playerPositionOffset.x, playerPositionOffset.y, playerPositionOffset.z);
-			entityRenderDispatcher.render(renderPlayer, 0, 0, 0, 0, 1, matrices, vertexConsumers, 0xF000F0);
+			entityRenderDispatcher.render(renderPlayer, 0, 0, 0, 0, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true), matrices, vertexConsumers, 0xF000F0);
 		}
 		matrices.popPose();
 	}
