@@ -91,6 +91,7 @@ public class RailwayDataFileSaveModule extends RailwayDataModule {
 
 	@Override
 	public void earlyInit() {
+		MTR.LOGGER.info("[NeoMTR] Loading MTR save data for {}...", level.dimension().location());
 		existingFiles.clear();
 		readMessagePackFromFile(stationsPath, Station::new, railwayData.stations::add, false);
 		readMessagePackFromFile(platformsPath, Platform::new, railwayData.platforms::add, true);
@@ -101,7 +102,7 @@ public class RailwayDataFileSaveModule extends RailwayDataModule {
 		readMessagePackFromFile(railsPath, RailEntry::new, railEntry -> rails.put(railEntry.pos, railEntry.connections), true);
 		readMessagePackFromFile(signalBlocksPath, SignalBlocks.SignalBlock::new, signalBlocks.signalBlocks::add, true);
 
-		MTR.LOGGER.info("Minecraft Transit Railway data successfully loaded for {}", level.dimension().location());
+		MTR.LOGGER.info("[NeoMTR] MTR save data loaded for {}", level.dimension().location());
 		canAutoSave = true;
 		dataLoaded = true;
 	}
