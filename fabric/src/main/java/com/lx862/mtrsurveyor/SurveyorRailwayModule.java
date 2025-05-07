@@ -98,7 +98,9 @@ public class SurveyorRailwayModule extends RailwayDataModule implements MTRAreaU
     private void fillAreaComponents(AreaBase areaBase, LandmarkComponentMap.Builder builder) {
         builder.add(LandmarkComponentTypes.COLOR, areaBase.color);
         builder.add(LandmarkComponentTypes.POS, areaBase.getCenter());
-        builder.add(LandmarkComponentTypes.BOX, Util.getBoundingBox(areaBase.corner1, areaBase.corner2));
+        if(AreaBase.nonNullCorners(areaBase)) {
+            builder.add(LandmarkComponentTypes.BOX, Util.getBoundingBox(areaBase.corner1, areaBase.corner2));
+        }
         builder.add(LandmarkComponentTypes.STACK, Util.getItemStackForTransportMode(areaBase.transportMode, areaBase instanceof Depot));
         builder.add(MTRLandmarkComponentTypes.TRANSPORT_TYPE, areaBase.transportMode.toString());
     }
