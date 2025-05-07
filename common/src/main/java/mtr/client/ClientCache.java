@@ -216,6 +216,13 @@ public class ClientCache extends DataCache implements IGui {
 		return routeMap;
 	}
 
+	// TODO: Some script in joban use this
+	// Should update it, but works as a stop gap for now
+	@Deprecated
+	public String getFormattedRouteDestination(Route route, int currentStationIndex, String circularMarker) {
+		return getFormattedRouteDestination(route, currentStationIndex, circularMarker, MultipartName.Usage.GENERIC);
+	}
+
 	public String getFormattedRouteDestination(Route route, int currentStationIndex, String circularMarker, MultipartName.Usage usage) {
 		try {
 			final String customDestination = route.getDestination(currentStationIndex, usage);
