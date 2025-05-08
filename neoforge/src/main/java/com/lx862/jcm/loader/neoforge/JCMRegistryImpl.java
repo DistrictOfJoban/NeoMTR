@@ -25,7 +25,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.loading.FMLPaths;
 
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 public class JCMRegistryImpl {
@@ -105,5 +107,9 @@ public class JCMRegistryImpl {
         ENTITY_TYPES.register(eventBus);
         SOUND_EVENTS.register(eventBus);
         PARTICLE_TYPES.register(eventBus);
+    }
+
+    public static Path getConfigPath() {
+        return FMLPaths.CONFIGDIR.get();
     }
 }

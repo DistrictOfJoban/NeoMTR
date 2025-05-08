@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 public class JCMRegistry {
@@ -78,6 +79,11 @@ public class JCMRegistry {
 
     @ExpectPlatform
     public static void registerTickEvent(Consumer<MinecraftServer> consumer) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static Path getConfigPath() {
         throw new AssertionError();
     }
 }

@@ -10,6 +10,7 @@ import mtr.registry.CreativeModeTabs;
 import mtr.registry.RegistryObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 public class JCMRegistryImpl {
@@ -85,5 +87,9 @@ public class JCMRegistryImpl {
 
     public static void registerTickEvent(Consumer<MinecraftServer> consumer) {
         ServerTickEvents.START_SERVER_TICK.register(consumer::accept);
+    }
+
+    public static Path getConfigPath() {
+        return FabricLoader.getInstance().getConfigDir();
     }
 }
