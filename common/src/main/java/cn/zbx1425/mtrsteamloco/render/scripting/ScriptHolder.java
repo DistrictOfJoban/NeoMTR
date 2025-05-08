@@ -62,7 +62,7 @@ public class ScriptHolder {
 
             scope.put("ModelManager", scope, Context.toObject(MainClient.modelManager, scope));
             scope.put("Resources", scope, new NativeJavaClass(scope, ScriptResourceUtil.class));
-            scope.put("GraphicsTexture", scope, new NativeJavaClass(scope, GraphicsTexture.class));
+            scope.put("GraphicsTexture", scope, new NativeJavaClass(scope, com.lx862.mtrscripting.util.GraphicsTexture.class));
 
             scope.put("Timing", scope, new NativeJavaClass(scope, TimingUtil.class));
             scope.put("StateTracker", scope, new NativeJavaClass(scope, StateTracker.class));
