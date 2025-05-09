@@ -3,6 +3,21 @@
 This is a fork of [NeoMTR](https://github.com/zbx1425/Minecraft-Transit-Railway) which ports and bundles major MTR addon mods, along with some misc changes.  
 
 ## FAQ
+**Q: What has been changed from NeoMTR?**  
+A:
+- Addon Integration
+- - Joban Client Mod v2
+- - Station Decoration
+- - London Underground (The Tube)
+- - TransitManager
+- - TrainDrivingModule
+- - MTR: Transport Ticket
+- - MTR: Surveyor Integration
+- Rain blocking in trains
+- Reduce distance effect for certain rendering elements (Railway Sign etc.)
+- Slight improvements of GUI (Dashboard, Config screen etc.)
+- Backport 22.5/45 degree signal lights from MTR 4
+
 **Q: Should I use this?**  
 A: It's not a very serious project to fit with everyone's demand, just sort of my own spin on NeoMTR & MTR. If you like you can use it, but I might change things any second!
 
