@@ -45,7 +45,7 @@ public abstract class PIDSRenderer<T extends PIDSBlockEntity> extends JCMBlockEn
         if(!blockEntity.getPlatformIds().isEmpty()) {
             platforms = new LongImmutableList(blockEntity.getPlatformIds());
         } else {
-            final long platformId = RailwayData.getClosePlatformId(ClientData.PLATFORMS, ClientData.DATA_CACHE, pos, 5, 3, 3);
+            final long platformId = RailwayData.getClosePlatformId(ClientData.PLATFORMS, ClientData.DATA_CACHE, pos, 5, 4, 4);
             if (platformId != 0) {
                 platforms = new LongImmutableList(new long[]{platformId});
             } else {
