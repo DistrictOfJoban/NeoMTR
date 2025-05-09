@@ -33,15 +33,20 @@ public class ArrivalDestinationComponent extends TextComponent {
 
         final String destination = ClientData.DATA_CACHE.getFormattedRouteDestination(route, arrival.currentStationIndex, "", MultipartName.Usage.PIDS_DEST);
 
-        String routeNo = route.lightRailRouteNumber.isEmpty() ? "" : route.lightRailRouteNumber + " ";
-        String destinationString = cycleString(routeNo) + cycleString(destination);
-//        if(arrival.getCircularState() == Route.CircularState.CLOCKWISE) {
+        String routeNumber = getRouteNumber(route);
+        String routeNoStr = routeNumber.isEmpty() ? "" : routeNumber + " ";
+        String destinationString = cycleString(routeNoStr) + cycleString(destination);
+        if(route.circularState == Route.CircularState.CLOCKWISE) {
 //            destinationString = (isCjk(destinationString, false) ? TranslationProvider.GUI_MTR_CLOCKWISE_VIA_CJK : TranslationProvider.GUI_MTR_CLOCKWISE_VIA).getString(destinationString);
-//        } else if(arrival.getCircularState() == Route.CircularState.ANTICLOCKWISE) {
+        } else if(route.circularState == Route.CircularState.ANTICLOCKWISE) {
 //            destinationString = (isCjk(destinationString, false) ? TranslationProvider.GUI_MTR_ANTICLOCKWISE_VIA_CJK : TranslationProvider.GUI_MTR_ANTICLOCKWISE_VIA).getString(destinationString);
-//        }
+        }
 
         drawText(poseStack, bufferSource, destinationString);
+    }
+
+    private static String getRouteNumber(Route route) {
+        return route.isLightRailRoute ? route.lightRailRouteNumber : "";
     }
 
     public static PIDSComponent parseComponent(double x, double y, double width, double height, JsonObject jsonObject) {
